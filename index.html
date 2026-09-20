@@ -342,18 +342,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
   .theme-grid{grid-template-columns:repeat(2,1fr)}
   .search-box{display:none}
   .form-row{grid-template-columns:1fr}
-  .home-title{white-space:normal;font-size:1.5rem;line-height:1.18}
-  .home-head>div:first-child{margin-top:0}
-  .home-sub{font-size:.9rem;line-height:1.45}
-  .home-illus{display:none}
-  .tool-grid{grid-template-columns:1fr}
-  .produce-main h4{white-space:normal}
-  /* Mobile topbar: logo left, tabs on their own row */
-  .topbar{flex-wrap:wrap;margin-bottom:1rem}
-  .topbar-logo{display:block}
-  :root.dark .topbar-logo-dark{display:block}
-  .topbar-actions{flex:1 1 100%;justify-content:space-between;order:3;margin-top:.25rem}
-  .home-tabs{flex:1;justify-content:center}
 }
 .menu-toggle{display:none;width:40px;height:40px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-md);align-items:center;justify-content:center;cursor:pointer;color:var(--text-primary)}
 .menu-toggle svg{width:20px;height:20px}
@@ -641,6 +629,23 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
 .ai-msg-actions button{font-size:.74rem;font-weight:600;padding:.35rem .7rem;border-radius:var(--r-md);border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:.3rem}
 .ai-msg-actions button:hover{color:var(--text-primary);border-color:var(--accent-light)}
 .ai-msg-actions button.ok{color:#059669;border-color:#10b981}
+/* ===== MOBILE OVERRIDES (must be last to win specificity) ===== */
+@media (max-width:640px){
+  .home-title{white-space:normal!important;font-size:1.5rem;line-height:1.18}
+  .home-head{flex-wrap:wrap}
+  .home-head>div:first-child{margin-top:0!important}
+  .home-sub{font-size:.9rem;line-height:1.45;max-width:100%}
+  .home-illus{display:none}
+  .tool-grid{grid-template-columns:1fr}
+  .produce-main h4{white-space:normal!important}
+  /* Mobile topbar: logo top row, tabs on their own row */
+  .topbar{flex-wrap:wrap;margin-bottom:1rem}
+  .topbar-logo{display:block!important}
+  :root.dark .topbar-logo-light{display:none!important}
+  :root.dark .topbar-logo-dark{display:block!important}
+  .topbar-actions{flex:1 1 100%;justify-content:space-between;order:3;margin-top:.5rem}
+  .home-tabs{flex:1;justify-content:center}
+}
 </style>
 </head>
 <body>
@@ -6044,5 +6049,5 @@ if (document.readyState === 'loading') {
   init();
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3e44598ba1190f2',t:'MTc4OTk0MzM5Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3e451aaf947fcf6',t:'MTc4OTk0Mzg5MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
