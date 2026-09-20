@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KreatorHub - Konten Kreator Manager</title>
+<title>AiKreator — Studio Konten Kreator Bertenaga AI</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238b5cf6'/%3E%3Cstop offset='1' stop-color='%23ec4899'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='120' height='120' rx='26' fill='url(%23g)'/%3E%3Cg fill='%23fff' transform='translate(2,12) scale(0.58)'%3E%3Cpolygon points='4,98 28,98 68,6 52,6'/%3E%3Cpolygon points='68,6 88,6 88,98 68,98'/%3E%3Cpolygon points='30,60 70,60 70,76 38,76'/%3E%3Cpolygon points='88,50 88,34 138,6 162,6 100,42'/%3E%3Cpolygon points='88,54 104,44 170,98 144,98'/%3E%3C/g%3E%3C/svg%3E">
+<meta name="theme-color" content="#8b5cf6">
+<meta name="description" content="AiKreator — studio all-in-one untuk kreator konten: temukan arah, bangun akun, produksi konten dengan AI, optimasi, dan analitik.">
 <script src="https://js.puter.com/v2/"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.8/index.css">
 <style>
@@ -28,16 +31,17 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
 .sidebar{background:var(--bg-secondary);border-right:1px solid var(--border);padding:1.5rem 1rem;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
 .sidebar::-webkit-scrollbar{width:6px}.sidebar::-webkit-scrollbar-thumb{background:var(--bg-hover);border-radius:3px}
 .logo{display:flex;align-items:center;gap:.75rem;padding:0 .75rem 1.5rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
-.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--accent),var(--pink));border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px var(--accent-glow)}
-.logo-icon svg{width:22px;height:22px;color:white}
-.logo-text{font-size:1.15rem;font-weight:700;letter-spacing:-.02em}
-.logo-text span{color:var(--accent-light)}
+.logo-icon{height:32px;display:flex;align-items:center;justify-content:center}
+.logo-icon svg{height:32px;width:auto}
+.logo-text{font-size:1.22rem;font-weight:800;letter-spacing:-.03em;color:var(--text-primary)}
+.logo-text span{background:linear-gradient(120deg,var(--accent),var(--pink));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--accent)}
 .nav-section{margin-bottom:1.5rem}
 .nav-label{font-size:.7rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;padding:0 .75rem;margin-bottom:.5rem}
 .nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem .75rem;border-radius:8px;color:var(--text-secondary);cursor:pointer;transition:all .2s;font-size:.9rem;font-weight:500;position:relative;margin-bottom:2px}
 .nav-item:hover{background:var(--bg-hover);color:var(--text-primary)}
-.nav-item.active{background:linear-gradient(90deg,rgba(139,92,246,.15),transparent);color:var(--text-primary)}
-.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:20px;background:var(--accent);border-radius:0 3px 3px 0}
+.nav-item.active{background:linear-gradient(90deg,rgba(139,92,246,.16),rgba(236,72,153,.06));color:var(--text-primary);font-weight:600}
+.nav-item.active svg{color:var(--accent-light)}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:22px;background:linear-gradient(180deg,var(--accent),var(--pink));border-radius:0 3px 3px 0;box-shadow:0 0 10px var(--accent-glow)}
 .nav-item svg{width:18px;height:18px;flex-shrink:0}
 .nav-item .badge{margin-left:auto;background:var(--accent);color:white;font-size:.65rem;font-weight:700;padding:2px 6px;border-radius:10px}
 .nav-item .new-badge{margin-left:auto;background:linear-gradient(135deg,var(--pink),var(--orange));color:white;font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:10px;text-transform:uppercase;letter-spacing:.05em}
@@ -78,7 +82,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
 .stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.25rem;position:relative;overflow:hidden;transition:all .2s}
-.stat-card:hover{border-color:var(--border-strong);transform:translateY(-2px)}
+.stat-card:hover{border-color:var(--border-strong);transform:translateY(-2px);box-shadow:0 12px 28px rgba(23,26,46,.10)}
 .stat-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
 .stat-label{font-size:.8rem;color:var(--text-muted);font-weight:500}
 .stat-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center}
@@ -531,9 +535,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
   <aside class="sidebar" id="sidebar">
     <div class="logo">
       <div class="logo-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <svg viewBox="0 0 200 120" fill="none" aria-label="AiKreator"><defs><linearGradient id="akg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#ec4899"/></linearGradient></defs><g fill="url(#akg)"><polygon points="4,98 28,98 68,6 52,6"/><polygon points="68,6 88,6 88,98 68,98"/><polygon points="30,60 70,60 70,76 38,76"/><polygon points="88,50 88,34 138,6 162,6 100,42"/><polygon points="88,54 104,44 170,98 144,98"/></g></svg>
       </div>
-      <div class="logo-text">Kreator<span>Hub</span></div>
+      <div class="logo-text">Ai<span>Kreator</span></div>
     </div>
     <div class="nav-section">
       <div class="nav-label">Utama</div>
@@ -2688,7 +2692,7 @@ function _renderSlideCanvas(slide, idx, total, theme, W, H) {
     ctx.globalAlpha = 1;
   }
   // footer brand
-  const brand = (state.arah && state.arah.brand) || (state.profile && state.profile.name) || 'KreatorHub';
+  const brand = (state.arah && state.arah.brand) || (state.profile && state.profile.name) || 'AiKreator';
   ctx.fillStyle = theme.accent; ctx.font = `700 ${sSize}px Inter, sans-serif`; ctx.textAlign = 'left';
   ctx.fillText('@' + brand.replace(/\s+/g,'').toLowerCase(), pad, H - Math.round(H*0.074));
   // swipe hint kecuali slide terakhir
@@ -2742,7 +2746,7 @@ function flowBuatThumbnail(themeId) {
   ctx.fillStyle=theme.fg; ctx.textAlign='left'; ctx.font=`900 ${tSize}px Inter, sans-serif`;
   const lines = _wrapText(ctx, flowState.idea, W-pad*2);
   let y = Math.round(H*0.41); lines.slice(0,6).forEach(l=>{ ctx.fillText(l,pad,y); y+=tSize*1.13; });
-  const brand = (state.arah && state.arah.brand) || 'KreatorHub';
+  const brand = (state.arah && state.arah.brand) || 'AiKreator';
   ctx.fillStyle=theme.accent; ctx.font=`700 ${Math.round(W*0.041)}px Inter`; ctx.fillText('@'+brand.replace(/\s+/g,'').toLowerCase(), pad, H-Math.round(H*0.062));
   const url = c.toDataURL('image/png');
   flowState.coverImg = url;
@@ -5316,14 +5320,9 @@ async function callImageProvider(provider, config, model, prompt, o = {}) {
       if (typeof puter === 'undefined' || !puter?.ai?.txt2img) {
         throw new Error('Puter.js belum termuat — periksa koneksi internet lalu muat ulang halaman.');
       }
-      // Coba buat "user sementara" otomatis → TANPA daftar/email/nomor HP.
-      // (Popup daftar penuh minta verifikasi HP; temp user melewatinya.)
-      try {
-        const signedIn = puter.auth?.isSignedIn ? puter.auth.isSignedIn() : false;
-        if (!signedIn && puter.auth?.signIn) {
-          await puter.auth.signIn({ attempt_temp_user_creation: true });
-        }
-      } catch(_) { /* kalau gagal, biarkan txt2img memicu popup login bawaan */ }
+      // Puter.js sudah menangani autentikasi otomatis saat txt2img dipanggil.
+      // Kita TIDAK memanggil signIn manual (memicu buka "Puter Desktop" yang membingungkan).
+      // Cukup langsung generate — kalau belum login, Puter munculkan popup kecil sendiri.
       const mdl = model || 'google/gemini-2.5-flash-image';
       // txt2img mengembalikan elemen <img> (src = URL/dataURL) ATAU objek. Minta testMode=false.
       const result = await puter.ai.txt2img(prompt, { model: mdl });
@@ -5738,7 +5737,7 @@ async function callProviderAI(provider, config, prompt) {
         headers['Authorization'] = `Bearer ${apiKey}`;
         if (provider.id === 'openrouter') {
           headers['HTTP-Referer'] = window.location.origin || 'https://kreatorhub.local';
-          headers['X-Title'] = 'KreatorHub';
+          headers['X-Title'] = 'AiKreator';
         }
         if (provider.needsAccountId && config.accountId) {
           url = provider.apiBase.replace('{accountId}', config.accountId);
@@ -5847,7 +5846,7 @@ function init() {
     
     if (!state.profile.name) {
       setTimeout(() => {
-        toast('Selamat datang di KreatorHub! 👋', 'Mulai dengan mengatur profil & API key AI di menu Pengaturan', 'info');
+        toast('Selamat datang di AiKreator! 👋', 'Mulai dengan mengatur profil & API key AI di menu Pengaturan', 'info');
       }, 800);
     }
     
@@ -5872,5 +5871,5 @@ if (document.readyState === 'loading') {
   init();
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3dc595c1c66ff95',t:'MTc4OTg2MDMyMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3dce300abaefe14',t:'MTc4OTg2NTk1OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
