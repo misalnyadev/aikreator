@@ -3675,6 +3675,7 @@ function ceRenderProps() {
       <option value="left" ${el.align==='left'?'selected':''}>Kiri</option><option value="center" ${el.align==='center'?'selected':''}>Tengah</option><option value="right" ${el.align==='right'?'selected':''}>Kanan</option></select></div>`;
   } else if (el.type === 'image') {
     html += `<div class="ce-prop-group"><label>Sudut membulat: ${el.radius||0}px</label><input type="range" min="0" max="300" value="${el.radius||0}" oninput="ceUpd('radius',+this.value)"></div>`;
+    html += `<div class="ce-prop-group"><button class="btn btn-secondary btn-sm" style="width:100%" id="ceRmBgBtn" onclick="ceRemoveBg()"><svg class="ico"><use href="#i-scissors"/></svg> Hapus Background</button><div style="font-size:.7rem;color:var(--text-muted);margin-top:.35rem;line-height:1.4">Proses AI berjalan di perangkatmu (gratis, tanpa API key). Pemakaian pertama mengunduh model AI, butuh internet & sedikit waktu.</div></div>`;
   } else { // rect/circle
     html += `<div class="ce-prop-group"><label>Warna</label><input type="color" value="${el.color}" oninput="ceUpd('color',this.value)"></div>`;
     if (el.type === 'rect') html += `<div class="ce-prop-group"><label>Sudut membulat: ${el.radius||0}px</label><input type="range" min="0" max="300" value="${el.radius||0}" oninput="ceUpd('radius',+this.value)"></div>`;
@@ -3686,6 +3687,51 @@ function ceRenderProps() {
   html += `<div class="ce-prop-group"><button class="btn btn-danger btn-sm" style="width:100%" onclick="ceDeleteEl(${el.id})"><svg class="ico"><use href="#i-trash"/></svg> Hapus Elemen</button></div>`;
   box.innerHTML = html;
 }
+// ---- Hapus Background (AI, di browser, tanpa API key) ----
+let _imglyRemoveBg = null; // cache modul agar tidak di-import ulang
+
+async function ceRemoveBg() {
+  const el = ceDoc.els.find(x => x.id === ceSel);
+  if (!el || el.type !== 'image') { toast('Pilih gambar dulu','Fitur ini hanya untuk elemen gambar','info'); return; }
+  const btn = document.getElementById('ceRmBgBtn');
+  const origHtml = btn ? btn.innerHTML : '';
+  const setBtn = (txt, dis) => { if (btn) { btn.innerHTML = txt; btn.disabled = dis; } };
+  setBtn('<svg class="ico"><use href="#i-refresh"/></svg> Memuat model AI…', true);
+  try {
+    // Lazy-load library ESM dari CDN saat pertama dipakai
+    if (!_imglyRemoveBg) {
+      const mod = await import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.5/dist/index.mjs');
+      _imglyRemoveBg = mod.removeBackground || (mod.default && mod.default.removeBackground) || mod.default;
+    }
+    if (typeof _imglyRemoveBg !== 'function') throw new Error('Modul tidak termuat');
+    toast('Menghapus background…','Proses AI berjalan di perangkatmu. Mohon tunggu sebentar.','info');
+    setBtn('<svg class="ico"><use href="#i-refresh"/></svg> Memproses…', true);
+    const blob = await _imglyRemoveBg(el.src, {
+      output: { format: 'image/png' },
+      progress: (key, cur, total) => {
+        if (key && key.startsWith('fetch') && total) {
+          const pct = Math.round((cur/total)*100);
+          setBtn(`<svg class="ico"><use href="#i-refresh"/></svg> Unduh model ${pct}%`, true);
+        }
+      },
+    });
+    const dataUrl = await new Promise((res, rej) => {
+      const fr = new FileReader();
+      fr.onload = () => res(fr.result);
+      fr.onerror = rej;
+      fr.readAsDataURL(blob);
+    });
+    el.src = dataUrl;
+    ceRenderStage();
+    ceRenderProps();
+    toast('Background dihapus','Latar gambar berhasil dibersihkan','success');
+  } catch (err) {
+    console.error('removeBg error', err);
+    setBtn(origHtml, false);
+    toast('Gagal hapus background', (err && err.message) ? err.message : 'Coba lagi, pastikan koneksi internet aktif', 'error');
+  }
+}
+
 function ceUpd(key, val) {
   const el = ceDoc.els.find(x => x.id === ceSel);
   if (!el) return;
@@ -6284,5 +6330,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3e7db509eb45fd9',t:'MTc4OTk4MDk4Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3e8069798fd6010',t:'MTc4OTk4Mjc1OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
