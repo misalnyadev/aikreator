@@ -1288,7 +1288,15 @@ Tips: atur & simpan API key dulu di menu Pengaturan.</div>
           <input type="text" class="form-input" id="arahNiche" placeholder="mis. Dakwah Islami harian, Review gadget murah, Tips main Mobile Legends...">
           <div class="form-hint">Bingung? Isi minat/keahlian Anda lalu klik "Bantu dengan AI".</div>
         </div>
-        <button class="btn btn-secondary btn-sm" onclick="aiBantuNiche()"><svg class="ico"><use href="#i-sparkle"/></svg> Bantu dengan AI</button>
+        <div class="form-group" style="margin-top:.9rem">
+          <label class="form-label">Niche alternatif / pendukung <span style="font-weight:400;color:var(--text-muted);font-size:.78rem">(opsional)</span></label>
+          <input type="text" class="form-input" id="arahNicheAlt" placeholder="mis. Kajian keluarga, Doa harian, Kisah nabi... (pisah dengan koma)">
+          <div class="form-hint">Niche cadangan untuk memperluas ide & menangkap peluang tren di luar niche utama.</div>
+        </div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.25rem">
+          <button class="btn btn-secondary btn-sm" onclick="aiBantuNiche()"><svg class="ico"><use href="#i-sparkle"/></svg> Bantu dengan AI</button>
+          <button class="btn btn-secondary btn-sm" onclick="aiNicheTrend()"><svg class="ico"><use href="#i-fire"/></svg> Niche sedang tren</button>
+        </div>
         <div id="arahNicheAI" style="margin-top:.75rem"></div>
       </div>
 
@@ -1331,11 +1339,12 @@ Tips: atur & simpan API key dulu di menu Pengaturan.</div>
 
       <!-- 1.5 Brand Voice -->
       <div class="card" style="margin-bottom:1.25rem">
-        <div class="card-header"><div><div class="card-title">5. Gaya / Brand Voice</div><div class="card-subtitle">Kepribadian kontenmu — biar terasa khas & konsisten.</div></div></div>
+        <div class="card-header"><div><div class="card-title">5. Gaya / Brand Voice <span style="font-weight:500;font-size:.75rem;color:var(--accent);border:1px solid var(--border-strong);padding:1px 8px;border-radius:999px;margin-left:.4rem;vertical-align:middle">boleh gabung beberapa</span></div><div class="card-subtitle">Kepribadian kontenmu — biar terasa khas & konsisten. Bisa dikombinasi, mis. Santai & Akrab + Humoris.</div></div></div>
         <div class="theme-grid" id="arahVoiceGrid"></div>
         <div class="form-group" style="margin-top:1rem">
           <label class="form-label">Nama brand / channel (opsional)</label>
           <input type="text" class="form-input" id="arahBrand" placeholder="mis. Ngaji Santai, TeknoBocil, GameParah...">
+          <div class="form-hint">Dipakai sebagai watermark <strong>@namabrand</strong> di pojok slide & cover/thumbnail yang kamu buat di Alur Konten, plus jadi acuan AI saat mengusulkan username.</div>
         </div>
         <button class="btn btn-secondary btn-sm" onclick="aiBantuBrand()"><svg class="ico"><use href="#i-sparkle"/></svg> Usulkan nama & tagline (AI)</button>
         <div id="arahBrandAI" style="margin-top:.75rem"></div>
@@ -2034,11 +2043,13 @@ function renderArah() {
   if (!Array.isArray(a.platforms)) a.platforms = a.platform ? [a.platform] : [];
   // Migrasi: tipe tunggal (lama) -> tipes array (baru, multi-select)
   if (!Array.isArray(a.tipes)) a.tipes = a.tipe ? [a.tipe] : [];
+  // Migrasi: voice tunggal (lama) -> voices array (baru, multi-select)
+  if (!Array.isArray(a.voices)) a.voices = a.voice ? [a.voice] : [];
   _cardGridMulti(TIPE_KREATOR, 'arahTipeGrid', a.tipes, 'pilihArahTipe');
   _cardGridMulti(PLATFORM_LIST, 'arahPlatformGrid', a.platforms, 'pilihArahPlatform');
-  _cardGrid(VOICE_LIST, 'arahVoiceGrid', a.voice, 'pilihArahVoice');
+  _cardGridMulti(VOICE_LIST, 'arahVoiceGrid', a.voices, 'pilihArahVoice');
   const set = (id,v)=>{ const el=document.getElementById(id); if(el) el.value=v||''; };
-  set('arahNiche', a.niche); set('arahUsia', a.usia); set('arahBahasa', a.bahasa);
+  set('arahNiche', a.niche); set('arahNicheAlt', a.nicheAlt); set('arahUsia', a.usia); set('arahBahasa', a.bahasa);
   set('arahMasalah', a.masalah); set('arahBrand', a.brand);
   renderArahProgress();
 }
@@ -2060,7 +2071,15 @@ function pilihArahPlatform(id){
   _cardGridMulti(PLATFORM_LIST, 'arahPlatformGrid', a.platforms, 'pilihArahPlatform');
   renderArahProgress();
 }
-function pilihArahVoice(id){ state.arah.voice=id; _cardGrid(VOICE_LIST,'arahVoiceGrid',id,'pilihArahVoice'); renderArahProgress(); }
+function pilihArahVoice(id){
+  const a = state.arah;
+  if (!Array.isArray(a.voices)) a.voices = a.voice ? [a.voice] : [];
+  const i = a.voices.indexOf(id);
+  if (i >= 0) a.voices.splice(i, 1); else a.voices.push(id);
+  a.voice = a.voices[0] || ''; // jaga kompatibilitas fitur lama
+  _cardGridMulti(VOICE_LIST, 'arahVoiceGrid', a.voices, 'pilihArahVoice');
+  renderArahProgress();
+}
 
 function _arahLengkap(a){
   if (!a) return 0;
@@ -2068,7 +2087,7 @@ function _arahLengkap(a){
   if ((Array.isArray(a.tipes) && a.tipes.length) || (a.tipe && String(a.tipe).trim())) n++;
   if (a.niche && String(a.niche).trim()) n++;
   if ((Array.isArray(a.platforms) && a.platforms.length) || (a.platform && String(a.platform).trim())) n++;
-  if (a.voice && String(a.voice).trim()) n++;
+  if ((Array.isArray(a.voices) && a.voices.length) || (a.voice && String(a.voice).trim())) n++;
   return n;
 }
 function renderArahProgress(){
@@ -2086,6 +2105,7 @@ function simpanArah(){
   const g = id => (document.getElementById(id)?.value || '').trim();
   state.arah.niche=g('arahNiche'); state.arah.usia=g('arahUsia'); state.arah.bahasa=g('arahBahasa');
   state.arah.masalah=g('arahMasalah'); state.arah.brand=g('arahBrand');
+  state.arah.nicheAlt=g('arahNicheAlt');
   save('arah', state.arah);
   // Sinkron ke profil biar dipakai fitur lain
   if(state.arah.niche){ state.profile.niche = state.arah.niche; }
@@ -2106,16 +2126,36 @@ function _arahRingkas(){
   const plats = Array.isArray(a.platforms) ? a.platforms : (a.platform ? [a.platform] : []);
   const platNames = plats.map(id => (PLATFORM_LIST.find(p=>p.id===id)||{}).nm).filter(Boolean);
   const plat = platNames.join(', '); // gabungan semua platform terpilih
-  const voice=(VOICE_LIST.find(v=>v.id===a.voice)||{}).nm||'';
-  return { tipe, tipes:tipeNames, plat, platforms:platNames, voice, niche:a.niche||'', usia:a.usia||'', bahasa:a.bahasa||'', masalah:a.masalah||'' };
+  const voiceIds = Array.isArray(a.voices) ? a.voices : (a.voice ? [a.voice] : []);
+  const voiceNames = voiceIds.map(id => (VOICE_LIST.find(v=>v.id===id)||{}).nm).filter(Boolean);
+  const voice = voiceNames.join(', '); // gabungan semua gaya brand voice terpilih
+  return { tipe, tipes:tipeNames, plat, platforms:platNames, voice, voices:voiceNames, niche:a.niche||'', nicheAlt:a.nicheAlt||'', usia:a.usia||'', bahasa:a.bahasa||'', masalah:a.masalah||'' };
 }
 
 async function aiBantuNiche(){
   const minat = document.getElementById('arahNiche').value.trim();
+  const alt = document.getElementById('arahNicheAlt').value.trim();
   const box = document.getElementById('arahNicheAI');
   box.innerHTML = '<div style="color:var(--text-muted);font-size:.85rem;display:flex;align-items:center;gap:.5rem"><div class="loading-dots"><span></span><span></span><span></span></div> AI sedang menyusun ide niche...</div>';
   const r=_arahRingkas();
-  const prompt = `Saya calon konten kreator${r.tipe?` model "${r.tipe}"`:''}. Minat/keahlian saya: "${minat||'belum spesifik'}". Sarankan 5 pilihan NICHE spesifik yang punya potensi audiens${r.plat?` di ${r.plat}`:''}. Untuk tiap niche beri 1 kalimat alasan singkat. Format daftar bernomor, ringkas, Bahasa Indonesia.`;
+  const prompt = `Saya calon konten kreator${r.tipe?` model "${r.tipe}"`:''}. Minat/keahlian saya: "${minat||'belum spesifik'}"${alt?`. Niche pendukung yang saya pertimbangkan: "${alt}"`:''}. Sarankan 5 pilihan NICHE spesifik yang punya potensi audiens${r.plat?` di ${r.plat}`:''}. Sertakan minimal 2 niche turunan/kombinasi dari niche utama & pendukung saya. Untuk tiap niche beri 1 kalimat alasan singkat + tingkat persaingan (rendah/sedang/tinggi). Format daftar bernomor, ringkas, Bahasa Indonesia.`;
+  try{ const res=await callAI(prompt); box.innerHTML=`<div class="idea-card" style="white-space:pre-wrap">${escapeHtml(res)}</div>`; }
+  catch(e){ box.innerHTML=`<div style="color:var(--danger,#ef4444);font-size:.85rem">${escapeHtml(e.message)}</div>`; }
+}
+async function aiNicheTrend(){
+  const minat = document.getElementById('arahNiche').value.trim();
+  const alt = document.getElementById('arahNicheAlt').value.trim();
+  const box = document.getElementById('arahNicheAI');
+  box.innerHTML = '<div style="color:var(--text-muted);font-size:.85rem;display:flex;align-items:center;gap:.5rem"><div class="loading-dots"><span></span><span></span><span></span></div> Mencari niche yang sedang tren...</div>';
+  const r=_arahRingkas();
+  const tahun = new Date().getFullYear();
+  const prompt = `Bertindaklah sebagai analis tren konten media sosial Indonesia tahun ${tahun}.${r.tipe?` Jenis kreator: ${r.tipe}.`:''}${r.plat?` Platform: ${r.plat}.`:''}${minat?` Niche utama saya: "${minat}".`:''}${alt?` Niche pendukung: "${alt}".`:''}
+
+Berikan output dalam 2 bagian:
+BAGIAN A — "Tren di dalam niche kamu": 3-4 sub-topik/angle yang sedang naik daun DI DALAM niche utama saya${minat?'':' (jika niche belum diisi, lewati bagian ini)'}. Jika menurutmu niche utama saya sedang SEPI tren, katakan terus terang.
+BAGIAN B — "Niche yang benar-benar sedang tren sekarang": 5 niche/topik yang lagi ramai secara umum di Indonesia (lintas kategori) sebagai INSPIRASI, walau di luar niche utama saya. Untuk tiap item beri: nama niche, kenapa sedang naik, dan tingkat persaingan (rendah/sedang/tinggi).
+
+Ringkas, jujur, pakai daftar bernomor, Bahasa Indonesia. Ingatkan singkat di akhir bahwa tren berubah cepat — validasi ulang sebelum komit.`;
   try{ const res=await callAI(prompt); box.innerHTML=`<div class="idea-card" style="white-space:pre-wrap">${escapeHtml(res)}</div>`; }
   catch(e){ box.innerHTML=`<div style="color:var(--danger,#ef4444);font-size:.85rem">${escapeHtml(e.message)}</div>`; }
 }
@@ -6036,6 +6076,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3e5b8155ba50af4',t:'MTc4OTk1ODU3Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3e5d0020f304717',t:'MTc4OTk1OTU1Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
