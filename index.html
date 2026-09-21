@@ -100,6 +100,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
 .user-plan{font-size:.7rem;color:var(--text-muted)}
 .main{padding:1.1rem 2.5rem 1.5rem;overflow-x:hidden}
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;gap:1rem;flex-wrap:wrap}
+.topbar-left{display:flex;align-items:center;gap:1rem;min-width:0;flex:1}
+.topbar-left .page-title{min-width:0}
+.page-title h1{overflow:hidden;text-overflow:ellipsis}
 .page-title h1{font-size:1.75rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.25rem}
 .page-title p{color:var(--text-muted);font-size:.9rem}
 .topbar-actions{display:flex;gap:.75rem;align-items:center;flex:1;justify-content:flex-end}
@@ -646,14 +649,23 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
   .topbar-logo-dark{display:none!important}
   :root.dark .topbar-logo-light{display:none!important}
   :root.dark .topbar-logo-dark{display:block!important}
+  /* Title drops to its OWN full-width row so it never clips or piles up.
+     Top row stays: [menu][logo] ............... [notif][theme] */
+  .topbar{align-items:flex-start}
+  .topbar-left{flex:1 1 auto;flex-wrap:wrap}
+  .topbar-left .page-title{flex:1 1 100%;margin-top:.6rem;display:block}
+  .page-title h1{font-size:1.4rem;line-height:1.2;white-space:normal}
+  .page-title p{font-size:.83rem;line-height:1.4;white-space:normal}
+  .topbar-actions{flex:0 0 auto}
 }
 @media (max-width:640px){
   .home-title{font-size:1.5rem;line-height:1.18}
   .home-sub{font-size:.9rem;line-height:1.45;max-width:100%}
   .tool-grid{grid-template-columns:1fr}
   .produce-main h4{white-space:normal!important}
-  /* Phone only: stack tabs to their own row, notif+mode pinned top-right */
-  .topbar{flex-wrap:wrap;margin-bottom:1rem;position:relative}
+  .page-title h1{font-size:1.25rem}
+  /* Dashboard tabs: drop to their own centered row; utils stay top-right */
+  .topbar{position:relative}
   .topbar-actions{flex:1 1 100%;justify-content:center;order:3;margin-top:.5rem}
   .home-tabs{flex:1;justify-content:center}
   .topbar-utils{position:absolute;top:0;right:0}
@@ -808,7 +820,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
 
   <main class="main">
     <div class="topbar">
-      <div style="display:flex;align-items:center;gap:1rem">
+      <div class="topbar-left">
         <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
@@ -1917,8 +1929,8 @@ const viewTitles = {
   optimizer: ['Optimizer Konten', 'Optimalkan hook, judul, caption & CTA untuk performa maksimal'],
   schedule: ['Jadwal Upload', 'Atur jadwal upload untuk konsistensi konten Anda'],
   analytics: ['Analytics', 'Analisis performa & rekomendasi algoritma'],
-  projects: ['📁 Project', 'Kelompokkan konten & idemu per proyek/campaign'],
-  assets: ['🖼️ Assets', 'Simpan referensi: gambar, teks, link & catatan untuk kontenmu'],
+  projects: ['Project', 'Kelompokkan konten & idemu per proyek/campaign'],
+  assets: ['Assets', 'Simpan referensi: gambar, teks, link & catatan untuk kontenmu'],
   aistudio: ['AI Studio', 'Chat dengan AI dari berbagai provider untuk generate konten'],
   themes: ['Tema Konten', 'Pilih tema yang Anda geluti untuk rekomendasi personal'],
   profile: ['Profil Saya', 'Kelola informasi profil dan foto akun Anda'],
@@ -6071,5 +6083,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3e4f5438d1dfd8f',t:'MTc4OTk1MDU5Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3e51de5cc506bfd',t:'MTc4OTk1MjI1Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
