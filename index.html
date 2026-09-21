@@ -914,7 +914,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
             <h2><svg class="ico"><use href="#i-fire"/></svg> Trending Sekarang</h2>
             <span class="more" onclick="refreshTrends()">↻ Refresh</span>
           </div>
-          <p class="home-sub">Topik & format yang sedang naik — pakai sebagai inspirasi konten berikutnya.</p>
+          <p class="home-sub" id="trendNote">Topik & format yang sedang naik — pakai sebagai inspirasi konten berikutnya.</p>
           <div id="trendList"></div>
         </div>
 
@@ -944,13 +944,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
           </div>
           <div class="form-group" style="margin:0">
             <label class="form-label">Platform Target</label>
-            <select class="form-select" id="ideaPlatform">
-              <option value="tiktok">TikTok</option>
-              <option value="instagram">Instagram Reels</option>
-              <option value="youtube">YouTube Shorts</option>
-              <option value="youtube-long">YouTube Long</option>
-              <option value="twitter">Twitter/X</option>
-            </select>
+            <select class="form-select" id="ideaPlatform"></select>
           </div>
         </div>
         <div style="margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap">
@@ -990,11 +984,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
             </div>
             <div class="form-group">
               <label class="form-label">Platform</label>
-              <select class="form-select" id="optPlatform">
-                <option value="tiktok">TikTok</option>
-                <option value="instagram">Instagram</option>
-                <option value="youtube">YouTube</option>
-              </select>
+              <select class="form-select" id="optPlatform"></select>
             </div>
           </div>
           <div class="form-group">
@@ -1052,42 +1042,23 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
 
     <div class="view" id="view-analytics">
       <div class="card" style="margin-bottom:1.25rem;background:rgba(166,124,34,.08);border-color:rgba(166,124,34,.3);display:flex;align-items:flex-start;gap:.75rem;padding:.9rem 1.1rem">
-        <svg class="ico" style="color:var(--accent);flex:none;margin-top:.15rem"><use href="#i-warn"/></svg>
+        <svg class="ico" style="color:var(--accent);flex:none;margin-top:.15rem"><use href="#i-check"/></svg>
         <div style="font-size:.85rem;line-height:1.5;color:var(--text-secondary)">
-          <strong style="color:var(--text-primary)">Data contoh (simulasi).</strong>
-          Angka di bawah ini masih ilustrasi untuk menunjukkan tampilan dashboard. Analytics asli membutuhkan koneksi resmi ke akun platform Anda (mis. TikTok/YouTube Studio, Instagram Insights). Yang <em>sudah nyata</em> adalah tombol <strong>Rekomendasi AI</strong> di bawah — memakai provider AI aktif Anda.
+          <strong style="color:var(--text-primary)">Statistik nyata dari aktivitasmu.</strong>
+          Angka di bawah dihitung langsung dari yang kamu kerjakan di AiKreator — konten yang dibuat, ide, jadwal, dan project. Ini <em>bukan</em> data karangan.
+          Untuk metrik platform (views, followers, engagement) kamu perlu melihatnya langsung di TikTok/YouTube Studio/Instagram Insights — AiKreator tidak mengarang angka itu.
         </div>
       </div>
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-header"><span class="stat-label">Total Views</span><div class="stat-icon" style="background:var(--bg-elevated);color:var(--accent)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div></div>
-          <div class="stat-value">24.5K</div>
-          <div class="stat-change up">↑ 18.2%</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-header"><span class="stat-label">Engagement</span><div class="stat-icon" style="background:var(--bg-elevated);color:var(--accent)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div></div>
-          <div class="stat-value">8.7%</div>
-          <div class="stat-change up">↑ 2.4%</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-header"><span class="stat-label">Followers Baru</span><div class="stat-icon" style="background:var(--bg-elevated);color:var(--accent)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div></div>
-          <div class="stat-value">+1,247</div>
-          <div class="stat-change up">↑ 15.8%</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-header"><span class="stat-label">Score Algoritma</span><div class="stat-icon" style="background:var(--bg-elevated);color:var(--accent)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div></div>
-          <div class="stat-value">87</div>
-          <div class="stat-change up">↑ 5 poin</div>
-        </div>
-      </div>
+      <div class="stats-grid" id="analyticsStats"></div>
 
       <div class="analytics-grid">
         <div class="card">
-          <div class="card-header"><div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-chart"/></svg> Pertumbuhan Performa</div></div>
+          <div class="card-header"><div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-chart"/></svg> Aktivitas Produksi (8 minggu terakhir)</div></div>
           <div class="chart-container" id="analyticsChart"></div>
+          <div style="font-size:.78rem;color:var(--text-muted);margin-top:.6rem">Jumlah konten & jadwal yang kamu buat tiap minggu.</div>
         </div>
         <div class="card">
-          <div class="card-header"><div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-target"/></svg> Performa per Tema</div></div>
+          <div class="card-header"><div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-target"/></svg> Konten per Jenis/Tema</div></div>
           <div id="themePerformance"></div>
         </div>
       </div>
@@ -1954,8 +1925,8 @@ function switchView(viewId) {
     else if (viewId === 'projects') renderProjects();
     else if (viewId === 'assets') renderAssets();
     else if (viewId === 'flow') renderFlow();
-    else if (viewId === 'ideas') populateThemeSelect();
-    else if (viewId === 'optimizer') populateOptimizerThemes();
+    else if (viewId === 'ideas') { populateThemeSelect(); populatePlatformSelect('ideaPlatform'); }
+    else if (viewId === 'optimizer') { populateOptimizerThemes(); populatePlatformSelect('optPlatform'); }
   } catch (e) {
     console.error('Render error:', e);
     toast('Error','Gagal memuat view:' + e.message,'error');
@@ -3894,6 +3865,27 @@ function saveProfile() {
 }
 
 // ============ THEMES (menu digabung ke Jenis Kreator; helper dropdown tetap) ============
+// Isi dropdown platform dari PLATFORM_LIST (sumber tunggal: Temukan Arah).
+// Platform yang dipilih user di Temukan Arah ditaruh paling atas.
+function populatePlatformSelect(selectId, opts = {}) {
+  const sel = document.getElementById(selectId);
+  if (!sel) return;
+  const prev = sel.value;
+  const a = state.arah || {};
+  const chosen = (Array.isArray(a.platforms) && a.platforms.length) ? a.platforms
+                 : (a.platform ? [a.platform] : []);
+  const ordered = [
+    ...PLATFORM_LIST.filter(p => chosen.includes(p.id)),
+    ...PLATFORM_LIST.filter(p => !chosen.includes(p.id)),
+  ];
+  let html = ordered.map(p => `<option value="${p.id}">${escapeHtml(p.nm)}</option>`).join('');
+  if (opts.allowMulti) html = `<option value="all">Semua platform terpilih</option>` + html;
+  sel.innerHTML = html;
+  // Pertahankan pilihan sebelumnya bila masih ada, kalau tidak pakai platform pertama user
+  if (prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
+  else if (chosen.length) sel.value = chosen[0];
+}
+
 function populateThemeSelect() {
   const sel = document.getElementById('ideaTheme');
   sel.innerHTML = '<option value="all">Semua Tema</option>';
@@ -4361,28 +4353,68 @@ function lanjutPerjalanan() {
   else switchView('aistudio');
 }
 
-function refreshTrends() {
-  const trends = [
-    {rank:1, title:'Day in My Life as a [Profesi]', category:'Lifestyle', views:'2.4M'},
-    {rank:2, title:'Resep 5 Menit Anak Kos', category:'Kuliner', views:'1.8M'},
-    {rank:3, title:'Tutorial AI untuk Pemula 2026', category:'Edukasi', views:'1.5M'},
-    {rank:4, title:'Review Skincare Under 100K', category:'Lifestyle', views:'1.2M'},
-    {rank:5, title:'Tips Produktif WFH Anti Burnout', category:'Karir', views:'980K'},
-    {rank:6, title:'Unboxing Gadget Terbaru', category:'Teknologi', views:'870K'},
-    {rank:7, title:'Story Time Pengalaman Lucu', category:'Cerita Pribadi', views:'750K'}
-  ];
+function renderTrendList(trends) {
   const box = document.getElementById('trendList');
   if (!box) return;
-  box.innerHTML = trends.map(t => `
-    <div class="trend-row" onclick="useTrend('${t.title.replace(/'/g,"\\'")}')">
-      <div class="trend-rank">${t.rank}</div>
+  const note = document.getElementById('trendNote');
+  if (note) note.textContent = 'Hasil analisa AI sesuai niche-mu — tetap validasi ulang, tren berubah cepat.';
+  box.innerHTML = trends.map((t, i) => `
+    <div class="trend-row" onclick="useTrend('${(t.title||'').replace(/'/g,"\\'")}')">
+      <div class="trend-rank">${i+1}</div>
       <div class="trend-main">
-        <b>${escapeHtml(t.title)}</b>
-        <span>${escapeHtml(t.category)}</span>
+        <b>${escapeHtml(t.title||'')}</b>
+        <span>${escapeHtml(t.category||'')}${t.why?' · '+escapeHtml(t.why):''}</span>
       </div>
-      <div class="trend-heat"><svg class="ico"><use href="#i-fire"/></svg> ${t.views}</div>
+      <div class="trend-heat"><svg class="ico"><use href="#i-fire"/></svg> ${escapeHtml(t.level||'Naik')}</div>
     </div>
   `).join('');
+}
+
+// Tampilkan ajakan jujur bila belum bisa analisa (TANPA angka/topik karangan).
+function renderTrendEmpty(reason) {
+  const box = document.getElementById('trendList');
+  if (!box) return;
+  const note = document.getElementById('trendNote');
+  if (note) note.textContent = 'Tren dianalisa langsung oleh AI dari niche-mu — bukan daftar karangan.';
+  const cta = reason === 'niche'
+    ? `<button class="btn btn-primary btn-sm" onclick="switchView('arah')">Isi Niche di Temukan Arah</button>`
+    : `<button class="btn btn-primary btn-sm" onclick="switchView('settings')">Aktifkan AI Provider</button>`;
+  const msg = reason === 'niche'
+    ? 'Isi niche kamu dulu di <b>Temukan Arah</b>, lalu AiKreator akan menganalisa tren yang benar-benar relevan untukmu.'
+    : 'Aktifkan minimal satu AI Provider di <b>Pengaturan</b> agar AiKreator bisa menganalisa tren nyata sesuai niche-mu.';
+  box.innerHTML = `<div class="trend-empty"><span class="em"><svg class="ico"><use href="#i-fire"/></svg></span>
+    <p style="margin-bottom:1rem;max-width:42ch;margin-left:auto;margin-right:auto">${msg}</p>${cta}</div>`;
+}
+
+async function refreshTrends() {
+  const box = document.getElementById('trendList');
+  if (!box) return;
+  const r = (typeof _arahRingkas === 'function') ? _arahRingkas() : {};
+  const niche = (r && (r.niche || r.nicheAlt)) ? (r.niche || r.nicheAlt) : '';
+  const hasProvider = state.providers && Object.values(state.providers).some(v => v && v.apiKey);
+
+  // Tanpa niche / tanpa AI → JANGAN tampilkan angka karangan. Beri ajakan jujur.
+  if (!niche) { renderTrendEmpty('niche'); return; }
+  if (!hasProvider) { renderTrendEmpty('provider'); return; }
+
+  box.innerHTML = `<div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div><h3 style="margin-top:1rem">AI menganalisa tren untuk niche "${escapeHtml(niche)}"...</h3></div>`;
+  const tahun = new Date().getFullYear();
+  const prompt = `Kamu analis tren media sosial Indonesia. Untuk niche "${niche}"${r.tipe?`, tipe kreator ${r.tipe}`:''}, sebutkan 7 topik/format konten yang sedang naik daun tahun ${tahun}. Jujur & realistis, jangan mengarang angka penonton. Balas HANYA JSON array tanpa teks lain, tanpa markdown:
+[{"title":"judul topik/format singkat","category":"kategori singkat","why":"alasan singkat kenapa naik","level":"Tinggi/Sedang/Naik"}]`;
+  try {
+    const response = await callAI(prompt);
+    let trends;
+    const m = response.match(/\[[\s\S]*\]/);
+    trends = m ? JSON.parse(m[0]) : null;
+    if (!Array.isArray(trends) || trends.length === 0) throw new Error('format');
+    renderTrendList(trends.slice(0, 7));
+    toast('Tren diperbarui', `Analisa AI untuk niche "${niche}"`, 'success');
+  } catch (err) {
+    box.innerHTML = `<div class="trend-empty"><span class="em"><svg class="ico"><use href="#i-warn"/></svg></span>
+      <p style="margin-bottom:1rem">Gagal menganalisa tren saat ini. Coba lagi sebentar.</p>
+      <button class="btn btn-primary btn-sm" onclick="refreshTrends()">Coba Lagi</button></div>`;
+    toast('Gagal analisa tren', 'AI tidak merespons. Coba lagi sebentar.', 'warning');
+  }
 }
 
 // ===== Tab beranda/trending/riwayat =====
@@ -4455,26 +4487,6 @@ function useTrend(title) {
     document.getElementById('optIdea').value = title;
   }, 100);
   toast('Trend digunakan', `Ide ditambahkan ke optimizer`,'info');
-}
-
-function renderRecommendations() {
-  const container = document.getElementById('recommendations');
-  const recs = [
-    {title:'Morning Routine yang Produktif', desc:'Bagikan rutinitas pagi Anda dengan twist unik yang relatable', theme:'lifestyle', tags:['#morningroutine','#produktif']},
-    {title:'Hidden Gem Kuliner di Kota Anda', desc:'Review tempat makan yang belum banyak diketahui orang', theme:'kuliner', tags:['#hidden_gem','#kuliner']},
-    {title:'5 Kesalahan Pemula di [Niche]', desc:'Konten edukatif yang memberikan value tinggi', theme:'edukasi', tags:['#tips','#edukasi']}
-  ];
-  container.innerHTML = recs.map(r => `
-    <div class="idea-card" onclick="switchView('optimizer');setTimeout(()=>{document.getElementById('optIdea').value='${r.title.replace(/'/g,"\\'")}'},100)">
-      <div class="idea-header">
-        <span class="idea-category">${r.theme}</span>
-        <span class="idea-trend"><svg class="ico"><use href="#i-fire"/></svg> Trending</span>
-      </div>
-      <div class="idea-title">${r.title}</div>
-      <div class="idea-desc">${r.desc}</div>
-      <div class="idea-footer">${r.tags.map(t => `<span class="idea-tag">${t}</span>`).join('')}</div>
-    </div>
-  `).join('');
 }
 
 // ============ IDEAS GENERATION ============
@@ -4834,28 +4846,85 @@ function viewSchedule(id) {
 
 // ============ ANALYTICS ============
 function renderAnalytics() {
-  const chartData = [45, 62, 58, 78, 85, 72, 90, 88, 95, 82, 91, 98];
-  const labels = ['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11','W12'];
-  const max = Math.max(...chartData);
-  document.getElementById('analyticsChart').innerHTML = chartData.map((v, i) => 
-    `<div class="chart-bar" style="height:${(v/max)*100}%" data-label="${labels[i]}" data-value="${v}"></div>`
-  ).join('');
-  
-  // Ambil jenis kreator yang dipilih user di Temukan Arah; fallback ke contoh umum
-  const a = state.arah || {};
-  const userTipes = (Array.isArray(a.tipes) ? a.tipes : (a.tipe ? [a.tipe] : []))
-    .map(id => (TIPE_KREATOR.find(t => t.id === id) || {}).nm).filter(Boolean);
-  const baseLabels = userTipes.length ? userTipes.slice(0,6)
-    : ['Edukasi','Kuliner','Teknologi','Hiburan / Komedi','Vlog / Lifestyle'];
-  const sample = [92,78,85,68,74,81];
-  const perfs = baseLabels.map((label,i) => ({ label, value: sample[i % sample.length] }));
-  document.getElementById('themePerformance').innerHTML = perfs.map(p => `
-    <div class="perf-item">
-      <div class="perf-label">${p.label}</div>
-      <div class="perf-bar"><div class="perf-bar-fill" style="width:${p.value}%"></div></div>
-      <div class="perf-value">${p.value}%</div>
+  const assets = state.assets || [];
+  const ideas = state.ideas || [];
+  const schedules = state.schedules || [];
+  const projects = state.projects || [];
+  const now = Date.now();
+  const WEEK = 7 * 24 * 60 * 60 * 1000;
+
+  // ---- KARTU STATISTIK NYATA ----
+  const totalKonten = assets.length;
+  const totalIde = ideas.length;
+  const totalJadwal = schedules.length;
+  const projectSelesai = projects.filter(p => p.status === 'selesai').length;
+
+  // Konsistensi: berapa dari 8 minggu terakhir yang ada minimal 1 aktivitas (aset/jadwal)
+  const activityTs = [
+    ...assets.map(a => a.ts || 0),
+    ...schedules.map(s => { const d = new Date((s.date||'') + 'T' + (s.time||'00:00')); return isNaN(d) ? 0 : d.getTime(); })
+  ].filter(Boolean);
+  const weeksActive = new Set();
+  activityTs.forEach(ts => {
+    const wAgo = Math.floor((now - ts) / WEEK);
+    if (wAgo >= 0 && wAgo < 8) weeksActive.add(wAgo);
+  });
+  const konsistensi = Math.round((weeksActive.size / 8) * 100);
+
+  const stats = [
+    { label:'Konten Dibuat',   value: totalKonten,        icon:'i-palette',  sub: totalKonten ? 'tersimpan di Assets' : 'belum ada — mulai di AI Studio' },
+    { label:'Ide Dihasilkan',  value: totalIde,           icon:'i-idea',     sub: totalIde ? 'dari Ide & Trend' : 'belum ada — buka Ide & Trend' },
+    { label:'Terjadwal',       value: totalJadwal,        icon:'i-calendar', sub: totalJadwal ? 'di Jadwal Upload' : 'belum ada jadwal' },
+    { label:'Konsistensi 8 mgg', value: konsistensi + '%', icon:'i-fire',    sub: weeksActive.size + ' dari 8 minggu aktif' },
+  ];
+  const statsBox = document.getElementById('analyticsStats');
+  if (statsBox) statsBox.innerHTML = stats.map(s => `
+    <div class="stat-card">
+      <div class="stat-header"><span class="stat-label">${s.label}</span><div class="stat-icon" style="background:var(--bg-elevated);color:var(--accent)"><svg class="ico"><use href="#${s.icon}"/></svg></div></div>
+      <div class="stat-value">${s.value}</div>
+      <div class="stat-change" style="color:var(--text-muted)">${escapeHtml(s.sub)}</div>
     </div>
   `).join('');
+
+  // ---- GRAFIK AKTIVITAS 8 MINGGU (nyata) ----
+  const buckets = new Array(8).fill(0);
+  activityTs.forEach(ts => {
+    const wAgo = Math.floor((now - ts) / WEEK);
+    if (wAgo >= 0 && wAgo < 8) buckets[7 - wAgo]++;   // index 7 = minggu ini
+  });
+  const labels = buckets.map((_, i) => i === 7 ? 'Skrg' : `-${7 - i}mg`);
+  const maxB = Math.max(1, ...buckets);
+  const chartEl = document.getElementById('analyticsChart');
+  if (chartEl) {
+    if (activityTs.length === 0) {
+      chartEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:var(--text-muted);font-size:.85rem">Belum ada aktivitas produksi. Buat konten pertamamu untuk melihat grafik ini terisi.</div>`;
+    } else {
+      chartEl.innerHTML = buckets.map((v, i) =>
+        `<div class="chart-bar" style="height:${Math.max(4,(v/maxB)*100)}%" data-label="${labels[i]}" data-value="${v}"></div>`
+      ).join('');
+    }
+  }
+
+  // ---- KONTEN PER JENIS/TEMA (nyata, dari assets + schedules) ----
+  const kindCount = {};
+  assets.forEach(a => { const k = a.type === 'video' ? 'Video' : (a.type === 'image' ? 'Foto/Gambar' : 'Lainnya'); kindCount[k] = (kindCount[k]||0)+1; });
+  schedules.forEach(s => { if (s.kind) kindCount[s.kind] = (kindCount[s.kind]||0)+1; });
+  const perfBox = document.getElementById('themePerformance');
+  const entries = Object.entries(kindCount).sort((a,b) => b[1]-a[1]).slice(0,6);
+  if (perfBox) {
+    if (entries.length === 0) {
+      perfBox.innerHTML = `<div style="padding:1rem;text-align:center;color:var(--text-muted);font-size:.85rem">Belum ada konten. Setelah kamu membuat & menyimpan konten, distribusinya per jenis muncul di sini.</div>`;
+    } else {
+      const maxV = Math.max(...entries.map(e => e[1]));
+      perfBox.innerHTML = entries.map(([label, val]) => `
+        <div class="perf-item">
+          <div class="perf-label">${escapeHtml(label)}</div>
+          <div class="perf-bar"><div class="perf-bar-fill" style="width:${Math.round((val/maxV)*100)}%"></div></div>
+          <div class="perf-value">${val}</div>
+        </div>
+      `).join('');
+    }
+  }
 }
 
 async function getAIRecommendations() {
@@ -4867,16 +4936,30 @@ async function getAIRecommendations() {
     return;
   }
   
-  container.innerHTML = `<div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div><h3 style="margin-top:1rem">AI sedang menganalisis...</h3></div>`;
-  
-  const prompt = `Berikan 5 rekomendasi spesifik untuk meningkatkan performa konten dan optimasi algoritma untuk seorang content creator Indonesia. Format dalam markdown dengan struktur:
+  container.innerHTML = `<div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div><h3 style="margin-top:1rem">AI sedang menganalisis aktivitasmu...</h3></div>`;
 
-## 🎯 Rekomendasi #[nomor]: [Judul]
+  // Konteks NYATA dari data user
+  const r = (typeof _arahRingkas === 'function') ? _arahRingkas() : {};
+  const nKonten = (state.assets||[]).length;
+  const nIde = (state.ideas||[]).length;
+  const nJadwal = (state.schedules||[]).length;
+  const ctx = [
+    r.niche ? `Niche: ${r.niche}` : 'Niche: belum diisi',
+    r.tipe ? `Tipe kreator: ${r.tipe}` : '',
+    r.voice ? `Brand voice: ${r.voice}` : '',
+    `Aktivitas sejauh ini: ${nKonten} konten dibuat, ${nIde} ide dihasilkan, ${nJadwal} konten terjadwal`
+  ].filter(Boolean).join('. ');
+
+  const prompt = `Kamu mentor content creator Indonesia. Berdasarkan profil & aktivitas kreator berikut, beri 5 rekomendasi spesifik & realistis untuk meningkatkan konsistensi dan performa kontennya.
+
+PROFIL KREATOR: ${ctx}.
+
+Sesuaikan rekomendasi dengan niche & tipe kreatornya (bukan saran generik). Jika aktivitasnya masih sedikit, prioritaskan membangun kebiasaan & fondasi. Jujur, bermanfaat, tanpa trik manipulatif/clickbait. Format markdown:
+
+## Rekomendasi #[nomor]: [Judul]
 **Dampak**: [Tinggi/Sedang/Rendah]
-**Implementasi**: [Langkah konkret]
-**Expected Result**: [Hasil yang diharapkan]
-
-Fokus pada: hook optimization, posting time, content format, engagement strategy, dan algorithm hacking.`;
+**Langkah konkret**: [apa yang harus dilakukan]
+**Kenapa penting**: [alasan singkat]`;
   
   try {
     const response = await callAI(prompt);
@@ -6076,5 +6159,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3e5d0020f304717',t:'MTc4OTk1OTU1Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+</body>
 </html>
