@@ -538,6 +538,47 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .crop-zoom{flex:1;-webkit-appearance:none;appearance:none;height:5px;border-radius:999px;background:var(--border);outline:none}
 .crop-zoom::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg-card)}
 .crop-zoom::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg-card)}
+/* ===== STUDIO OBJEK (hapus background mandiri) ===== */
+.obj-tabs{display:flex;gap:.5rem;margin-bottom:1rem}
+.obj-tab{flex:1;padding:.6rem;border:1px solid var(--border);border-radius:var(--r-md);background:var(--bg-elevated);color:var(--text-secondary);cursor:pointer;font-family:inherit;font-size:.82rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:.4rem;transition:all .15s}
+.obj-tab.on{border-color:var(--accent);color:var(--accent);background:rgba(166,124,34,.08)}
+.obj-tab .ico{width:16px;height:16px}
+.obj-drop{border:2px dashed var(--border);border-radius:var(--r-lg);padding:2rem 1rem;text-align:center;cursor:pointer;transition:all .15s;color:var(--text-muted)}
+.obj-drop:hover{border-color:var(--accent);color:var(--text-secondary)}
+.obj-drop .ico{width:34px;height:34px;color:var(--accent);margin-bottom:.5rem}
+.obj-preview{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin:1rem 0}
+.obj-cell{text-align:center;flex:1;min-width:160px}
+.obj-cell-h{font-size:.72rem;font-weight:600;color:var(--text-muted);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.04em}
+.obj-img-box{width:100%;aspect-ratio:1;border-radius:var(--r-md);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.obj-img-box img{max-width:100%;max-height:100%;object-fit:contain}
+.obj-checker{background-image:linear-gradient(45deg,#8883 25%,transparent 25%),linear-gradient(-45deg,#8883 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#8883 75%),linear-gradient(-45deg,transparent 75%,#8883 75%);background-size:18px 18px;background-position:0 0,0 9px,9px -9px,-9px 0}
+.obj-status{text-align:center;font-size:.82rem;color:var(--text-secondary);margin:.75rem 0;min-height:1.2em}
+/* ===== KOTAK ALAT (TOOLBOX) ===== */
+.tb-intro{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--r-md);padding:.85rem 1rem;font-size:.85rem;color:var(--text-secondary);line-height:1.5;margin-bottom:1.25rem}
+.tb-grid{display:block}
+.tb-grid-inner{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1rem;margin-bottom:1.5rem}
+.tb-group-h{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);margin:.5rem 0 .75rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+.tb-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.25rem;cursor:pointer;transition:all .18s;text-align:left;display:flex;flex-direction:column;gap:.5rem}
+.tb-card:hover{transform:translateY(-3px);border-color:var(--accent)}
+.tb-ic{width:42px;height:42px;border-radius:var(--r-md);background:rgba(166,124,34,.1);display:flex;align-items:center;justify-content:center}
+.tb-ic .ico{width:22px;height:22px;color:var(--accent)}
+.tb-name{font-size:.95rem;font-weight:700;color:var(--text-primary)}
+.tb-desc{font-size:.78rem;color:var(--text-muted);line-height:1.45}
+@media(max-width:600px){.tb-grid-inner{grid-template-columns:repeat(2,1fr)}}
+/* Tool modal bits */
+.tm-drop{border:2px dashed var(--border);border-radius:var(--r-lg);padding:1.75rem 1rem;text-align:center;cursor:pointer;transition:all .15s;color:var(--text-muted);display:block}
+.tm-drop:hover{border-color:var(--accent);color:var(--text-secondary)}
+.tm-drop .ico{width:32px;height:32px;color:var(--accent);margin-bottom:.4rem}
+.tm-row{display:flex;align-items:center;gap:.75rem;margin:.75rem 0}
+.tm-row label{font-size:.8rem;font-weight:600;color:var(--text-secondary);flex-shrink:0;min-width:96px}
+.tm-row input[type=range]{flex:1}
+.tm-row .val{font-size:.8rem;color:var(--accent);font-weight:600;min-width:52px;text-align:right}
+.tm-preview{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin:1rem 0}
+.tm-meta{font-size:.78rem;color:var(--text-muted);text-align:center;margin:.5rem 0}
+.tm-swatches{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin:1rem 0}
+.tm-sw{width:64px;text-align:center;cursor:pointer}
+.tm-sw-c{width:64px;height:64px;border-radius:var(--r-md);border:1px solid var(--border)}
+.tm-sw-hex{font-size:.68rem;color:var(--text-muted);margin-top:.25rem;font-family:monospace}
 .color-pick{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.3rem}
 .color-dot{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s}
 .color-dot.on{border-color:var(--text-primary);transform:scale(1.15)}
@@ -795,6 +836,10 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
     </div>
     <div class="nav-section">
       <div class="nav-label">Tools</div>
+      <div class="nav-item" data-label="Kotak Alat" data-view="toolbox">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.89 1.45l8 4A2 2 0 0 1 22 7.24v9.53a2 2 0 0 1-1.11 1.79l-8 4a2 2 0 0 1-1.79 0l-8-4a2 2 0 0 1-1.1-1.8V7.24a2 2 0 0 1 1.11-1.79l8-4a2 2 0 0 1 1.78 0z"/><path d="M2.32 6.16L12 11l9.68-4.84M12 22.76V11"/></svg>
+        Kotak Alat
+      </div>
       <div class="nav-item" data-label="Ide Konten" data-view="ideas">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
         Ide Konten
@@ -1398,13 +1443,22 @@ Tips: atur & simpan API key dulu di menu Pengaturan.</div>
           <span class="ws-chip on" data-f="all" onclick="filterAssets('all')">Semua</span>
           <span class="ws-chip" data-f="image" onclick="filterAssets('image')"><svg class="ico"><use href="#i-image"/></svg> Gambar</span>
           <span class="ws-chip" data-f="video" onclick="filterAssets('video')"><svg class="ico"><use href="#i-video"/></svg> Video</span>
+          <span class="ws-chip" data-f="audio" onclick="filterAssets('audio')"><svg class="ico"><use href="#i-mic"/></svg> Audio</span>
           <span class="ws-chip" data-f="text" onclick="filterAssets('text')"><svg class="ico"><use href="#i-pen"/></svg> Teks</span>
           <span class="ws-chip" data-f="link" onclick="filterAssets('link')"><svg class="ico"><use href="#i-link"/></svg> Link</span>
         </div>
+        <button class="btn btn-secondary" onclick="switchView('toolbox')"><svg class="ico"><use href="#i-box"/></svg> Kotak Alat</button>
+        <button class="btn btn-secondary" onclick="openObjekStudio()"><svg class="ico"><use href="#i-scissors"/></svg> Studio Objek</button>
         <button class="btn btn-secondary" onclick="ceOpen([], 'Kanvas Baru')"><svg class="ico"><use href="#i-palette"/></svg> Studio Komposisi</button>
         <button class="btn btn-primary" onclick="openAssetModal()">+ Tambah Asset</button>
       </div>
       <div id="assetGrid" class="ws-grid"></div>
+    </div>
+
+    <!-- ===== KOTAK ALAT (TOOLBOX) ===== -->
+    <div class="view" id="view-toolbox">
+      <div class="tb-intro">Semua alat berjalan langsung di perangkatmu — gratis, tanpa API key, tanpa mengirim file ke server. Hasilnya bisa langsung disimpan ke Assets untuk produksi.</div>
+      <div class="tb-grid" id="toolboxGrid"></div>
     </div>
 
   </main>
@@ -1897,7 +1951,8 @@ const viewTitles = {
   assets: ['Assets', 'Simpan referensi: gambar, teks, link & catatan untuk kontenmu'],
   aistudio: ['AI Studio', 'Chat dengan AI dari berbagai provider untuk generate konten'],
   profile: ['Profil Saya', 'Kelola informasi profil dan foto akun Anda'],
-  settings: ['Pengaturan', 'Konfigurasi API key AI provider & preferensi aplikasi']
+  settings: ['Pengaturan', 'Konfigurasi API key AI provider & preferensi aplikasi'],
+  toolbox: ['Kotak Alat', 'Kumpulan utility untuk produksi konten — semua di perangkatmu, tanpa API key']
 };
 
 function toggleSidebarCollapse() {
@@ -1945,6 +2000,7 @@ function switchView(viewId) {
     else if (viewId === 'analytics') renderAnalytics();
     else if (viewId === 'projects') renderProjects();
     else if (viewId === 'assets') renderAssets();
+    else if (viewId === 'toolbox') renderToolbox();
     else if (viewId === 'flow') renderFlow();
     else if (viewId === 'ideas') { populateThemeSelect(); populatePlatformSelect('ideaPlatform'); }
     else if (viewId === 'optimizer') { populateOptimizerThemes(); populatePlatformSelect('optPlatform'); }
@@ -2358,16 +2414,18 @@ function renderAssets() {
     box.innerHTML = `<div class="ws-empty"><span class="em"><svg class="ico"><use href="#i-image"/></svg></span>Belum ada asset${f!=='all'?' untuk filter ini':''}.<br>Simpan gambar, teks, atau link sebagai referensi kontenmu.<br><br><button class="btn btn-primary" onclick="openAssetModal()">+ Tambah Asset</button></div>`;
     return;
   }
-  const kindLabel = { image:'<svg class="ico"><use href="#i-image"/></svg> Gambar', text:'<svg class="ico"><use href="#i-pen"/></svg> Teks', link:'<svg class="ico"><use href="#i-link"/></svg> Link', video:'<svg class="ico"><use href="#i-video"/></svg> Video' };
+  const kindLabel = { image:'<svg class="ico"><use href="#i-image"/></svg> Gambar', text:'<svg class="ico"><use href="#i-pen"/></svg> Teks', link:'<svg class="ico"><use href="#i-link"/></svg> Link', video:'<svg class="ico"><use href="#i-video"/></svg> Video', audio:'<svg class="ico"><use href="#i-mic"/></svg> Audio' };
   box.innerHTML = list.map(a => {
     const proj = (state.projects || []).find(p => p.id === a.project);
     let thumb = '';
     if (a.type === 'image') thumb = `<img src="${escapeHtml(a.url)}" alt="${escapeHtml(a.name)}" onerror="this.parentElement.innerHTML='<span class=\\'big\\'><svg class="ico"><use href="#i-image"/></svg></span>'">`;
     else if (a.type === 'video') thumb = `<video src="${escapeHtml(a.url)}" muted playsinline onmouseover="this.play()" onmouseout="this.pause()" style="width:100%;height:100%;object-fit:cover"></video>`;
+    else if (a.type === 'audio') thumb = `<span class="big"><svg class="ico"><use href="#i-mic"/></svg></span>`;
     else if (a.type === 'link') thumb = `<span class="big"><svg class="ico"><use href="#i-link"/></svg></span>`;
     else thumb = `<span class="big"><svg class="ico"><use href="#i-pen"/></svg></span>`;
     let body = `<b title="${escapeHtml(a.name)}">${escapeHtml(a.name)}</b>`;
     if (a.type === 'text') body += `<div class="atext">${escapeHtml(a.content || '')}</div>`;
+    else if (a.type === 'audio') body += `<audio src="${escapeHtml(a.url)}" controls onclick="event.stopPropagation()" style="width:100%;margin-top:.4rem;height:34px"></audio>`;
     else if (a.type === 'link') body += `<a class="alink" href="${escapeHtml(a.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${escapeHtml(a.url)}</a>`;
     if (proj) body += `<div class="atext" style="color:${proj.color};font-weight:600;margin-top:.3rem">${escapeHtml(proj.emoji)} ${escapeHtml(proj.name)}</div>`;
     return `<div class="asset-card" onclick="openAssetModal('${a.id}')">
@@ -3690,47 +3748,1128 @@ function ceRenderProps() {
 // ---- Hapus Background (AI, di browser, tanpa API key) ----
 let _imglyRemoveBg = null; // cache modul agar tidak di-import ulang
 
+// Helper bersama: terima data URL/URL gambar → kembalikan data URL PNG transparan.
+// onStatus(txt) dipanggil untuk update UI progres.
+async function removeBgFromSrc(src, onStatus) {
+  onStatus && onStatus('Memuat model AI…');
+  if (!_imglyRemoveBg) {
+    const mod = await import('https://esm.sh/@imgly/background-removal@1.7.0');
+    _imglyRemoveBg = mod.removeBackground || (mod.default && mod.default.removeBackground) || mod.default;
+  }
+  if (typeof _imglyRemoveBg !== 'function') throw new Error('Modul tidak termuat');
+  onStatus && onStatus('Memproses…');
+  const blob = await _imglyRemoveBg(src, {
+    debug: true,
+    output: { format: 'image/png' },
+    progress: (key, cur, total) => {
+      if (key && key.startsWith('fetch') && total) {
+        onStatus && onStatus(`Unduh model ${Math.round((cur/total)*100)}%`);
+      } else if (key && key.startsWith('compute')) {
+        onStatus && onStatus('Memproses…');
+      }
+    },
+  });
+  return await new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => res(fr.result);
+    fr.onerror = rej;
+    fr.readAsDataURL(blob);
+  });
+}
+
+// ===== STUDIO OBJEK: hapus background mandiri → simpan jadi asset transparan =====
+let _objState = { srcOriginal:null, srcResult:null, busy:false };
+
+function openObjekStudio() {
+  _objState = { srcOriginal:null, srcResult:null, busy:false };
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">Studio Objek — Hapus Background</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <p class="crop-hint" style="text-align:left;margin-top:-.5rem">Buat objek tanpa background dari file galeri atau hasil generate AI, lalu simpan jadi asset siap pakai di Studio Komposisi.</p>
+    <div class="obj-tabs">
+      <button class="obj-tab on" id="objTabUpload" onclick="objSwitchTab('upload')"><svg class="ico"><use href="#i-image"/></svg> Dari Galeri</button>
+      <button class="obj-tab" id="objTabGen" onclick="objSwitchTab('gen')"><svg class="ico"><use href="#i-sparkle"/></svg> Generate AI</button>
+    </div>
+    <div id="objTabBody"></div>
+    <div class="obj-preview" id="objPreview" style="display:none"></div>
+    <div class="obj-status" id="objStatus"></div>
+    <div class="modal-footer" id="objFooter" style="display:none;gap:.6rem;margin-top:1rem"></div>
+  `);
+  objSwitchTab('upload');
+}
+
+function objSwitchTab(tab) {
+  document.getElementById('objTabUpload').classList.toggle('on', tab==='upload');
+  document.getElementById('objTabGen').classList.toggle('on', tab==='gen');
+  const body = document.getElementById('objTabBody');
+  if (tab === 'upload') {
+    body.innerHTML = `
+      <label class="obj-drop" style="display:block">
+        <svg class="ico"><use href="#i-image"/></svg>
+        <div style="font-weight:600;color:var(--text-secondary)">Klik untuk pilih gambar dari galeri</div>
+        <div style="font-size:.75rem;margin-top:.25rem">JPG / PNG / WEBP • maks 5MB</div>
+        <input type="file" accept="image/*" style="display:none" onchange="objPickFile(event)">
+      </label>`;
+  } else {
+    // dropdown provider foto (reuse pola ceRenderGenProviders)
+    const imgActive = AI_PROVIDERS.filter(p =>
+      (p.caps||[]).includes('image') && !p.noKey &&
+      state.providers[p.id]?.apiKey && state.verifiedModels[p.id]?.working);
+    let opts = `<option value="">Otomatis (provider foto → Pollinations)</option>`;
+    opts += imgActive.map(p => `<option value="${p.id}">${escapeHtml(p.name)} (foto)</option>`).join('');
+    opts += `<option value="pollinations">Pollinations (gratis, tanpa key)</option>`;
+    body.innerHTML = `
+      <div class="ce-prop-group"><label style="display:block;font-size:.78rem;font-weight:600;color:var(--text-secondary);margin-bottom:.3rem">Deskripsi objek</label>
+        <input type="text" class="form-input" id="objGenPrompt" placeholder="mis: sepatu sneaker putih, gelas kopi, tas kulit coklat"></div>
+      <div class="ce-prop-group"><label style="display:block;font-size:.78rem;font-weight:600;color:var(--text-secondary);margin:.6rem 0 .3rem">Provider foto</label>
+        <select class="form-select" id="objGenProvider">${opts}</select></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:.5rem" id="objGenBtn" onclick="objGenerate()"><svg class="ico"><use href="#i-sparkle"/></svg> Generate lalu Hapus Background</button>`;
+  }
+  // reset preview
+  document.getElementById('objPreview').style.display = 'none';
+  document.getElementById('objFooter').style.display = 'none';
+  document.getElementById('objStatus').textContent = '';
+}
+
+function objPickFile(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  if (file.size > 5*1024*1024) { toast('File terlalu besar','Maksimal 5MB','error'); ev.target.value=''; return; }
+  const reader = new FileReader();
+  reader.onload = () => { objProcess(reader.result); };
+  reader.onerror = () => toast('Error','Gagal membaca file','error');
+  reader.readAsDataURL(file);
+  ev.target.value = '';
+}
+
+async function objGenerate() {
+  const prompt = (document.getElementById('objGenPrompt')?.value || '').trim();
+  if (!prompt) { toast('Kosong','Tulis objek apa yang mau dibuat','warning'); return; }
+  const provId = document.getElementById('objGenProvider')?.value || '';
+  const btn = document.getElementById('objGenBtn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<svg class="ico"><use href="#i-refresh"/></svg> Membuat gambar…'; }
+  try {
+    // prompt yang mengarahkan objek tunggal berlatar polos (lebih mudah dihapus)
+    const desc = `${prompt}, single object, centered, plain solid white background, product photo, studio lighting, high detail`;
+    const opts = { width:1024, height:1024 };
+    if (provId) opts.providerId = provId;
+    const { dataUrl } = await generateImageAI(desc, opts);
+    await objProcess(dataUrl);
+  } catch (e) {
+    toast('Gagal membuat gambar', e.message || 'Coba provider lain atau ulangi.','error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = '<svg class="ico"><use href="#i-sparkle"/></svg> Generate lalu Hapus Background'; }
+  }
+}
+
+// Proses inti: tampilkan original, jalankan hapus BG, tampilkan hasil, tawarkan simpan.
+async function objProcess(src) {
+  _objState.srcOriginal = src;
+  _objState.srcResult = null;
+  const prev = document.getElementById('objPreview');
+  const status = document.getElementById('objStatus');
+  const footer = document.getElementById('objFooter');
+  prev.style.display = 'flex';
+  footer.style.display = 'none';
+  prev.innerHTML = `
+    <div class="obj-cell"><div class="obj-cell-h">Asli</div><div class="obj-img-box"><img src="${src}"></div></div>
+    <div class="obj-cell"><div class="obj-cell-h">Hasil (transparan)</div><div class="obj-img-box obj-checker" id="objResultBox"><span style="color:var(--text-muted);font-size:.8rem">Memproses…</span></div></div>`;
+  try {
+    const dataUrl = await removeBgFromSrc(src, (t) => { status.textContent = t; });
+    _objState.srcResult = dataUrl;
+    status.textContent = '';
+    document.getElementById('objResultBox').innerHTML = `<img src="${dataUrl}">`;
+    footer.style.display = 'flex';
+    footer.innerHTML = `
+      <button class="btn btn-primary" style="flex:1" onclick="objSave()"><svg class="ico"><use href="#i-save"/></svg> Simpan ke Assets</button>
+      <button class="btn btn-secondary" onclick="objDownload()"><svg class="ico"><use href="#i-download"/></svg> Download PNG</button>
+      <button class="btn btn-ghost" onclick="objSwitchTab(document.getElementById('objTabGen').classList.contains('on')?'gen':'upload')">Ulangi</button>`;
+    toast('Background dihapus','Objek siap disimpan sebagai asset','success');
+  } catch (err) {
+    console.error('objProcess error', err);
+    status.textContent = '';
+    const box = document.getElementById('objResultBox');
+    if (box) box.innerHTML = `<span style="color:var(--danger,#e05252);font-size:.78rem;padding:.5rem;text-align:center">Gagal: ${escapeHtml((err&&err.message)||'coba lagi')}</span>`;
+    toast('Gagal hapus background', (err && err.message) ? err.message : 'Pastikan internet aktif, coba lagi','error');
+  }
+}
+
+function objSave() {
+  if (!_objState.srcResult) return;
+  state.assets = state.assets || [];
+  state.assets.unshift({ id:'a'+Date.now(), ts:Date.now(), type:'image', name:'Objek tanpa BG '+new Date().toLocaleDateString('id-ID'), url:_objState.srcResult, content:'', project:'' });
+  save('assets', state.assets);
+  closeModal();
+  renderAssets();
+  toast('Tersimpan','Objek transparan ditambahkan ke Assets. Siap dipakai di Studio Komposisi.','success');
+}
+
+function objDownload() {
+  if (!_objState.srcResult) return;
+  const a = document.createElement('a');
+  a.href = _objState.srcResult;
+  a.download = 'objek-tanpa-bg-'+Date.now()+'.png';
+  a.click();
+}
+
+// ============================================================
+// KOTAK ALAT (TOOLBOX) — utility produksi, 100% di browser
+// ============================================================
+let _tbState = {};
+const TOOLBOX = [
+  { id:'compress', ic:'i-download', name:'Kompres Gambar', desc:'Perkecil ukuran file JPG/WebP/PNG sebelum upload, tanpa turun kualitas drastis.', fn:'tbCompress', group:'Gambar' },
+  { id:'trim',     ic:'i-scissors', name:'Rapikan Objek', desc:'Potong pinggiran transparan otomatis agar objek pas & rapat. Pasangan Studio Objek.', fn:'tbTrim', group:'Gambar' },
+  { id:'carousel', ic:'i-grid',     name:'Split Carousel', desc:'Belah 1 gambar panjang jadi beberapa slide mulus untuk carousel Instagram.', fn:'tbCarousel', group:'Gambar' },
+  { id:'watermark',ic:'i-shield',   name:'Watermark', desc:'Tambahkan teks watermark ke gambar untuk melindungi karyamu.', fn:'tbWatermark', group:'Gambar' },
+  { id:'palette',  ic:'i-palette',  name:'Ekstrak Palet Warna', desc:'Ambil palet warna dominan dari foto untuk konsistensi brand.', fn:'tbPalette', group:'Gambar' },
+  { id:'convert',  ic:'i-image',    name:'Konversi Format', desc:'Ubah gambar antar format PNG ⇄ JPG ⇄ WebP dengan sekali klik.', fn:'tbConvert', group:'Gambar' },
+  { id:'resize',   ic:'i-target',   name:'Ubah Ukuran', desc:'Skala ulang gambar ke lebar/tinggi tertentu, menjaga rasio.', fn:'tbResize', group:'Gambar' },
+  { id:'mask',     ic:'i-scissors', name:'Potong Bentuk (Mask)', desc:'Potong gambar jadi bentuk: lingkaran, kotak bulat, bintang, hati.', fn:'tbMask', group:'Gambar' },
+  { id:'frames',   ic:'i-video',    name:'Ambil Frame Video', desc:'Ambil still dari video jadi thumbnail. Pilih detik yang kamu mau.', fn:'tbFrames', group:'Video & Audio' },
+  { id:'recorder', ic:'i-mic',      name:'Rekam Suara', desc:'Rekam voiceover/narasi langsung di app, simpan jadi asset audio.', fn:'tbRecorder', group:'Video & Audio' },
+  { id:'audiotrim',ic:'i-clock',    name:'Potong Audio', desc:'Pangkas awal/akhir audio dengan fade, ekspor WAV.', fn:'tbAudioTrim', group:'Video & Audio' },
+  { id:'waveform', ic:'i-chart',    name:'Audiogram (Waveform)', desc:'Render gelombang audio jadi gambar untuk post kutipan/podcast.', fn:'tbWaveform', group:'Video & Audio' },
+  { id:'counter',  ic:'i-doc',      name:'Cek Panjang Caption', desc:'Hitung kata/karakter & cek limit tiap platform (IG, X, TikTok, dll).', fn:'tbCounter', group:'Teks & Utilitas' },
+  { id:'qr',       ic:'i-grid',     name:'QR Code', desc:'Buat QR untuk link-in-bio, promo, atau giveaway. Simpan PNG.', fn:'tbQR', group:'Teks & Utilitas' },
+  { id:'metadata', ic:'i-shield',   name:'Hapus Metadata', desc:'Strip EXIF/GPS dari foto sebelum posting demi privasi & keamanan.', fn:'tbMetadata', group:'Teks & Utilitas' },
+];
+
+function renderToolbox() {
+  const grid = document.getElementById('toolboxGrid');
+  if (!grid) return;
+  const order = ['Gambar','Video & Audio','Teks & Utilitas'];
+  const groups = {};
+  TOOLBOX.forEach(t => { const g = t.group || 'Lainnya'; (groups[g] = groups[g] || []).push(t); });
+  const names = order.filter(g => groups[g]).concat(Object.keys(groups).filter(g => !order.includes(g)));
+  grid.innerHTML = names.map(g => `
+    <div class="tb-group-h">${escapeHtml(g)}</div>
+    <div class="tb-grid-inner">
+      ${groups[g].map(t => `
+        <div class="tb-card" onclick="${t.fn}()">
+          <div class="tb-ic"><svg class="ico"><use href="#${t.ic}"/></svg></div>
+          <div class="tb-name">${escapeHtml(t.name)}</div>
+          <div class="tb-desc">${escapeHtml(t.desc)}</div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+
+// ---- Helpers bersama untuk tools gambar ----
+function _tbLoadImg(src) {
+  return new Promise((res, rej) => {
+    const img = new Image();
+    img.onload = () => res(img);
+    img.onerror = rej;
+    img.src = src;
+  });
+}
+function _tbReadFile(file) {
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => res(fr.result);
+    fr.onerror = rej;
+    fr.readAsDataURL(file);
+  });
+}
+function _tbHumanSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
+  return (bytes/1024/1024).toFixed(2) + ' MB';
+}
+function _tbDataUrlBytes(dataUrl) {
+  const i = dataUrl.indexOf(',');
+  const b64 = dataUrl.slice(i+1);
+  return Math.round(b64.length * 3 / 4);
+}
+function _tbDownload(dataUrl, name) {
+  const a = document.createElement('a');
+  a.href = dataUrl; a.download = name; a.click();
+}
+function _tbSaveAsset(dataUrl, name, type='image') {
+  state.assets = state.assets || [];
+  state.assets.unshift({ id:'a'+Date.now(), ts:Date.now(), type, name, url:dataUrl, content:'', project:'' });
+  save('assets', state.assets);
+  toast('Tersimpan', name + ' ditambahkan ke Assets','success');
+}
+function _tbBlobToDataUrl(blob) {
+  return new Promise((res, rej) => { const fr = new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsDataURL(blob); });
+}
+function _tbFmtTime(s) {
+  s = Math.max(0, s||0);
+  const m = Math.floor(s/60), sec = Math.floor(s%60);
+  return `${m}:${sec.toString().padStart(2,'0')}`;
+}
+// picker file umum → mengembalikan {dataUrl, file}
+function _tbFilePicker(cb, accept='image/*') {
+  const inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = accept; inp.style.display = 'none';
+  inp.onchange = async () => {
+    const file = inp.files[0];
+    if (!file) return;
+    if (file.size > 15*1024*1024) { toast('File terlalu besar','Maksimal 15MB','error'); return; }
+    const dataUrl = await _tbReadFile(file);
+    cb(dataUrl, file);
+  };
+  document.body.appendChild(inp); inp.click();
+  setTimeout(()=>inp.remove(), 1000);
+}
+
+// ---------- 1) KOMPRES GAMBAR ----------
+function tbCompress() {
+  _tbState = {};
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">Kompres Gambar</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <label class="tm-drop"><svg class="ico"><use href="#i-download"/></svg>
+      <div style="font-weight:600;color:var(--text-secondary)">Klik untuk pilih gambar</div>
+      <div style="font-size:.74rem;margin-top:.2rem">JPG / PNG / WebP</div>
+      <input type="file" accept="image/*" style="display:none" onchange="tbCompressPick(event)"></label>
+    <div id="tbCompressBody"></div>
+  `);
+}
+async function tbCompressPick(ev) {
+  const file = ev.target.files[0]; if (!file) return;
+  const dataUrl = await _tbReadFile(file);
+  const img = await _tbLoadImg(dataUrl);
+  _tbState = { img, origBytes: file.size, origName: (file.name||'gambar').replace(/\.[^.]+$/,'') };
+  document.getElementById('tbCompressBody').innerHTML = `
+    <div class="tm-row"><label>Format</label>
+      <select class="form-select" id="tbcFormat" onchange="tbCompressRun()" style="flex:1">
+        <option value="image/jpeg">JPEG (foto, paling kecil)</option>
+        <option value="image/webp">WebP (modern, efisien)</option>
+        <option value="image/png">PNG (tanpa kehilangan)</option>
+      </select></div>
+    <div class="tm-row" id="tbcQualityRow"><label>Kualitas</label>
+      <input type="range" id="tbcQuality" min="30" max="95" value="75" oninput="tbCompressRun()">
+      <span class="val" id="tbcQualityVal">75%</span></div>
+    <div class="tm-preview"><div class="obj-img-box" style="max-width:280px;margin:0 auto"><img id="tbcPreview"></div></div>
+    <div class="tm-meta" id="tbcMeta"></div>
+    <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:.5rem">
+      <button class="btn btn-primary" style="flex:1" onclick="tbCompressSave()"><svg class="ico"><use href="#i-save"/></svg> Simpan ke Assets</button>
+      <button class="btn btn-secondary" onclick="tbCompressDownload()"><svg class="ico"><use href="#i-download"/></svg> Download</button>
+    </div>`;
+  tbCompressRun();
+}
+function tbCompressRun() {
+  const fmt = document.getElementById('tbcFormat').value;
+  const q = +document.getElementById('tbcQuality').value / 100;
+  document.getElementById('tbcQualityVal').textContent = Math.round(q*100)+'%';
+  document.getElementById('tbcQualityRow').style.display = (fmt==='image/png') ? 'none' : 'flex';
+  const { img, origBytes } = _tbState;
+  const cv = document.createElement('canvas');
+  cv.width = img.naturalWidth; cv.height = img.naturalHeight;
+  const ctx = cv.getContext('2d');
+  if (fmt === 'image/jpeg') { ctx.fillStyle = '#fff'; ctx.fillRect(0,0,cv.width,cv.height); }
+  ctx.drawImage(img, 0, 0);
+  const out = cv.toDataURL(fmt, q);
+  _tbState.out = out; _tbState.fmt = fmt;
+  document.getElementById('tbcPreview').src = out;
+  const newBytes = _tbDataUrlBytes(out);
+  const pct = Math.round((1 - newBytes/origBytes) * 100);
+  const savingTxt = pct > 0 ? `hemat ${pct}%` : `+${Math.abs(pct)}% (coba format/kualitas lain)`;
+  document.getElementById('tbcMeta').innerHTML = `${_tbHumanSize(origBytes)} → <strong style="color:var(--accent)">${_tbHumanSize(newBytes)}</strong> · ${savingTxt} · ${img.naturalWidth}×${img.naturalHeight}px`;
+}
+function tbCompressSave() { const ext = _tbState.fmt.split('/')[1].replace('jpeg','jpg'); _tbSaveAsset(_tbState.out, `${_tbState.origName}-kompres.${ext}`); closeModal(); if (document.getElementById('view-assets').classList.contains('active')) renderAssets(); }
+function tbCompressDownload() { const ext = _tbState.fmt.split('/')[1].replace('jpeg','jpg'); _tbDownload(_tbState.out, `${_tbState.origName}-kompres.${ext}`); }
+
+// ---------- 2) RAPIKAN OBJEK (TRIM transparan) ----------
+function tbTrim() {
+  _tbState = {};
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">Rapikan Objek (Trim)</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <p class="crop-hint" style="text-align:left;margin-top:-.5rem">Memotong area transparan di sekeliling objek (PNG). Cocok untuk merapikan hasil hapus background.</p>
+    <label class="tm-drop"><svg class="ico"><use href="#i-scissors"/></svg>
+      <div style="font-weight:600;color:var(--text-secondary)">Klik untuk pilih PNG transparan</div>
+      <input type="file" accept="image/png,image/webp" style="display:none" onchange="tbTrimPick(event)"></label>
+    <div id="tbTrimBody"></div>
+  `);
+}
+async function tbTrimPick(ev) {
+  const file = ev.target.files[0]; if (!file) return;
+  const dataUrl = await _tbReadFile(file);
+  const img = await _tbLoadImg(dataUrl);
+  const cv = document.createElement('canvas');
+  cv.width = img.naturalWidth; cv.height = img.naturalHeight;
+  const ctx = cv.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+  const data = ctx.getImageData(0,0,cv.width,cv.height).data;
+  let minX=cv.width, minY=cv.height, maxX=0, maxY=0, found=false;
+  const thr = 10;
+  for (let y=0;y<cv.height;y++) for (let x=0;x<cv.width;x++) {
+    if (data[(y*cv.width+x)*4+3] > thr) { found=true; if(x<minX)minX=x; if(x>maxX)maxX=x; if(y<minY)minY=y; if(y>maxY)maxY=y; }
+  }
+  const body = document.getElementById('tbTrimBody');
+  if (!found) { body.innerHTML = `<div class="tm-meta" style="color:var(--danger,#e05252)">Gambar ini tidak punya area transparan untuk dipotong.</div>`; return; }
+  const pad = 2;
+  minX=Math.max(0,minX-pad); minY=Math.max(0,minY-pad); maxX=Math.min(cv.width-1,maxX+pad); maxY=Math.min(cv.height-1,maxY+pad);
+  const w = maxX-minX+1, h = maxY-minY+1;
+  const oc = document.createElement('canvas'); oc.width=w; oc.height=h;
+  oc.getContext('2d').drawImage(cv, minX, minY, w, h, 0, 0, w, h);
+  const out = oc.toDataURL('image/png');
+  _tbState = { out, origName:(file.name||'objek').replace(/\.[^.]+$/,'') };
+  body.innerHTML = `
+    <div class="tm-preview"><div class="obj-img-box obj-checker" style="max-width:260px;margin:0 auto"><img src="${out}"></div></div>
+    <div class="tm-meta">${img.naturalWidth}×${img.naturalHeight}px → <strong style="color:var(--accent)">${w}×${h}px</strong> (pinggiran transparan dipotong)</div>
+    <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:.5rem">
+      <button class="btn btn-primary" style="flex:1" onclick="tbTrimSave()"><svg class="ico"><use href="#i-save"/></svg> Simpan ke Assets</button>
+      <button class="btn btn-secondary" onclick="_tbDownload(_tbState.out, _tbState.origName+'-rapi.png')"><svg class="ico"><use href="#i-download"/></svg> Download</button>
+    </div>`;
+}
+function tbTrimSave() { _tbSaveAsset(_tbState.out, _tbState.origName+'-rapi.png'); closeModal(); if (document.getElementById('view-assets').classList.contains('active')) renderAssets(); }
+
+// ---------- 3) SPLIT CAROUSEL ----------
+function tbCarousel() {
+  _tbState = {};
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">Split Carousel</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <p class="crop-hint" style="text-align:left;margin-top:-.5rem">Belah 1 gambar panjang jadi beberapa slide sama lebar untuk carousel Instagram yang tersambung mulus.</p>
+    <label class="tm-drop"><svg class="ico"><use href="#i-grid"/></svg>
+      <div style="font-weight:600;color:var(--text-secondary)">Klik untuk pilih gambar panjang</div>
+      <input type="file" accept="image/*" style="display:none" onchange="tbCarouselPick(event)"></label>
+    <div id="tbCarBody"></div>
+  `);
+}
+async function tbCarouselPick(ev) {
+  const file = ev.target.files[0]; if (!file) return;
+  const img = await _tbLoadImg(await _tbReadFile(file));
+  _tbState = { img, origName:(file.name||'carousel').replace(/\.[^.]+$/,''), slices:[] };
+  document.getElementById('tbCarBody').innerHTML = `
+    <div class="tm-row"><label>Jumlah slide</label>
+      <input type="range" id="tbCarN" min="2" max="10" value="3" oninput="tbCarouselRun()">
+      <span class="val" id="tbCarNVal">3</span></div>
+    <div class="tm-row"><label>Rasio slide</label>
+      <select class="form-select" id="tbCarRatio" onchange="tbCarouselRun()" style="flex:1">
+        <option value="0">Bagi rata (apa adanya)</option>
+        <option value="0.8">Potret 4:5 per slide</option>
+        <option value="1">Persegi 1:1 per slide</option>
+      </select></div>
+    <div class="tm-preview" id="tbCarPreview"></div>
+    <div class="tm-meta" id="tbCarMeta"></div>
+    <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:.5rem">
+      <button class="btn btn-primary" style="flex:1" onclick="tbCarouselSave()"><svg class="ico"><use href="#i-save"/></svg> Simpan semua ke Assets</button>
+      <button class="btn btn-secondary" onclick="tbCarouselDownload()"><svg class="ico"><use href="#i-download"/></svg> Download semua</button>
+    </div>`;
+  tbCarouselRun();
+}
+function tbCarouselRun() {
+  const n = +document.getElementById('tbCarN').value;
+  const ratio = +document.getElementById('tbCarRatio').value;
+  document.getElementById('tbCarNVal').textContent = n;
+  const { img } = _tbState;
+  const slices = [];
+  const sliceW = Math.floor(img.naturalWidth / n);
+  const sliceH = ratio > 0 ? Math.round(sliceW / ratio) : img.naturalHeight;
+  for (let i=0;i<n;i++) {
+    const cv = document.createElement('canvas');
+    cv.width = sliceW; cv.height = sliceH;
+    const ctx = cv.getContext('2d');
+    // crop bagian tengah vertikal bila rasio dipaksa
+    const srcH = ratio > 0 ? Math.min(img.naturalHeight, sliceH) : img.naturalHeight;
+    const srcY = ratio > 0 ? Math.round((img.naturalHeight - srcH)/2) : 0;
+    ctx.drawImage(img, i*sliceW, srcY, sliceW, srcH, 0, 0, sliceW, sliceH);
+    slices.push(cv.toDataURL('image/jpeg', 0.92));
+  }
+  _tbState.slices = slices;
+  document.getElementById('tbCarPreview').innerHTML = slices.map((s,i)=>`<div style="text-align:center"><div class="obj-img-box" style="width:80px;height:auto;aspect-ratio:${sliceW}/${sliceH}"><img src="${s}"></div><div style="font-size:.68rem;color:var(--text-muted);margin-top:.2rem">${i+1}</div></div>`).join('');
+  document.getElementById('tbCarMeta').textContent = `${n} slide · ${sliceW}×${sliceH}px masing-masing`;
+}
+function tbCarouselSave() { _tbState.slices.forEach((s,i)=>_tbSaveAsset(s, `${_tbState.origName}-slide-${i+1}.jpg`)); closeModal(); if (document.getElementById('view-assets').classList.contains('active')) renderAssets(); }
+function tbCarouselDownload() { _tbState.slices.forEach((s,i)=>setTimeout(()=>_tbDownload(s, `${_tbState.origName}-slide-${i+1}.jpg`), i*250)); }
+
+// ---------- 4) WATERMARK ----------
+function tbWatermark() {
+  _tbState = {};
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">Watermark</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <label class="tm-drop"><svg class="ico"><use href="#i-shield"/></svg>
+      <div style="font-weight:600;color:var(--text-secondary)">Klik untuk pilih gambar</div>
+      <input type="file" accept="image/*" style="display:none" onchange="tbWmPick(event)"></label>
+    <div id="tbWmBody"></div>
+  `);
+}
+async function tbWmPick(ev) {
+  const file = ev.target.files[0]; if (!file) return;
+  const img = await _tbLoadImg(await _tbReadFile(file));
+  _tbState = { img, origName:(file.name||'gambar').replace(/\.[^.]+$/,'') };
+  const defText = (state.profile && state.profile.handle) ? '@'+state.profile.handle.replace('@','') : (state.profile && state.profile.name) || '@kreator';
+  document.getElementById('tbWmBody').innerHTML = `
+    <div class="tm-row"><label>Teks</label><input type="text" class="form-input" id="tbWmText" value="${escapeHtml(defText)}" oninput="tbWmRun()" style="flex:1"></div>
+    <div class="tm-row"><label>Posisi</label>
+      <select class="form-select" id="tbWmPos" onchange="tbWmRun()" style="flex:1">
+        <option value="br">Kanan bawah</option><option value="bl">Kiri bawah</option>
+        <option value="tr">Kanan atas</option><option value="tl">Kiri atas</option>
+        <option value="center">Tengah</option><option value="tile">Ulang (tile)</option>
+      </select></div>
+    <div class="tm-row"><label>Ukuran</label><input type="range" id="tbWmSize" min="2" max="12" value="5" oninput="tbWmRun()"><span class="val" id="tbWmSizeVal">5%</span></div>
+    <div class="tm-row"><label>Transparansi</label><input type="range" id="tbWmOp" min="10" max="100" value="55" oninput="tbWmRun()"><span class="val" id="tbWmOpVal">55%</span></div>
+    <div class="tm-row"><label>Warna</label><input type="color" id="tbWmColor" value="#ffffff" oninput="tbWmRun()"></div>
+    <div class="tm-preview"><div class="obj-img-box" style="max-width:300px;margin:0 auto"><img id="tbWmPreview"></div></div>
+    <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:.5rem">
+      <button class="btn btn-primary" style="flex:1" onclick="tbWmSave()"><svg class="ico"><use href="#i-save"/></svg> Simpan ke Assets</button>
+      <button class="btn btn-secondary" onclick="_tbDownload(_tbState.out, _tbState.origName+'-watermark.png')"><svg class="ico"><use href="#i-download"/></svg> Download</button>
+    </div>`;
+  tbWmRun();
+}
+function tbWmRun() {
+  const { img } = _tbState;
+  const text = document.getElementById('tbWmText').value || '';
+  const pos = document.getElementById('tbWmPos').value;
+  const sizePct = +document.getElementById('tbWmSize').value;
+  const op = +document.getElementById('tbWmOp').value/100;
+  const color = document.getElementById('tbWmColor').value;
+  document.getElementById('tbWmSizeVal').textContent = sizePct+'%';
+  document.getElementById('tbWmOpVal').textContent = Math.round(op*100)+'%';
+  const cv = document.createElement('canvas');
+  cv.width = img.naturalWidth; cv.height = img.naturalHeight;
+  const ctx = cv.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+  const fontSize = Math.round(cv.width * sizePct/100);
+  ctx.font = `700 ${fontSize}px Inter, sans-serif`;
+  ctx.fillStyle = color; ctx.globalAlpha = op;
+  ctx.shadowColor = 'rgba(0,0,0,.4)'; ctx.shadowBlur = fontSize*0.15;
+  const m = fontSize * 0.8;
+  const tw = ctx.measureText(text).width;
+  if (pos === 'tile') {
+    ctx.textAlign='left'; ctx.textBaseline='top'; ctx.save(); ctx.rotate(-Math.PI/12);
+    const stepX = tw + fontSize*2, stepY = fontSize*3;
+    for (let y=-cv.height; y<cv.height*1.5; y+=stepY) for (let x=-cv.width; x<cv.width*1.5; x+=stepX) ctx.fillText(text, x, y);
+    ctx.restore();
+  } else {
+    let x, y;
+    ctx.textBaseline = 'alphabetic';
+    if (pos==='center') { ctx.textAlign='center'; x=cv.width/2; y=cv.height/2; }
+    else {
+      ctx.textAlign = (pos==='br'||pos==='tr') ? 'right' : 'left';
+      x = (pos==='br'||pos==='tr') ? cv.width-m : m;
+      y = (pos==='br'||pos==='bl') ? cv.height-m : m+fontSize;
+    }
+    ctx.fillText(text, x, y);
+  }
+  ctx.globalAlpha = 1;
+  const out = cv.toDataURL('image/png');
+  _tbState.out = out;
+  document.getElementById('tbWmPreview').src = out;
+}
+function tbWmSave() { _tbSaveAsset(_tbState.out, _tbState.origName+'-watermark.png'); closeModal(); if (document.getElementById('view-assets').classList.contains('active')) renderAssets(); }
+
+// ---------- 5) EKSTRAK PALET WARNA ----------
+function tbPalette() {
+  _tbState = {};
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">Ekstrak Palet Warna</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <label class="tm-drop"><svg class="ico"><use href="#i-palette"/></svg>
+      <div style="font-weight:600;color:var(--text-secondary)">Klik untuk pilih gambar</div>
+      <input type="file" accept="image/*" style="display:none" onchange="tbPalettePick(event)"></label>
+    <div id="tbPalBody"></div>
+  `);
+}
+async function tbPalettePick(ev) {
+  const file = ev.target.files[0]; if (!file) return;
+  const img = await _tbLoadImg(await _tbReadFile(file));
+  // downscale untuk kecepatan
+  const S = 80;
+  const cv = document.createElement('canvas'); cv.width=S; cv.height=S;
+  const ctx = cv.getContext('2d'); ctx.drawImage(img,0,0,S,S);
+  const data = ctx.getImageData(0,0,S,S).data;
+  // kuantisasi sederhana: bucket 4 bit per channel
+  const buckets = {};
+  for (let i=0;i<data.length;i+=4) {
+    const a = data[i+3]; if (a<125) continue;
+    const r=data[i], g=data[i+1], b=data[i+2];
+    const key = (r>>5)+','+(g>>5)+','+(b>>5);
+    if (!buckets[key]) buckets[key]={r:0,g:0,b:0,n:0};
+    buckets[key].r+=r; buckets[key].g+=g; buckets[key].b+=b; buckets[key].n++;
+  }
+  const arr = Object.values(buckets).sort((a,b)=>b.n-a.n).slice(0,6).map(bk=>{
+    const r=Math.round(bk.r/bk.n), g=Math.round(bk.g/bk.n), b=Math.round(bk.b/bk.n);
+    const hex = '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+    return hex;
+  });
+  _tbState = { palette: arr };
+  document.getElementById('tbPalBody').innerHTML = `
+    <div class="tm-preview"><div class="obj-img-box" style="max-width:200px;margin:0 auto"><img src="${img.src}"></div></div>
+    <div class="tm-swatches">${arr.map(h=>`<div class="tm-sw" onclick="tbPaletteCopy('${h}')"><div class="tm-sw-c" style="background:${h}"></div><div class="tm-sw-hex">${h}</div></div>`).join('')}</div>
+    <div class="tm-meta">Klik warna untuk menyalin kode HEX.</div>
+    <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:.5rem">
+      <button class="btn btn-secondary" style="flex:1" onclick="tbPaletteCopyAll()"><svg class="ico"><use href="#i-doc"/></svg> Salin semua HEX</button>
+    </div>`;
+}
+function tbPaletteCopy(h) { navigator.clipboard?.writeText(h); toast('Disalin', h+' disalin ke clipboard','success'); }
+function tbPaletteCopyAll() { const t=(_tbState.palette||[]).join(', '); navigator.clipboard?.writeText(t); toast('Disalin','Semua kode warna disalin','success'); }
+
+// ---------- 6) KONVERSI FORMAT ----------
+function tbConvert() {
+  _tbState = {};
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">Konversi Format</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <label class="tm-drop"><svg class="ico"><use href="#i-image"/></svg>
+      <div style="font-weight:600;color:var(--text-secondary)">Klik untuk pilih gambar</div>
+      <input type="file" accept="image/*" style="display:none" onchange="tbConvertPick(event)"></label>
+    <div id="tbConvBody"></div>
+  `);
+}
+async function tbConvertPick(ev) {
+  const file = ev.target.files[0]; if (!file) return;
+  const img = await _tbLoadImg(await _tbReadFile(file));
+  _tbState = { img, origName:(file.name||'gambar').replace(/\.[^.]+$/,'') };
+  document.getElementById('tbConvBody').innerHTML = `
+    <div class="tm-row"><label>Konversi ke</label>
+      <select class="form-select" id="tbConvFmt" onchange="tbConvertRun()" style="flex:1">
+        <option value="image/png">PNG (mendukung transparan)</option>
+        <option value="image/jpeg">JPG (foto)</option>
+        <option value="image/webp">WebP (modern)</option>
+      </select></div>
+    <div class="tm-preview"><div class="obj-img-box" style="max-width:260px;margin:0 auto"><img id="tbConvPreview"></div></div>
+    <div class="tm-meta" id="tbConvMeta"></div>
+    <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:.5rem">
+      <button class="btn btn-primary" style="flex:1" onclick="tbConvertSave()"><svg class="ico"><use href="#i-save"/></svg> Simpan ke Assets</button>
+      <button class="btn btn-secondary" onclick="tbConvertDownload()"><svg class="ico"><use href="#i-download"/></svg> Download</button>
+    </div>`;
+  tbConvertRun();
+}
+function tbConvertRun() {
+  const fmt = document.getElementById('tbConvFmt').value;
+  const { img } = _tbState;
+  const cv = document.createElement('canvas'); cv.width=img.naturalWidth; cv.height=img.naturalHeight;
+  const ctx = cv.getContext('2d');
+  if (fmt==='image/jpeg') { ctx.fillStyle='#fff'; ctx.fillRect(0,0,cv.width,cv.height); }
+  ctx.drawImage(img,0,0);
+  const out = cv.toDataURL(fmt, 0.95);
+  _tbState.out = out; _tbState.fmt = fmt;
+  document.getElementById('tbConvPreview').src = out;
+  document.getElementById('tbConvMeta').textContent = `${cv.width}×${cv.height}px · ${_tbHumanSize(_tbDataUrlBytes(out))}`;
+}
+function tbConvertSave() { const ext=_tbState.fmt.split('/')[1].replace('jpeg','jpg'); _tbSaveAsset(_tbState.out, `${_tbState.origName}.${ext}`); closeModal(); if (document.getElementById('view-assets').classList.contains('active')) renderAssets(); }
+function tbConvertDownload() { const ext=_tbState.fmt.split('/')[1].replace('jpeg','jpg'); _tbDownload(_tbState.out, `${_tbState.origName}.${ext}`); }
+
+// ---------- 7) UBAH UKURAN ----------
+function tbResize() {
+  _tbState = {};
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">Ubah Ukuran</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <label class="tm-drop"><svg class="ico"><use href="#i-target"/></svg>
+      <div style="font-weight:600;color:var(--text-secondary)">Klik untuk pilih gambar</div>
+      <input type="file" accept="image/*" style="display:none" onchange="tbResizePick(event)"></label>
+    <div id="tbResBody"></div>
+  `);
+}
+async function tbResizePick(ev) {
+  const file = ev.target.files[0]; if (!file) return;
+  const img = await _tbLoadImg(await _tbReadFile(file));
+  _tbState = { img, origName:(file.name||'gambar').replace(/\.[^.]+$/,''), ratio: img.naturalWidth/img.naturalHeight };
+  document.getElementById('tbResBody').innerHTML = `
+    <div class="tm-row"><label>Lebar (px)</label><input type="number" class="form-input" id="tbResW" value="${img.naturalWidth}" oninput="tbResizeSync('w')" style="flex:1"></div>
+    <div class="tm-row"><label>Tinggi (px)</label><input type="number" class="form-input" id="tbResH" value="${img.naturalHeight}" oninput="tbResizeSync('h')" style="flex:1"></div>
+    <div class="tm-row"><label>Kunci rasio</label><input type="checkbox" id="tbResLock" checked style="width:auto"></div>
+    <div class="tm-meta">Asli: ${img.naturalWidth}×${img.naturalHeight}px</div>
+    <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:.5rem">
+      <button class="btn btn-primary" style="flex:1" onclick="tbResizeSave()"><svg class="ico"><use href="#i-save"/></svg> Simpan ke Assets</button>
+      <button class="btn btn-secondary" onclick="tbResizeDownload()"><svg class="ico"><use href="#i-download"/></svg> Download</button>
+    </div>`;
+}
+function tbResizeSync(from) {
+  if (!document.getElementById('tbResLock').checked) return;
+  const wEl = document.getElementById('tbResW'), hEl = document.getElementById('tbResH');
+  if (from==='w') hEl.value = Math.round(+wEl.value / _tbState.ratio);
+  else wEl.value = Math.round(+hEl.value * _tbState.ratio);
+}
+function _tbResizeOut() {
+  const w = Math.max(1, +document.getElementById('tbResW').value);
+  const h = Math.max(1, +document.getElementById('tbResH').value);
+  const cv = document.createElement('canvas'); cv.width=w; cv.height=h;
+  const ctx = cv.getContext('2d'); ctx.imageSmoothingQuality='high';
+  ctx.drawImage(_tbState.img, 0, 0, w, h);
+  return cv.toDataURL('image/png');
+}
+function tbResizeSave() { _tbSaveAsset(_tbResizeOut(), _tbState.origName+'-resize.png'); closeModal(); if (document.getElementById('view-assets').classList.contains('active')) renderAssets(); }
+function tbResizeDownload() { _tbDownload(_tbResizeOut(), _tbState.origName+'-resize.png'); }
+
+// ---------- 8) POTONG BENTUK (MASK) ----------
+function tbMask() {
+  _tbState = {};
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">Potong Bentuk (Mask)</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <label class="tm-drop"><svg class="ico"><use href="#i-scissors"/></svg>
+      <div style="font-weight:600;color:var(--text-secondary)">Klik untuk pilih gambar</div>
+      <input type="file" accept="image/*" style="display:none" onchange="tbMaskPick(event)"></label>
+    <div id="tbMaskBody"></div>
+  `);
+}
+async function tbMaskPick(ev) {
+  const file = ev.target.files[0]; if (!file) return;
+  const img = await _tbLoadImg(await _tbReadFile(file));
+  _tbState = { img, origName:(file.name||'gambar').replace(/\.[^.]+$/,'') };
+  document.getElementById('tbMaskBody').innerHTML = `
+    <div class="tm-row"><label>Bentuk</label>
+      <select class="form-select" id="tbMaskShape" onchange="tbMaskRun()" style="flex:1">
+        <option value="circle">Lingkaran</option>
+        <option value="rounded">Kotak membulat</option>
+        <option value="star">Bintang</option>
+        <option value="heart">Hati</option>
+        <option value="triangle">Segitiga</option>
+      </select></div>
+    <div class="tm-preview"><div class="obj-img-box obj-checker" style="max-width:280px;margin:0 auto"><img id="tbMaskPreview"></div></div>
+    <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:.5rem">
+      <button class="btn btn-primary" style="flex:1" onclick="tbMaskSave()"><svg class="ico"><use href="#i-save"/></svg> Simpan ke Assets</button>
+      <button class="btn btn-secondary" onclick="_tbDownload(_tbState.out, _tbState.origName+'-mask.png')"><svg class="ico"><use href="#i-download"/></svg> Download</button>
+    </div>`;
+  tbMaskRun();
+}
+function tbMaskRun() {
+  const shape = document.getElementById('tbMaskShape').value;
+  const { img } = _tbState;
+  const s = Math.min(img.naturalWidth, img.naturalHeight);
+  const cv = document.createElement('canvas'); cv.width=s; cv.height=s;
+  const ctx = cv.getContext('2d');
+  const ox = (img.naturalWidth - s)/2, oy = (img.naturalHeight - s)/2;
+  ctx.save();
+  _tbShapePath(ctx, shape, s);
+  ctx.clip();
+  ctx.drawImage(img, ox, oy, s, s, 0, 0, s, s);
+  ctx.restore();
+  const out = cv.toDataURL('image/png');
+  _tbState.out = out;
+  document.getElementById('tbMaskPreview').src = out;
+}
+function _tbShapePath(ctx, shape, s) {
+  ctx.beginPath();
+  const c = s/2;
+  if (shape === 'circle') { ctx.arc(c, c, c, 0, Math.PI*2); }
+  else if (shape === 'rounded') { const r=s*0.18; ctx.moveTo(r,0); ctx.arcTo(s,0,s,s,r); ctx.arcTo(s,s,0,s,r); ctx.arcTo(0,s,0,0,r); ctx.arcTo(0,0,s,0,r); }
+  else if (shape === 'triangle') { ctx.moveTo(c,s*0.05); ctx.lineTo(s*0.95,s*0.95); ctx.lineTo(s*0.05,s*0.95); }
+  else if (shape === 'star') {
+    const spikes=5, outer=c*0.95, inner=c*0.4; let rot=-Math.PI/2;
+    ctx.moveTo(c, c-outer);
+    for (let i=0;i<spikes;i++){ rot+=Math.PI/spikes; ctx.lineTo(c+Math.cos(rot)*inner, c+Math.sin(rot)*inner); rot+=Math.PI/spikes; ctx.lineTo(c+Math.cos(rot)*outer, c+Math.sin(rot)*outer); }
+  } else if (shape === 'heart') {
+    const w=s, h=s; ctx.moveTo(w/2, h*0.85);
+    ctx.bezierCurveTo(w*0.1, h*0.55, w*0.05, h*0.2, w*0.3, h*0.2);
+    ctx.bezierCurveTo(w*0.45, h*0.2, w/2, h*0.38, w/2, h*0.38);
+    ctx.bezierCurveTo(w/2, h*0.38, w*0.55, h*0.2, w*0.7, h*0.2);
+    ctx.bezierCurveTo(w*0.95, h*0.2, w*0.9, h*0.55, w/2, h*0.85);
+  }
+  ctx.closePath();
+}
+function tbMaskSave() { _tbSaveAsset(_tbState.out, _tbState.origName+'-mask.png'); closeModal(); if (document.getElementById('view-assets').classList.contains('active')) renderAssets(); }
+
+// ---------- 9) AMBIL FRAME VIDEO ----------
+function tbFrames() {
+  _tbState = {};
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">Ambil Frame Video</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <p class="crop-hint" style="text-align:left;margin-top:-.5rem">Ambil gambar diam (still) dari video untuk dijadikan thumbnail. Semua diproses di perangkatmu.</p>
+    <label class="tm-drop"><svg class="ico"><use href="#i-video"/></svg>
+      <div style="font-weight:600;color:var(--text-secondary)">Klik untuk pilih video</div>
+      <div style="font-size:.74rem;margin-top:.2rem">MP4 / WebM / MOV</div>
+      <input type="file" accept="video/*" style="display:none" onchange="tbFramesPick(event)"></label>
+    <div id="tbFramesBody"></div>
+  `);
+}
+async function tbFramesPick(ev) {
+  const file = ev.target.files[0]; if (!file) return;
+  const url = URL.createObjectURL(file);
+  const body = document.getElementById('tbFramesBody');
+  body.innerHTML = `<div class="tm-meta">Memuat video…</div>`;
+  const v = document.createElement('video');
+  v.preload = 'metadata'; v.muted = true; v.src = url;
+  v.onloadedmetadata = () => {
+    _tbState = { video:v, url, dur:v.duration, origName:(file.name||'video').replace(/\.[^.]+$/,'') };
+    body.innerHTML = `
+      <video src="${url}" controls style="width:100%;max-height:240px;border-radius:var(--r-md);background:#000"></video>
+      <div class="tm-row"><label>Detik ke</label>
+        <input type="range" id="tbFrTime" min="0" max="${v.duration.toFixed(2)}" step="0.1" value="0" oninput="tbFramesSeek()">
+        <span class="val" id="tbFrTimeVal">0:00</span></div>
+      <div class="tm-preview"><div class="obj-img-box" style="max-width:280px;margin:0 auto"><img id="tbFrPreview"></div></div>
+      <div class="tm-meta" id="tbFrMeta"></div>
+      <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:.5rem;flex-wrap:wrap">
+        <button class="btn btn-primary" style="flex:1" onclick="tbFramesSave()"><svg class="ico"><use href="#i-save"/></svg> Simpan frame</button>
+        <button class="btn btn-secondary" onclick="tbFramesDownload()"><svg class="ico"><use href="#i-download"/></svg> Download</button>
+        <button class="btn btn-ghost" onclick="tbFramesContactSheet()">Contact sheet (9 frame)</button>
+      </div>`;
+    tbFramesSeek();
+  };
+  v.onerror = () => { body.innerHTML = `<div class="tm-meta" style="color:var(--danger,#e05252)">Gagal memuat video. Coba format MP4/WebM.</div>`; };
+}
+function _tbGrabFrame(t) {
+  return new Promise((res) => {
+    const v = _tbState.video;
+    const onSeek = () => {
+      const cv = document.createElement('canvas');
+      cv.width = v.videoWidth; cv.height = v.videoHeight;
+      cv.getContext('2d').drawImage(v, 0, 0);
+      v.removeEventListener('seeked', onSeek);
+      res(cv.toDataURL('image/jpeg', 0.92));
+    };
+    v.addEventListener('seeked', onSeek);
+    v.currentTime = Math.min(t, _tbState.dur - 0.05);
+  });
+}
+async function tbFramesSeek() {
+  const t = +document.getElementById('tbFrTime').value;
+  document.getElementById('tbFrTimeVal').textContent = _tbFmtTime(t);
+  const out = await _tbGrabFrame(t);
+  _tbState.out = out;
+  document.getElementById('tbFrPreview').src = out;
+  const v = _tbState.video;
+  document.getElementById('tbFrMeta').textContent = `${v.videoWidth}×${v.videoHeight}px · pada ${_tbFmtTime(t)}`;
+}
+function tbFramesSave() { _tbSaveAsset(_tbState.out, `${_tbState.origName}-frame.jpg`); closeModal(); if (document.getElementById('view-assets').classList.contains('active')) renderAssets(); }
+function tbFramesDownload() { _tbDownload(_tbState.out, `${_tbState.origName}-frame.jpg`); }
+async function tbFramesContactSheet() {
+  toast('Membuat contact sheet…','Mengambil 9 frame','info');
+  const n = 9, cols = 3, rows = 3;
+  const v = _tbState.video;
+  const fw = 320, fh = Math.round(fw * v.videoHeight / v.videoWidth);
+  const cv = document.createElement('canvas'); cv.width = fw*cols; cv.height = fh*rows;
+  const ctx = cv.getContext('2d'); ctx.fillStyle = '#000'; ctx.fillRect(0,0,cv.width,cv.height);
+  for (let i=0;i<n;i++){
+    const t = (_tbState.dur * (i+0.5)) / n;
+    const src = await _tbGrabFrame(t);
+    const im = await _tbLoadImg(src);
+    ctx.drawImage(im, (i%cols)*fw, Math.floor(i/cols)*fh, fw, fh);
+  }
+  const out = cv.toDataURL('image/jpeg', 0.9);
+  _tbSaveAsset(out, `${_tbState.origName}-contactsheet.jpg`);
+  if (document.getElementById('view-assets').classList.contains('active')) renderAssets();
+}
+
+// ---------- 10) REKAM SUARA ----------
+function tbRecorder() {
+  _tbState = { chunks:[], rec:null, stream:null, timer:null, sec:0 };
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">Rekam Suara</h2>
+      <button class="modal-close" onclick="tbRecCleanup();closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <p class="crop-hint" style="text-align:left;margin-top:-.5rem">Rekam voiceover/narasi langsung. Izinkan akses mikrofon saat diminta.</p>
+    <div style="text-align:center;padding:1.5rem 0">
+      <div id="tbRecTime" style="font-size:2.5rem;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text-primary)">0:00</div>
+      <div id="tbRecState" style="font-size:.82rem;color:var(--text-muted);margin-top:.25rem">Siap merekam</div>
+    </div>
+    <div id="tbRecBtns" style="display:flex;gap:.6rem;justify-content:center">
+      <button class="btn btn-primary" id="tbRecStart" onclick="tbRecStart()"><svg class="ico"><use href="#i-mic"/></svg> Mulai Rekam</button>
+    </div>
+    <div id="tbRecResult"></div>
+  `);
+}
+async function tbRecStart() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+    _tbState.stream = stream;
+    const rec = new MediaRecorder(stream);
+    _tbState.rec = rec; _tbState.chunks = [];
+    rec.ondataavailable = (e) => { if (e.data.size) _tbState.chunks.push(e.data); };
+    rec.onstop = async () => {
+      const blob = new Blob(_tbState.chunks, { type: rec.mimeType || 'audio/webm' });
+      _tbState.out = await _tbBlobToDataUrl(blob);
+      document.getElementById('tbRecResult').innerHTML = `
+        <audio src="${_tbState.out}" controls style="width:100%;margin-top:1rem"></audio>
+        <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:.75rem">
+          <button class="btn btn-primary" style="flex:1" onclick="tbRecSave()"><svg class="ico"><use href="#i-save"/></svg> Simpan ke Assets</button>
+          <button class="btn btn-secondary" onclick="_tbDownload(_tbState.out,'rekaman-'+Date.now()+'.webm')"><svg class="ico"><use href="#i-download"/></svg> Download</button>
+        </div>`;
+    };
+    rec.start();
+    _tbState.sec = 0;
+    document.getElementById('tbRecState').textContent = '● Merekam…';
+    document.getElementById('tbRecBtns').innerHTML = `<button class="btn btn-danger" onclick="tbRecStop()"><svg class="ico"><use href="#i-x"/></svg> Stop</button>`;
+    _tbState.timer = setInterval(()=>{ _tbState.sec++; document.getElementById('tbRecTime').textContent = _tbFmtTime(_tbState.sec); }, 1000);
+  } catch (e) {
+    toast('Mikrofon ditolak','Izinkan akses mikrofon untuk merekam','error');
+  }
+}
+function tbRecStop() {
+  if (_tbState.rec && _tbState.rec.state !== 'inactive') _tbState.rec.stop();
+  if (_tbState.timer) clearInterval(_tbState.timer);
+  if (_tbState.stream) _tbState.stream.getTracks().forEach(t=>t.stop());
+  document.getElementById('tbRecState').textContent = 'Selesai';
+  document.getElementById('tbRecBtns').innerHTML = `<button class="btn btn-secondary" onclick="tbRecorder()"><svg class="ico"><use href="#i-refresh"/></svg> Rekam ulang</button>`;
+}
+function tbRecCleanup() {
+  if (_tbState.timer) clearInterval(_tbState.timer);
+  if (_tbState.rec && _tbState.rec.state !== 'inactive') try { _tbState.rec.stop(); } catch(e){}
+  if (_tbState.stream) _tbState.stream.getTracks().forEach(t=>t.stop());
+}
+function tbRecSave() { _tbSaveAsset(_tbState.out, 'Voiceover '+new Date().toLocaleDateString('id-ID'), 'audio'); closeModal(); if (document.getElementById('view-assets').classList.contains('active')) renderAssets(); }
+
+// ---------- 11) POTONG AUDIO ----------
+function tbAudioTrim() {
+  _tbState = {};
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">Potong Audio</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <label class="tm-drop"><svg class="ico"><use href="#i-clock"/></svg>
+      <div style="font-weight:600;color:var(--text-secondary)">Klik untuk pilih audio</div>
+      <div style="font-size:.74rem;margin-top:.2rem">MP3 / WAV / WebM / M4A</div>
+      <input type="file" accept="audio/*" style="display:none" onchange="tbAudioPick(event)"></label>
+    <div id="tbAudioBody"></div>
+  `);
+}
+async function tbAudioPick(ev) {
+  const file = ev.target.files[0]; if (!file) return;
+  const body = document.getElementById('tbAudioBody');
+  body.innerHTML = `<div class="tm-meta">Mendekode audio…</div>`;
+  try {
+    const buf = await file.arrayBuffer();
+    const AC = window.AudioContext || window.webkitAudioContext;
+    const actx = new AC();
+    const audioBuf = await actx.decodeAudioData(buf.slice(0));
+    _tbState = { audioBuf, actx, origName:(file.name||'audio').replace(/\.[^.]+$/,''), dur:audioBuf.duration, url:URL.createObjectURL(file) };
+    const d = audioBuf.duration;
+    body.innerHTML = `
+      <audio src="${_tbState.url}" controls style="width:100%;margin:.5rem 0"></audio>
+      <div class="tm-row"><label>Mulai</label><input type="range" id="tbAuStart" min="0" max="${d.toFixed(2)}" step="0.05" value="0" oninput="tbAudioUpd()"><span class="val" id="tbAuStartVal">0:00</span></div>
+      <div class="tm-row"><label>Selesai</label><input type="range" id="tbAuEnd" min="0" max="${d.toFixed(2)}" step="0.05" value="${d.toFixed(2)}" oninput="tbAudioUpd()"><span class="val" id="tbAuEndVal">${_tbFmtTime(d)}</span></div>
+      <div class="tm-row"><label>Fade in/out</label><input type="checkbox" id="tbAuFade" checked style="width:auto"></div>
+      <div class="tm-meta" id="tbAuMeta"></div>
+      <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:.5rem">
+        <button class="btn btn-primary" style="flex:1" onclick="tbAudioExport(true)"><svg class="ico"><use href="#i-save"/></svg> Potong & Simpan (WAV)</button>
+        <button class="btn btn-secondary" onclick="tbAudioExport(false)"><svg class="ico"><use href="#i-download"/></svg> Download</button>
+      </div>`;
+    tbAudioUpd();
+  } catch (e) {
+    body.innerHTML = `<div class="tm-meta" style="color:var(--danger,#e05252)">Gagal mendekode audio. Coba file MP3/WAV.</div>`;
+  }
+}
+function tbAudioUpd() {
+  let s = +document.getElementById('tbAuStart').value, e = +document.getElementById('tbAuEnd').value;
+  if (s > e - 0.1) { s = Math.max(0, e - 0.1); document.getElementById('tbAuStart').value = s; }
+  document.getElementById('tbAuStartVal').textContent = _tbFmtTime(s);
+  document.getElementById('tbAuEndVal').textContent = _tbFmtTime(e);
+  document.getElementById('tbAuMeta').textContent = `Durasi hasil: ${_tbFmtTime(e - s)}`;
+}
+function _tbAudioBufToWav(buf) {
+  const numCh = buf.numberOfChannels, len = buf.length * numCh * 2 + 44, sr = buf.sampleRate;
+  const ab = new ArrayBuffer(len), view = new DataView(ab);
+  const wr = (o,s)=>{ for(let i=0;i<s.length;i++) view.setUint8(o+i, s.charCodeAt(i)); };
+  wr(0,'RIFF'); view.setUint32(4, len-8, true); wr(8,'WAVE'); wr(12,'fmt ');
+  view.setUint32(16,16,true); view.setUint16(20,1,true); view.setUint16(22,numCh,true);
+  view.setUint32(24,sr,true); view.setUint32(28,sr*numCh*2,true); view.setUint16(32,numCh*2,true); view.setUint16(34,16,true);
+  wr(36,'data'); view.setUint32(40, len-44, true);
+  let off = 44;
+  const chans = []; for (let c=0;c<numCh;c++) chans.push(buf.getChannelData(c));
+  for (let i=0;i<buf.length;i++) for (let c=0;c<numCh;c++){ let s=Math.max(-1,Math.min(1,chans[c][i])); view.setInt16(off, s<0?s*0x8000:s*0x7FFF, true); off+=2; }
+  return new Blob([ab], { type:'audio/wav' });
+}
+async function tbAudioExport(saveAsset) {
+  const s = +document.getElementById('tbAuStart').value, e = +document.getElementById('tbAuEnd').value;
+  const fade = document.getElementById('tbAuFade').checked;
+  const src = _tbState.audioBuf, sr = src.sampleRate;
+  const startF = Math.floor(s*sr), endF = Math.floor(e*sr), lenF = endF - startF;
+  if (lenF <= 0) { toast('Rentang salah','Atur mulai & selesai','warning'); return; }
+  const AC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+  const out = new (window.AudioContext||window.webkitAudioContext)().createBuffer(src.numberOfChannels, lenF, sr);
+  const fadeF = Math.min(Math.floor(sr*0.05), Math.floor(lenF/4));
+  for (let c=0;c<src.numberOfChannels;c++){
+    const inD = src.getChannelData(c), outD = out.getChannelData(c);
+    for (let i=0;i<lenF;i++){
+      let v = inD[startF+i] || 0;
+      if (fade){ if (i<fadeF) v*=i/fadeF; else if (i>lenF-fadeF) v*=(lenF-i)/fadeF; }
+      outD[i]=v;
+    }
+  }
+  const blob = _tbAudioBufToWav(out);
+  const dataUrl = await _tbBlobToDataUrl(blob);
+  if (saveAsset){ _tbSaveAsset(dataUrl, `${_tbState.origName}-potong.wav`, 'audio'); closeModal(); if (document.getElementById('view-assets').classList.contains('active')) renderAssets(); }
+  else _tbDownload(dataUrl, `${_tbState.origName}-potong.wav`);
+}
+
+// ---------- 12) AUDIOGRAM (WAVEFORM) ----------
+function tbWaveform() {
+  _tbState = {};
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">Audiogram (Waveform)</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <p class="crop-hint" style="text-align:left;margin-top:-.5rem">Render gelombang audio jadi gambar — bagus untuk post kutipan podcast/voiceover.</p>
+    <label class="tm-drop"><svg class="ico"><use href="#i-chart"/></svg>
+      <div style="font-weight:600;color:var(--text-secondary)">Klik untuk pilih audio</div>
+      <input type="file" accept="audio/*" style="display:none" onchange="tbWavePick(event)"></label>
+    <div id="tbWaveBody"></div>
+  `);
+}
+async function tbWavePick(ev) {
+  const file = ev.target.files[0]; if (!file) return;
+  const body = document.getElementById('tbWaveBody');
+  body.innerHTML = `<div class="tm-meta">Menganalisis audio…</div>`;
+  try {
+    const buf = await file.arrayBuffer();
+    const actx = new (window.AudioContext||window.webkitAudioContext)();
+    const audioBuf = await actx.decodeAudioData(buf.slice(0));
+    _tbState = { audioBuf, origName:(file.name||'audio').replace(/\.[^.]+$/,'') };
+    body.innerHTML = `
+      <div class="tm-row"><label>Warna bar</label><input type="color" id="tbWvColor" value="#d4af5a" oninput="tbWaveRun()"></div>
+      <div class="tm-row"><label>Latar</label><input type="color" id="tbWvBg" value="#100f0d" oninput="tbWaveRun()"></div>
+      <div class="tm-row"><label>Gaya</label>
+        <select class="form-select" id="tbWvStyle" onchange="tbWaveRun()" style="flex:1">
+          <option value="bars">Batang</option><option value="mirror">Cermin (tengah)</option>
+        </select></div>
+      <div class="tm-preview"><div class="obj-img-box" style="max-width:100%;width:100%;aspect-ratio:16/9"><img id="tbWvPreview" style="width:100%"></div></div>
+      <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:.5rem">
+        <button class="btn btn-primary" style="flex:1" onclick="tbWaveSave()"><svg class="ico"><use href="#i-save"/></svg> Simpan ke Assets</button>
+        <button class="btn btn-secondary" onclick="_tbDownload(_tbState.out,_tbState.origName+'-waveform.png')"><svg class="ico"><use href="#i-download"/></svg> Download</button>
+      </div>`;
+    tbWaveRun();
+  } catch (e) {
+    body.innerHTML = `<div class="tm-meta" style="color:var(--danger,#e05252)">Gagal mendekode audio. Coba MP3/WAV.</div>`;
+  }
+}
+function tbWaveRun() {
+  const color = document.getElementById('tbWvColor').value;
+  const bg = document.getElementById('tbWvBg').value;
+  const style = document.getElementById('tbWvStyle').value;
+  const W=1280, H=720, cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+  const ctx=cv.getContext('2d'); ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+  const data = _tbState.audioBuf.getChannelData(0);
+  const bars = 90, block = Math.floor(data.length/bars), gap=4;
+  const bw = (W - gap*(bars-1)) / bars;
+  ctx.fillStyle = color;
+  for (let i=0;i<bars;i++){
+    let max=0; for (let j=0;j<block;j++){ const v=Math.abs(data[i*block+j]||0); if(v>max)max=v; }
+    const bh = Math.max(4, max*H*0.8);
+    const x = i*(bw+gap);
+    if (style==='mirror'){ ctx.fillRect(x, H/2-bh/2, bw, bh); }
+    else { ctx.fillRect(x, H-bh-40, bw, bh); }
+  }
+  const out = cv.toDataURL('image/png');
+  _tbState.out = out;
+  document.getElementById('tbWvPreview').src = out;
+}
+function tbWaveSave() { _tbSaveAsset(_tbState.out, _tbState.origName+'-waveform.png'); closeModal(); if (document.getElementById('view-assets').classList.contains('active')) renderAssets(); }
+
+// ---------- 13) CEK PANJANG CAPTION ----------
+const PLATFORM_LIMITS = [
+  { nm:'Instagram caption', max:2200 },
+  { nm:'Instagram bio', max:150 },
+  { nm:'TikTok caption', max:2200 },
+  { nm:'X / Twitter', max:280 },
+  { nm:'YouTube judul', max:100 },
+  { nm:'YouTube deskripsi', max:5000 },
+  { nm:'Facebook post', max:63206 },
+  { nm:'LinkedIn post', max:3000 },
+  { nm:'Threads', max:500 },
+];
+function tbCounter() {
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">Cek Panjang Caption</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <textarea class="form-input" id="tbCntText" rows="6" placeholder="Tempel atau tulis caption di sini…" oninput="tbCounterRun()" style="width:100%;resize:vertical"></textarea>
+    <div id="tbCntStats" style="display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0;font-size:.85rem"></div>
+    <div id="tbCntLimits"></div>
+  `);
+  tbCounterRun();
+}
+function tbCounterRun() {
+  const t = document.getElementById('tbCntText').value || '';
+  const chars = t.length;
+  const words = t.trim() ? t.trim().split(/\s+/).length : 0;
+  const lines = t ? t.split('\n').length : 0;
+  const hashtags = (t.match(/#[\w\u00C0-\uFFFF]+/g)||[]).length;
+  document.getElementById('tbCntStats').innerHTML = `
+    <div><strong style="color:var(--accent);font-size:1.2rem">${chars}</strong> karakter</div>
+    <div><strong style="color:var(--accent);font-size:1.2rem">${words}</strong> kata</div>
+    <div><strong style="color:var(--accent);font-size:1.2rem">${lines}</strong> baris</div>
+    <div><strong style="color:var(--accent);font-size:1.2rem">${hashtags}</strong> hashtag</div>`;
+  document.getElementById('tbCntLimits').innerHTML = PLATFORM_LIMITS.map(p=>{
+    const ok = chars <= p.max;
+    const pct = Math.min(100, Math.round(chars/p.max*100));
+    return `<div style="margin-bottom:.6rem">
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.2rem">
+        <span>${p.nm}</span>
+        <span style="color:${ok?'var(--text-muted)':'var(--danger,#e05252)'};font-weight:600">${chars}/${p.max}${ok?'':' ⚠ lewat'}</span></div>
+      <div style="height:5px;border-radius:999px;background:var(--border);overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${ok?'var(--accent)':'var(--danger,#e05252)'}"></div></div></div>`;
+  }).join('');
+}
+
+// ---------- 14) QR CODE ----------
+let _qrLib = null;
+function tbQR() {
+  _tbState = {};
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">QR Code</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <div class="tm-row"><label>Isi / Link</label><input type="text" class="form-input" id="tbQrText" placeholder="https://instagram.com/kreator" oninput="tbQrRun()" style="flex:1"></div>
+    <div class="tm-row"><label>Warna</label><input type="color" id="tbQrColor" value="#100f0d" oninput="tbQrRun()"></div>
+    <div class="tm-row"><label>Latar</label><input type="color" id="tbQrBg" value="#ffffff" oninput="tbQrRun()"></div>
+    <div class="tm-preview"><div class="obj-img-box" style="max-width:240px;margin:0 auto;background:#fff"><img id="tbQrPreview"></div></div>
+    <div class="tm-meta" id="tbQrMeta">Ketik isi/link untuk membuat QR.</div>
+    <div class="modal-footer" id="tbQrFooter" style="display:none;gap:.6rem;margin-top:.5rem">
+      <button class="btn btn-primary" style="flex:1" onclick="tbQrSave()"><svg class="ico"><use href="#i-save"/></svg> Simpan ke Assets</button>
+      <button class="btn btn-secondary" onclick="_tbDownload(_tbState.out,'qrcode.png')"><svg class="ico"><use href="#i-download"/></svg> Download</button>
+    </div>
+  `);
+}
+async function tbQrRun() {
+  const text = document.getElementById('tbQrText').value.trim();
+  const meta = document.getElementById('tbQrMeta');
+  const footer = document.getElementById('tbQrFooter');
+  if (!text) { footer.style.display='none'; meta.textContent='Ketik isi/link untuk membuat QR.'; document.getElementById('tbQrPreview').src=''; return; }
+  meta.textContent = 'Membuat QR…';
+  try {
+    if (!_qrLib) { const mod = await import('https://esm.sh/qrcode@1.5.4'); _qrLib = mod.default || mod; }
+    const out = await _qrLib.toDataURL(text, { margin:2, width:512, color:{ dark:document.getElementById('tbQrColor').value, light:document.getElementById('tbQrBg').value } });
+    _tbState.out = out;
+    document.getElementById('tbQrPreview').src = out;
+    meta.textContent = '';
+    footer.style.display = 'flex';
+  } catch (e) {
+    meta.innerHTML = `<span style="color:var(--danger,#e05252)">Gagal membuat QR: ${escapeHtml(e.message||'')}</span>`;
+  }
+}
+function tbQrSave() { _tbSaveAsset(_tbState.out, 'QR Code', 'image'); closeModal(); if (document.getElementById('view-assets').classList.contains('active')) renderAssets(); }
+
+// ---------- 15) HAPUS METADATA ----------
+function tbMetadata() {
+  _tbState = {};
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">Hapus Metadata</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <p class="crop-hint" style="text-align:left;margin-top:-.5rem">Menghapus data tersembunyi (EXIF, lokasi GPS, info kamera) dengan menggambar ulang gambar. Lindungi privasimu sebelum posting.</p>
+    <label class="tm-drop"><svg class="ico"><use href="#i-shield"/></svg>
+      <div style="font-weight:600;color:var(--text-secondary)">Klik untuk pilih foto</div>
+      <input type="file" accept="image/*" style="display:none" onchange="tbMetaPick(event)"></label>
+    <div id="tbMetaBody"></div>
+  `);
+}
+async function tbMetaPick(ev) {
+  const file = ev.target.files[0]; if (!file) return;
+  const img = await _tbLoadImg(await _tbReadFile(file));
+  const cv = document.createElement('canvas'); cv.width=img.naturalWidth; cv.height=img.naturalHeight;
+  cv.getContext('2d').drawImage(img,0,0);
+  const out = cv.toDataURL('image/png');
+  _tbState = { out, origName:(file.name||'foto').replace(/\.[^.]+$/,'') };
+  document.getElementById('tbMetaBody').innerHTML = `
+    <div class="tm-preview"><div class="obj-img-box" style="max-width:260px;margin:0 auto"><img src="${out}"></div></div>
+    <div class="tm-meta" style="color:var(--accent)">✓ Metadata dihapus. Gambar bersih siap diposting.</div>
+    <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:.5rem">
+      <button class="btn btn-primary" style="flex:1" onclick="tbMetaSave()"><svg class="ico"><use href="#i-save"/></svg> Simpan ke Assets</button>
+      <button class="btn btn-secondary" onclick="_tbDownload(_tbState.out,_tbState.origName+'-bersih.png')"><svg class="ico"><use href="#i-download"/></svg> Download</button>
+    </div>`;
+}
+function tbMetaSave() { _tbSaveAsset(_tbState.out, _tbState.origName+'-bersih.png'); closeModal(); if (document.getElementById('view-assets').classList.contains('active')) renderAssets(); }
+
 async function ceRemoveBg() {
   const el = ceDoc.els.find(x => x.id === ceSel);
   if (!el || el.type !== 'image') { toast('Pilih gambar dulu','Fitur ini hanya untuk elemen gambar','info'); return; }
   const btn = document.getElementById('ceRmBgBtn');
   const origHtml = btn ? btn.innerHTML : '';
-  const setBtn = (txt, dis) => { if (btn) { btn.innerHTML = txt; btn.disabled = dis; } };
-  setBtn('<svg class="ico"><use href="#i-refresh"/></svg> Memuat model AI…', true);
+  const setBtn = (txt, dis) => { if (btn) { btn.innerHTML = `<svg class="ico"><use href="#i-refresh"/></svg> ${txt}`; btn.disabled = dis; } };
+  setBtn('Memuat model AI…', true);
   try {
-    // Lazy-load library ESM dari CDN saat pertama dipakai (esm.sh membundel semua dependency)
-    if (!_imglyRemoveBg) {
-      const mod = await import('https://esm.sh/@imgly/background-removal@1.7.0');
-      _imglyRemoveBg = mod.removeBackground || (mod.default && mod.default.removeBackground) || mod.default;
-    }
-    if (typeof _imglyRemoveBg !== 'function') throw new Error('Modul tidak termuat');
     toast('Menghapus background…','Proses AI berjalan di perangkatmu. Mohon tunggu sebentar.','info');
-    setBtn('<svg class="ico"><use href="#i-refresh"/></svg> Memproses…', true);
-    const blob = await _imglyRemoveBg(el.src, {
-      debug: true,
-      output: { format: 'image/png' },
-      progress: (key, cur, total) => {
-        if (key && key.startsWith('fetch') && total) {
-          const pct = Math.round((cur/total)*100);
-          setBtn(`<svg class="ico"><use href="#i-refresh"/></svg> Unduh model ${pct}%`, true);
-        } else if (key && key.startsWith('compute')) {
-          setBtn('<svg class="ico"><use href="#i-refresh"/></svg> Memproses…', true);
-        }
-      },
-    });
-    const dataUrl = await new Promise((res, rej) => {
-      const fr = new FileReader();
-      fr.onload = () => res(fr.result);
-      fr.onerror = rej;
-      fr.readAsDataURL(blob);
-    });
+    const dataUrl = await removeBgFromSrc(el.src, (t) => setBtn(t, true));
     el.src = dataUrl;
     ceRenderStage();
     ceRenderProps();
     toast('Background dihapus','Latar gambar berhasil dibersihkan','success');
   } catch (err) {
     console.error('removeBg error', err);
-    setBtn(origHtml, false);
+    if (btn) { btn.innerHTML = origHtml; btn.disabled = false; }
     toast('Gagal hapus background', (err && err.message) ? err.message : 'Coba lagi, pastikan koneksi internet aktif', 'error');
   }
 }
@@ -6333,5 +7472,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3e828632ade7082',t:'MTc4OTk4NDE0Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3e8cfc68aa0f900',t:'MTc4OTk5MTAwMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
