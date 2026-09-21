@@ -526,6 +526,18 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .asset-card:hover .asset-del{opacity:1}
 /* modal form bits */
 .modal-form label{display:block;font-size:.82rem;font-weight:600;color:var(--text-secondary);margin:.9rem 0 .35rem}
+/* ===== AVATAR CROPPER ===== */
+.crop-stage{position:relative;width:280px;height:280px;max-width:100%;margin:0 auto;border-radius:var(--r-lg);overflow:hidden;background:var(--bg-elevated);touch-action:none;cursor:grab;user-select:none}
+.crop-stage:active{cursor:grabbing}
+.crop-stage canvas{display:block;width:100%;height:100%}
+.crop-mask{position:absolute;inset:0;pointer-events:none;box-shadow:0 0 0 9999px rgba(0,0,0,.55);border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%);width:240px;height:240px}
+.crop-ring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:240px;height:240px;border-radius:50%;border:2px dashed rgba(255,255,255,.85);pointer-events:none}
+.crop-hint{text-align:center;font-size:.78rem;color:var(--text-muted);margin:.75rem 0 .25rem}
+.crop-zoom-row{display:flex;align-items:center;gap:.75rem;margin:.9rem 0 .25rem}
+.crop-zoom-row .ico{width:18px;height:18px;color:var(--text-muted);flex-shrink:0}
+.crop-zoom{flex:1;-webkit-appearance:none;appearance:none;height:5px;border-radius:999px;background:var(--border);outline:none}
+.crop-zoom::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg-card)}
+.crop-zoom::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg-card)}
 .color-pick{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.3rem}
 .color-dot{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s}
 .color-dot.on{border-color:var(--text-primary);transform:scale(1.15)}
@@ -1859,6 +1871,12 @@ function openModal(content) {
 
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('show');
+  // bersihkan listener global cropper bila modal ditutup tanpa menyimpan
+  if (typeof _crop !== 'undefined' && _crop) {
+    if (_crop._mm) window.removeEventListener('mousemove', _crop._mm);
+    if (_crop._mu) window.removeEventListener('mouseup', _crop._mu);
+    _crop = null;
+  }
 }
 
 document.getElementById('modalOverlay').addEventListener('click', (e) => {
@@ -3816,41 +3834,140 @@ function updateAvatarDisplay() {
   document.getElementById('sidebarUserName').textContent = p.name || 'Kreator';
 }
 
+// State cropper (dipakai antar-fungsi)
+let _crop = null;
+
 function handleAvatarUpload(e) {
   const file = e.target.files[0];
   if (!file) return;
   if (file.size > 5 * 1024 * 1024) {
     toast('File terlalu besar','Maksimal 5MB','error');
+    e.target.value = '';
     return;
   }
   const reader = new FileReader();
   reader.onload = (ev) => {
     const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const size = 400;                 // output persegi 400x400 (tajam di lingkaran)
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext('2d');
-      // "Cover crop": skala gambar agar MENUTUPI penuh kotak, dipusatkan, tanpa gepeng.
-      const scale = Math.max(size / img.width, size / img.height);
-      const drawW = img.width * scale;   // lebar setelah diskalakan
-      const drawH = img.height * scale;  // tinggi setelah diskalakan
-      const dx = (size - drawW) / 2;     // pusatkan horizontal (crop kiri-kanan)
-      const dy = (size - drawH) / 2;     // pusatkan vertikal (crop atas-bawah)
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(img, dx, dy, drawW, drawH);
-      state.profile.avatar = canvas.toDataURL('image/jpeg', 0.9);
-      save('profile', state.profile);
-      updateAvatarDisplay();
-      toast('Foto berhasil diupload','Avatar Anda telah diperbarui','success');
-    };
+    img.onload = () => openAvatarCropper(img);
     img.onerror = () => toast('Error','Gagal memproses gambar','error');
     img.src = ev.target.result;
   };
   reader.onerror = () => toast('Error','Gagal membaca file','error');
   reader.readAsDataURL(file);
+  e.target.value = ''; // reset agar file yang sama bisa dipilih ulang
+}
+
+function openAvatarCropper(img) {
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">Atur Foto Profil</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <p class="crop-hint">Geser foto untuk memindahkan • gunakan slider untuk memperbesar. Area dalam lingkaran itulah yang akan tampil.</p>
+    <div class="crop-stage" id="cropStage">
+      <canvas id="cropCanvas"></canvas>
+      <div class="crop-mask"></div>
+      <div class="crop-ring"></div>
+    </div>
+    <div class="crop-zoom-row">
+      <svg class="ico"><use href="#i-image"/></svg>
+      <input type="range" class="crop-zoom" id="cropZoom" min="1" max="4" step="0.01" value="1">
+    </div>
+    <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:1.4rem">
+      <button class="btn btn-primary" style="flex:1" onclick="applyAvatarCrop()"><svg class="ico"><use href="#i-check"/></svg> Simpan Foto</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Batal</button>
+    </div>
+  `);
+  // Ukuran render/canvas (persegi) & diameter lingkaran (dari CSS crop-ring = 240)
+  const view = 280;      // ukuran canvas tampilan (px CSS)
+  const circle = 240;    // diameter lingkaran output
+  const dpr = window.devicePixelRatio || 1;
+  const canvas = document.getElementById('cropCanvas');
+  canvas.width = view * dpr;
+  canvas.height = view * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  // skala minimum: foto harus menutupi lingkaran sepenuhnya
+  const minScale = Math.max(circle / img.width, circle / img.height);
+  _crop = { img, ctx, view, circle, dpr, scale: minScale, minScale, tx: view/2, ty: view/2, drag:false, lastX:0, lastY:0 };
+  const zoom = document.getElementById('cropZoom');
+  zoom.min = '1'; zoom.max = '4'; zoom.value = '1';
+  zoom.oninput = () => {
+    _crop.scale = _crop.minScale * parseFloat(zoom.value);
+    clampCrop(); drawCrop();
+  };
+
+  const stage = document.getElementById('cropStage');
+  const start = (x,y) => { _crop.drag=true; _crop.lastX=x; _crop.lastY=y; };
+  const move = (x,y) => {
+    if (!_crop.drag) return;
+    _crop.tx += (x - _crop.lastX);
+    _crop.ty += (y - _crop.lastY);
+    _crop.lastX = x; _crop.lastY = y;
+    clampCrop(); drawCrop();
+  };
+  const end = () => { _crop.drag=false; };
+  stage.onmousedown = (e)=>{ e.preventDefault(); start(e.clientX,e.clientY); };
+  window.addEventListener('mousemove', _crop._mm = (e)=>move(e.clientX,e.clientY));
+  window.addEventListener('mouseup', _crop._mu = end);
+  stage.ontouchstart = (e)=>{ const t=e.touches[0]; start(t.clientX,t.clientY); };
+  stage.ontouchmove = (e)=>{ e.preventDefault(); const t=e.touches[0]; move(t.clientX,t.clientY); };
+  stage.ontouchend = end;
+
+  clampCrop();
+  drawCrop();
+}
+
+// Jaga agar foto selalu menutupi lingkaran (tidak ada celah kosong)
+function clampCrop() {
+  const c = _crop; if (!c) return;
+  const w = c.img.width * c.scale;
+  const h = c.img.height * c.scale;
+  const cx = c.view/2, cy = c.view/2, r = c.circle/2;
+  // batas center gambar agar tepi lingkaran selalu tertutup
+  const maxDX = Math.max(0, w/2 - r);
+  const maxDY = Math.max(0, h/2 - r);
+  c.tx = Math.min(cx + maxDX, Math.max(cx - maxDX, c.tx));
+  c.ty = Math.min(cy + maxDY, Math.max(cy - maxDY, c.ty));
+}
+
+function drawCrop() {
+  const c = _crop; if (!c) return;
+  const { ctx, img, view, scale, tx, ty } = c;
+  ctx.clearRect(0, 0, view, view);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  const w = img.width * scale, h = img.height * scale;
+  ctx.drawImage(img, tx - w/2, ty - h/2, w, h);
+}
+
+function applyAvatarCrop() {
+  const c = _crop; if (!c) { closeModal(); return; }
+  const out = 400; // resolusi output tersimpan
+  const canvas = document.createElement('canvas');
+  canvas.width = out; canvas.height = out;
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  // Peta dari koordinat tampilan (lingkaran diameter c.circle di tengah view)
+  // ke output out×out. Faktor = out / circle.
+  const f = out / c.circle;
+  const r = c.circle/2;
+  // titik kiri-atas area lingkaran dalam koordinat view
+  const originX = c.view/2 - r;
+  const originY = c.view/2 - r;
+  const w = c.img.width * c.scale, h = c.img.height * c.scale;
+  const imgX = (c.tx - w/2 - originX) * f;
+  const imgY = (c.ty - h/2 - originY) * f;
+  ctx.drawImage(c.img, imgX, imgY, w * f, h * f);
+  state.profile.avatar = canvas.toDataURL('image/jpeg', 0.9);
+  save('profile', state.profile);
+  updateAvatarDisplay();
+  // bersihkan listener global
+  if (c._mm) window.removeEventListener('mousemove', c._mm);
+  if (c._mu) window.removeEventListener('mouseup', c._mu);
+  _crop = null;
+  closeModal();
+  toast('Foto berhasil disimpan','Avatar Anda telah diperbarui','success');
 }
 
 function removeAvatar() {
@@ -6167,5 +6284,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3e7c7b8a84b2f2a',t:'MTc4OTk4MDE4NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3e7db509eb45fd9',t:'MTc4OTk4MDk4Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
