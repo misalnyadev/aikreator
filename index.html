@@ -579,6 +579,45 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .tm-sw{width:64px;text-align:center;cursor:pointer}
 .tm-sw-c{width:64px;height:64px;border-radius:var(--r-md);border:1px solid var(--border)}
 .tm-sw-hex{font-size:.68rem;color:var(--text-muted);margin-top:.25rem;font-family:monospace}
+/* ===== KARAKTER ===== */
+.char-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;cursor:pointer;transition:all .18s;display:flex;flex-direction:column}
+.char-card:hover{transform:translateY(-3px);border-color:var(--accent)}
+.char-avatar{width:100%;aspect-ratio:1;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.char-avatar img{width:100%;height:100%;object-fit:cover}
+.char-avatar .ph{color:var(--text-muted)}
+.char-avatar .ph .ico{width:40px;height:40px}
+.char-badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.6);color:#fff;font-size:.66rem;font-weight:600;padding:.2rem .5rem;border-radius:999px;backdrop-filter:blur(4px)}
+.char-body{padding:.85rem}
+.char-name{font-weight:700;font-size:.95rem;margin-bottom:.2rem}
+.char-tag{font-size:.74rem;color:var(--text-muted);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.char-refs{display:flex;gap:.25rem;margin-top:.5rem}
+.char-ref-thumb{width:28px;height:28px;border-radius:4px;object-fit:cover;border:1px solid var(--border)}
+.char-ref-more{width:28px;height:28px;border-radius:4px;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;font-size:.66rem;color:var(--text-muted);border:1px solid var(--border)}
+/* editor */
+.che-tabs{display:flex;gap:.4rem;margin-bottom:1.25rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.che-tab{padding:.55rem .9rem;border:none;background:transparent;color:var(--text-muted);cursor:pointer;font-family:inherit;font-size:.84rem;font-weight:600;border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;align-items:center;gap:.4rem}
+.che-tab.on{color:var(--accent);border-bottom-color:var(--accent)}
+.che-tab .ico{width:15px;height:15px}
+.che-pane{display:none}
+.che-pane.on{display:block}
+.che-refgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:.6rem;margin-top:.75rem}
+.che-ref{position:relative;aspect-ratio:1;border-radius:var(--r-md);overflow:hidden;border:1px solid var(--border);background:var(--bg-elevated)}
+.che-ref img{width:100%;height:100%;object-fit:cover}
+.che-ref .del{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);border:none;color:#fff;width:22px;height:22px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.che-ref .del .ico{width:12px;height:12px}
+.che-ref.master::after{content:'Master';position:absolute;bottom:0;left:0;right:0;background:var(--accent);color:#fff;font-size:.6rem;font-weight:700;text-align:center;padding:1px}
+.che-add{aspect-ratio:1;border:2px dashed var(--border);border-radius:var(--r-md);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);gap:.25rem;font-size:.72rem}
+.che-add:hover{border-color:var(--accent);color:var(--accent)}
+.che-add .ico{width:22px;height:22px}
+.che-hint{font-size:.76rem;color:var(--text-muted);line-height:1.5;background:var(--bg-elevated);border-radius:var(--r-md);padding:.7rem .85rem;margin:.5rem 0}
+.che-gen-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin:.75rem 0}
+.char-mode-opt{flex:1;min-width:200px;display:flex;gap:.6rem;align-items:center;padding:.75rem .85rem;border:2px solid var(--border);border-radius:var(--r-md);cursor:pointer;transition:all .15s;background:var(--bg-card)}
+.char-mode-opt:hover{border-color:var(--accent)}
+.char-mode-opt.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.char-mode-opt .ico{width:22px;height:22px;color:var(--accent);flex-shrink:0}
+.char-mode-opt .cm-t{font-weight:700;font-size:.85rem}
+.char-mode-opt .cm-d{font-size:.72rem;color:var(--text-muted);line-height:1.35}
+.char-webcam-live{width:100%;max-width:360px;border-radius:var(--r-md);background:#000;margin:.5rem 0;display:block}
 .color-pick{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.3rem}
 .color-dot{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s}
 .color-dot.on{border-color:var(--text-primary);transform:scale(1.15)}
@@ -817,6 +856,10 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
       <div class="nav-item" data-label="Assets" data-view="assets">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
         Assets
+      </div>
+      <div class="nav-item" data-label="Karakter" data-view="characters">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Karakter
       </div>
     </div>
     <div class="nav-section">
@@ -1455,6 +1498,15 @@ Tips: atur & simpan API key dulu di menu Pengaturan.</div>
       <div id="assetGrid" class="ws-grid"></div>
     </div>
 
+    <!-- ===== KARAKTER (AI INFLUENCER / CHARACTER BIBLE) ===== -->
+    <div class="view" id="view-characters">
+      <div class="ws-toolbar">
+        <div class="tb-intro" style="margin:0;flex:1">Simpan karakter (AI Influencer, model UGC, tokoh film) lengkap dengan <strong>Character Bible</strong>, foto referensi & profil suara — agar setiap gambar, storyboard, dan video tetap <strong>konsisten</strong>. Terinspirasi alur Google Flow.</div>
+        <button class="btn btn-primary" onclick="openCharacterEditor()"><svg class="ico"><use href="#i-plus"/></svg> Karakter Baru</button>
+      </div>
+      <div id="characterGrid" class="tb-grid-inner" style="margin-top:1.25rem"></div>
+    </div>
+
     <!-- ===== KOTAK ALAT (TOOLBOX) ===== -->
     <div class="view" id="view-toolbox">
       <div class="tb-intro">Semua alat berjalan langsung di perangkatmu — gratis, tanpa API key, tanpa mengirim file ke server. Hasilnya bisa langsung disimpan ke Assets untuk produksi.</div>
@@ -1876,6 +1928,7 @@ let state = {
   homeMode: localStorage.getItem('kh_homeMode') || '',
   projects: JSON.parse(localStorage.getItem('kh_projects') || '[]'),
   assets: JSON.parse(localStorage.getItem('kh_assets') || '[]'),
+  characters: JSON.parse(localStorage.getItem('kh_characters') || '[]'),
   assetFilter: 'all'
 };
 
@@ -1925,6 +1978,9 @@ function openModal(content) {
 
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('show');
+  // bersihkan kamera/mic karakter bila masih aktif
+  try { if (typeof _charWebcamStream !== 'undefined' && _charWebcamStream) { _charWebcamStream.getTracks().forEach(t=>t.stop()); _charWebcamStream = null; } } catch(_){}
+  try { if (typeof _charVoiceRec !== 'undefined' && _charVoiceRec && _charVoiceRec.state === 'recording') _charVoiceRec.stop(); } catch(_){}
   // bersihkan listener global cropper bila modal ditutup tanpa menyimpan
   if (typeof _crop !== 'undefined' && _crop) {
     if (_crop._mm) window.removeEventListener('mousemove', _crop._mm);
@@ -1952,7 +2008,8 @@ const viewTitles = {
   aistudio: ['AI Studio', 'Chat dengan AI dari berbagai provider untuk generate konten'],
   profile: ['Profil Saya', 'Kelola informasi profil dan foto akun Anda'],
   settings: ['Pengaturan', 'Konfigurasi API key AI provider & preferensi aplikasi'],
-  toolbox: ['Kotak Alat', 'Kumpulan utility untuk produksi konten — semua di perangkatmu, tanpa API key']
+  toolbox: ['Kotak Alat', 'Kumpulan utility untuk produksi konten — semua di perangkatmu, tanpa API key'],
+  characters: ['Karakter', 'Simpan AI Influencer & tokoh dengan Character Bible untuk hasil konsisten']
 };
 
 function toggleSidebarCollapse() {
@@ -2000,6 +2057,7 @@ function switchView(viewId) {
     else if (viewId === 'analytics') renderAnalytics();
     else if (viewId === 'projects') renderProjects();
     else if (viewId === 'assets') renderAssets();
+    else if (viewId === 'characters') renderCharacters();
     else if (viewId === 'toolbox') renderToolbox();
     else if (viewId === 'flow') renderFlow();
     else if (viewId === 'ideas') { populateThemeSelect(); populatePlatformSelect('ideaPlatform'); }
@@ -3933,6 +3991,762 @@ const TOOLBOX = [
   { id:'qr',       ic:'i-grid',     name:'QR Code', desc:'Buat QR untuk link-in-bio, promo, atau giveaway. Simpan PNG.', fn:'tbQR', group:'Teks & Utilitas' },
   { id:'metadata', ic:'i-shield',   name:'Hapus Metadata', desc:'Strip EXIF/GPS dari foto sebelum posting demi privasi & keamanan.', fn:'tbMetadata', group:'Teks & Utilitas' },
 ];
+
+// ============================================================
+// KARAKTER (AI Influencer / Character Bible) — ala Google Flow
+// ============================================================
+const CHAR_ROLES = ['AI Influencer','Model UGC','Tokoh Film','Maskot Brand','Narator/Voice','Lainnya'];
+
+function renderCharacters() {
+  const grid = document.getElementById('characterGrid');
+  if (!grid) return;
+  const list = state.characters || [];
+  if (!list.length) {
+    grid.innerHTML = `<div class="ws-empty" style="grid-column:1/-1"><span class="em"><svg class="ico"><use href="#i-users"/></svg></span>Belum ada karakter.<br>Buat AI Influencer atau tokoh dengan Character Bible agar hasil gambar & video selalu konsisten.<br><br><button class="btn btn-primary" onclick="openCharacterEditor()"><svg class="ico"><use href="#i-plus"/></svg> Karakter Baru</button></div>`;
+    return;
+  }
+  grid.innerHTML = list.map(c => {
+    const master = (c.refs||[]).find(r => r.master) || (c.refs||[])[0];
+    const avatar = master ? `<img src="${master.url}" alt="${escapeHtml(c.name)}">` : `<span class="ph"><svg class="ico"><use href="#i-user"/></svg></span>`;
+    const extra = (c.refs||[]).length;
+    const refThumbs = (c.refs||[]).slice(0,4).map(r=>`<img class="char-ref-thumb" src="${r.url}">`).join('');
+    const more = extra > 4 ? `<div class="char-ref-more">+${extra-4}</div>` : '';
+    const voiceOn = c.voiceCfg?.locked;
+    return `<div class="char-card" onclick="openCharacterEditor('${c.id}')">
+      <div class="char-avatar">${avatar}${c.role?`<span class="char-badge">${escapeHtml(c.role)}</span>`:''}${c.mode==='real'?`<span class="char-badge" style="top:auto;bottom:8px;left:8px;background:rgba(34,139,84,.85)">Kreator Asli</span>`:''}${voiceOn?`<span class="char-badge" style="left:auto;right:8px;display:flex;align-items:center;gap:3px"><svg class="ico" style="width:11px;height:11px"><use href="#i-mic"/></svg>suara</span>`:''}</div>
+      <div class="char-body">
+        <div class="char-name">${escapeHtml(c.name||'Tanpa nama')}</div>
+        <div class="char-tag">${escapeHtml(c.tagline || (c.identity||'').slice(0,90) || 'Belum ada deskripsi')}</div>
+        ${(c.refs||[]).length?`<div class="char-refs">${refThumbs}${more}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+let _charEdit = null; // karakter yang sedang diedit (objek kerja)
+
+function openCharacterEditor(id) {
+  const existing = id ? (state.characters||[]).find(c => c.id === id) : null;
+  _charEdit = existing ? JSON.parse(JSON.stringify(existing)) : {
+    id: 'c'+Date.now(), name:'', role:'AI Influencer', tagline:'', mode:'fictional',
+    identity:'', bible:'', voice:'', refs:[], ts:Date.now(),
+    voiceCfg:{ provider:'gemini', voice:'Aoede', style:'', lang:'id-ID', sampleUrl:'', locked:false, ownVoiceUrl:'', mode:'ai' }
+  };
+  if (!_charEdit.voiceCfg) _charEdit.voiceCfg = { provider:'gemini', voice:'Aoede', style:_charEdit.voice||'', lang:'id-ID', sampleUrl:'', locked:false, ownVoiceUrl:'', mode:'ai' };
+  if (!_charEdit.mode) _charEdit.mode = 'fictional';
+  const c = _charEdit;
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title">${existing?'Edit Karakter':'Karakter Baru'}</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <div class="che-tabs">
+      <button class="che-tab on" data-pane="identity" onclick="charTab('identity')"><svg class="ico"><use href="#i-user"/></svg> Identitas</button>
+      <button class="che-tab" data-pane="refs" onclick="charTab('refs')"><svg class="ico"><use href="#i-image"/></svg> Foto Referensi</button>
+      <button class="che-tab" data-pane="bible" onclick="charTab('bible')"><svg class="ico"><use href="#i-doc"/></svg> Character Bible</button>
+      <button class="che-tab" data-pane="voice" onclick="charTab('voice')"><svg class="ico"><use href="#i-mic"/></svg> Suara</button>
+      <button class="che-tab" data-pane="produce" onclick="charTab('produce')"><svg class="ico"><use href="#i-sparkle"/></svg> Produksi</button>
+    </div>
+
+    <div class="che-pane on" id="chp-identity">
+      <label style="font-weight:600;font-size:.82rem;margin-bottom:.35rem;display:block">Jenis karakter</label>
+      <div class="char-mode-row" style="display:flex;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap">
+        <div class="char-mode-opt ${c.mode==='fictional'?'on':''}" data-mode="fictional" onclick="charSetMode('fictional')">
+          <svg class="ico"><use href="#i-sparkle"/></svg>
+          <div><div class="cm-t">Karakter AI (fiktif)</div><div class="cm-d">Buat AI Influencer/tokoh baru dari nol</div></div>
+        </div>
+        <div class="char-mode-opt ${c.mode==='real'?'on':''}" data-mode="real" onclick="charSetMode('real')">
+          <svg class="ico"><use href="#i-user"/></svg>
+          <div><div class="cm-t">Kreator Asli (aku sendiri)</div><div class="cm-d">Jadikan diri sendiri AI Influencer — wajah & suara asli</div></div>
+        </div>
+      </div>
+      <div class="ce-prop-group"><label>Nama karakter</label><input class="form-input" id="chName" value="${escapeHtml(c.name)}" placeholder="mis: Ayuna" oninput="_charEdit.name=this.value"></div>
+      <div class="ce-prop-group"><label>Peran</label><select class="form-select" id="chRole" onchange="_charEdit.role=this.value">${CHAR_ROLES.map(r=>`<option ${c.role===r?'selected':''}>${r}</option>`).join('')}</select></div>
+      <div class="ce-prop-group"><label>Tagline singkat</label><input class="form-input" id="chTagline" value="${escapeHtml(c.tagline)}" placeholder="mis: Gadis sebelah rumah, hangat & ceria" oninput="_charEdit.tagline=this.value"></div>
+      <div class="ce-prop-group"><label>Deskripsi identitas (dipakai untuk generate & bible)</label>
+        <textarea class="form-input" id="chIdentity" rows="6" placeholder="Deskripsikan penampilan detail: usia, wajah, rambut, kulit, gaya, kepribadian, gaya bicara. Makin detail makin konsisten. Boleh Bahasa Indonesia atau Inggris." oninput="_charEdit.identity=this.value">${escapeHtml(c.identity)}</textarea></div>
+      <div class="che-gen-actions">
+        <button class="btn btn-secondary btn-sm" onclick="charFillTemplate()"><svg class="ico"><use href="#i-doc"/></svg> Isi contoh template</button>
+      </div>
+      <div class="che-hint">💡 Tips: isi identitas sedetail mungkin (usia, wajah, rambut, kulit, gaya, kepribadian). Makin detail → makin konsisten hasil generate. Lalu buka tab <strong>Character Bible</strong> dan klik "Buat Bible dengan AI" untuk dokumen acuan lengkap ala Google Flow.</div>
+    </div>
+
+    <div class="che-pane" id="chp-refs">
+      <div class="che-hint" id="chRefHint">Unggah 1–8 foto wajah/pose karakter. Foto <strong>Master</strong> (yang pertama, bertanda) dipakai sebagai acuan utama saat generate gambar baru agar wajah tetap sama. Klik foto untuk jadikan Master.</div>
+      <div class="che-gen-actions" id="chWebcamRow" style="display:none">
+        <button class="btn btn-secondary btn-sm" onclick="charOpenWebcam()"><svg class="ico"><use href="#i-camera"/></svg> Ambil foto dari kamera</button>
+      </div>
+      <div id="chWebcamBox"></div>
+      <div class="che-refgrid" id="chRefGrid"></div>
+    </div>
+
+    <div class="che-pane" id="chp-bible">
+      <div class="che-gen-actions">
+        <button class="btn btn-primary btn-sm" id="chBibleBtn" onclick="charGenBible()"><svg class="ico"><use href="#i-sparkle"/></svg> Buat Bible dengan AI</button>
+        <button class="btn btn-secondary btn-sm" onclick="charCopyBible()"><svg class="ico"><use href="#i-doc"/></svg> Salin</button>
+        <button class="btn btn-secondary btn-sm" onclick="charDownloadBible()"><svg class="ico"><use href="#i-download"/></svg> Unduh .md</button>
+      </div>
+      <div class="ce-prop-group"><textarea class="form-input" id="chBible" rows="16" placeholder="Character Bible akan muncul di sini. Klik 'Buat Bible dengan AI', atau tempel bible buatanmu sendiri (mis. dari Google Flow)." oninput="_charEdit.bible=this.value" style="font-family:ui-monospace,monospace;font-size:.8rem;line-height:1.5">${escapeHtml(c.bible)}</textarea></div>
+    </div>
+
+    <div class="che-pane" id="chp-voice">
+      <div class="che-hint">🎙️ <strong>Voice Studio</strong> — audisi & "kostum" suara dulu: pilih voice, atur gaya bicara, coba sampai pas, baru tersimpan ke karakter. Setelah tersimpan, suara ini otomatis jadi referensi saat produksi video. Semua gratis via Puter (tanpa API key).</div>
+      <label style="font-weight:600;font-size:.82rem;margin-bottom:.35rem;display:block">Sumber suara</label>
+      <div class="char-mode-row" style="display:flex;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap">
+        <div class="char-mode-opt ${c.voiceCfg.mode!=='own'?'on':''}" data-vmode="ai" onclick="charSetVoiceMode('ai')">
+          <svg class="ico"><use href="#i-sparkle"/></svg>
+          <div><div class="cm-t">Suara AI</div><div class="cm-d">Pilih voice AI & atur gaya</div></div>
+        </div>
+        <div class="char-mode-opt ${c.voiceCfg.mode==='own'?'on':''}" data-vmode="own" onclick="charSetVoiceMode('own')">
+          <svg class="ico"><use href="#i-mic"/></svg>
+          <div><div class="cm-t">Suara asliku</div><div class="cm-d">Rekam/unggah suaramu sendiri</div></div>
+        </div>
+      </div>
+      <div id="chVoiceOwnBox" style="display:none">
+        <div class="che-hint">Rekam atau unggah sampel suaramu (10–30 detik, jelas & tanpa musik). Suaramu bisa dipakai <strong>langsung</strong> sebagai suara karakter, atau diubah pakai voice-changer AI. Klik "Kunci suara" bila sudah pas.</div>
+        <div class="che-gen-actions">
+          <button class="btn btn-secondary btn-sm" id="chVoiceRecBtn" onclick="charToggleVoiceRec()"><svg class="ico"><use href="#i-mic"/></svg> Mulai rekam</button>
+          <label class="btn btn-ghost btn-sm" style="cursor:pointer"><svg class="ico"><use href="#i-plus"/></svg> Unggah file<input type="file" accept="audio/*" style="display:none" onchange="charUploadOwnVoice(event)"></label>
+        </div>
+        <div id="chOwnVoiceOut"></div>
+      </div>
+      <div id="chVoiceAiBox">
+        <div class="ce-prop-row" style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <div class="ce-prop-group" style="flex:1;min-width:150px"><label>Mesin suara</label>
+            <select class="form-select" id="chVoiceProvider" onchange="charVoiceProviderChange()">
+              <option value="gemini">Gemini (natural, kontrol gaya)</option>
+              <option value="openai">OpenAI (ekspresif, kontrol gaya)</option>
+            </select></div>
+          <div class="ce-prop-group" style="flex:1;min-width:150px"><label>Pilih voice</label>
+            <select class="form-select" id="chVoiceName" onchange="_charSyncVoiceCfg()"></select></div>
+        </div>
+        <div class="ce-prop-group"><label>Gaya bicara / "kostum" suara (instructions)</label>
+          <textarea class="form-input" id="chVoiceStyle" rows="3" placeholder="mis: perempuan muda Indonesia, ceria & hangat, tempo santai seperti ngobrol dengan sahabat, terdengar sedang tersenyum, energi ringan, artikulasi jelas." oninput="_charSyncVoiceCfg()"></textarea></div>
+        <div class="ce-prop-group"><label>Bahasa</label>
+          <select class="form-select" id="chVoiceLang" onchange="_charSyncVoiceCfg()">
+            <option value="id-ID">Indonesia</option>
+            <option value="en-US">English (US)</option>
+            <option value="en-GB">English (UK)</option>
+          </select></div>
+        <div class="ce-prop-group"><label>Teks sampel untuk audisi</label>
+          <textarea class="form-input" id="chVoiceSample" rows="2">Halo semuanya, aku ${escapeHtml(c.name||'karakter')} — senang banget bisa nemenin kalian hari ini! Yuk kita mulai.</textarea></div>
+        <div class="che-gen-actions">
+          <button class="btn btn-primary btn-sm" id="chAuditionBtn" onclick="charAuditionVoice()"><svg class="ico"><use href="#i-play"/></svg> Coba suara (audisi)</button>
+          <button class="btn btn-ghost btn-sm" onclick="charTestVoice()" title="Preview cepat pakai suara browser (tanpa internet)">Preview browser</button>
+        </div>
+        <div id="chVoiceAuditionOut"></div>
+      </div>
+      <div class="che-hint" id="chVoiceSavedInfo" style="display:none"></div>
+    </div>
+
+    <div class="che-pane" id="chp-produce">
+      <div class="che-hint">Generate gambar baru karakter ini dengan pose/adegan berbeda — <strong>wajah tetap konsisten</strong> karena memakai foto Master + identitas sebagai acuan.</div>
+      <div class="ce-prop-group"><label>Adegan / pose yang diinginkan</label>
+        <input class="form-input" id="chScene" placeholder="mis: sedang memegang produk skincare, senyum, background kafe"></div>
+      <div class="ce-prop-group"><label>Rasio</label><select class="form-select" id="chRatio">
+        <option value="1024x1024">Persegi 1:1</option>
+        <option value="768x1344">Potret 9:16 (Reels/TikTok)</option>
+        <option value="1344x768">Lanskap 16:9</option></select></div>
+      <div class="che-gen-actions">
+        <button class="btn btn-primary" id="chGenImgBtn" onclick="charGenImage()"><svg class="ico"><use href="#i-sparkle"/></svg> Generate Gambar Konsisten</button>
+        <button class="btn btn-secondary" onclick="charBuildStoryboard()"><svg class="ico"><use href="#i-grid"/></svg> Buat Storyboard (AI)</button>
+      </div>
+      <div id="chProduceOut"></div>
+
+      <div style="border-top:1px solid var(--border);margin:1.25rem 0 1rem;padding-top:1rem">
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem"><svg class="ico" style="color:var(--accent)"><use href="#i-video"/></svg> Generate Video (AI)</div>
+        <div class="che-hint" id="chVidRefInfo">Bikin klip video dari karakter ini — <strong>foto Master (wajah) & suara terkunci otomatis jadi referensi</strong>. Model Google Veo/Seedance via Puter (gratis, tanpa API key). Butuh internet & beberapa menit render.</div>
+        <div class="ce-prop-group"><label>Naskah dialog karakter (opsional — untuk voiceover suara terkunci)</label>
+          <textarea class="form-input" id="chVidDialog" rows="2" placeholder="mis: Hai gais! Aku nemu skincare yang beneran bikin kulit glowing, wajib coba deh!"></textarea></div>
+        <div class="ce-prop-group"><label>Deskripsi gerakan / adegan video</label>
+          <textarea class="form-input" id="chVidScene" rows="3" placeholder="mis: berjalan santai di trotoar sambil tersenyum ke kamera, memegang produk, angin sepoi menerpa rambut"></textarea></div>
+        <div class="ce-prop-row" style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <div class="ce-prop-group" style="flex:1;min-width:130px"><label>Model</label>
+            <select class="form-select" id="chVidModel">
+              <option value="veo-3.1-lite">Veo 3.1 Lite (hemat, +audio)</option>
+              <option value="veo-3.1-fast">Veo 3.1 Fast (cepat, +audio)</option>
+              <option value="seedance">Seedance (alternatif)</option>
+            </select></div>
+          <div class="ce-prop-group" style="flex:1;min-width:110px"><label>Rasio</label>
+            <select class="form-select" id="chVidSize">
+              <option value="720x1280">9:16 (Reels/TikTok)</option>
+              <option value="1280x720">16:9 (YouTube)</option>
+            </select></div>
+          <div class="ce-prop-group" style="flex:1;min-width:90px"><label>Durasi</label>
+            <select class="form-select" id="chVidSecs"><option value="4">4 detik</option><option value="6">6 detik</option><option value="8">8 detik</option></select></div>
+        </div>
+        <label style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--text-secondary);margin:.25rem 0 .5rem">
+          <input type="checkbox" id="chVidUseRef" checked style="width:auto"> Pakai foto Master sebagai referensi wajah (image-to-video)</label>
+        <div class="che-gen-actions">
+          <button class="btn btn-primary" id="chGenVidBtn" onclick="charGenVideo()"><svg class="ico"><use href="#i-video"/></svg> Generate Video</button>
+          <button class="btn btn-ghost" id="chTestVidBtn" onclick="charGenVideo(true)" title="Sampel tanpa memakai kredit">Coba (test mode)</button>
+        </div>
+        <div id="chVidOut"></div>
+      </div>
+    </div>
+
+    <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:1.25rem;border-top:1px solid var(--border);padding-top:1rem">
+      <button class="btn btn-primary" style="flex:1" onclick="saveCharacter()"><svg class="ico"><use href="#i-save"/></svg> Simpan Karakter</button>
+      ${existing?`<button class="btn btn-danger" onclick="deleteCharacter('${c.id}')"><svg class="ico"><use href="#i-trash"/></svg> Hapus</button>`:''}
+      <button class="btn btn-ghost" onclick="closeModal()">Tutup</button>
+    </div>
+  `);
+  charRenderRefs();
+  charInitVoiceUI();
+  charApplyMode();
+  charSetVoiceMode(_charEdit.voiceCfg.mode === 'own' ? 'own' : 'ai');
+}
+
+// ---- Voice Studio ----
+const CHAR_VOICES = {
+  gemini: [
+    {id:'Aoede', label:'Aoede — perempuan, hangat & ceria'},
+    {id:'Kore', label:'Kore — perempuan, tegas & jernih'},
+    {id:'Leda', label:'Leda — perempuan, muda & ringan'},
+    {id:'Callirrhoe', label:'Callirrhoe — perempuan, lembut'},
+    {id:'Autonoe', label:'Autonoe — perempuan, cerah'},
+    {id:'Despina', label:'Despina — perempuan, halus'},
+    {id:'Puck', label:'Puck — laki-laki, energik'},
+    {id:'Charon', label:'Charon — laki-laki, dalam & mantap'},
+    {id:'Fenrir', label:'Fenrir — laki-laki, berwibawa'},
+    {id:'Orus', label:'Orus — laki-laki, hangat'}
+  ],
+  openai: [
+    {id:'coral', label:'Coral — perempuan, hangat'},
+    {id:'nova', label:'Nova — perempuan, cerah & ramah'},
+    {id:'shimmer', label:'Shimmer — perempuan, lembut'},
+    {id:'sage', label:'Sage — perempuan, tenang'},
+    {id:'alloy', label:'Alloy — netral, seimbang'},
+    {id:'echo', label:'Echo — laki-laki, jelas'},
+    {id:'onyx', label:'Onyx — laki-laki, dalam'},
+    {id:'ballad', label:'Ballad — laki-laki, ekspresif'},
+    {id:'ash', label:'Ash — laki-laki, mantap'}
+  ]
+};
+function charInitVoiceUI() {
+  const cfg = _charEdit.voiceCfg;
+  const provSel = document.getElementById('chVoiceProvider');
+  if (!provSel) return;
+  provSel.value = cfg.provider || 'gemini';
+  charVoiceProviderChange(true);
+  document.getElementById('chVoiceName').value = cfg.voice || CHAR_VOICES[provSel.value][0].id;
+  document.getElementById('chVoiceStyle').value = cfg.style || _charEdit.voice || '';
+  document.getElementById('chVoiceLang').value = cfg.lang || 'id-ID';
+  _charUpdateVoiceSavedInfo();
+}
+function charVoiceProviderChange(keep) {
+  const prov = document.getElementById('chVoiceProvider').value;
+  const sel = document.getElementById('chVoiceName');
+  sel.innerHTML = CHAR_VOICES[prov].map(v=>`<option value="${v.id}">${v.label}</option>`).join('');
+  if (!keep) { _charEdit.voiceCfg.provider = prov; _charEdit.voiceCfg.voice = CHAR_VOICES[prov][0].id; }
+  _charSyncVoiceCfg();
+}
+function _charSyncVoiceCfg() {
+  const c = _charEdit.voiceCfg;
+  c.provider = document.getElementById('chVoiceProvider').value;
+  c.voice = document.getElementById('chVoiceName').value;
+  c.style = document.getElementById('chVoiceStyle').value;
+  c.lang = document.getElementById('chVoiceLang').value;
+  _charEdit.voice = c.style; // jaga kompatibilitas field lama
+}
+function _charUpdateVoiceSavedInfo() {
+  const box = document.getElementById('chVoiceSavedInfo');
+  if (!box) return;
+  const c = _charEdit.voiceCfg;
+  if (c.locked && c.sampleUrl) {
+    box.style.display = 'block';
+    const label = c.mode === 'own' ? 'Suara asli kreator' : `${escapeHtml(c.provider)} · ${escapeHtml(c.voice)}`;
+    box.innerHTML = `✅ <strong>Suara terkunci</strong> untuk karakter ini (${label}). Sampel tersimpan & akan jadi referensi saat produksi video. <button class="btn btn-ghost btn-sm" style="margin-left:.5rem" onclick="charUnlockVoice()">Ganti suara</button>`;
+  } else { box.style.display = 'none'; }
+}
+async function charAuditionVoice() {
+  _charSyncVoiceCfg();
+  const c = _charEdit.voiceCfg;
+  const text = (document.getElementById('chVoiceSample').value || 'Halo, ini suara karakterku.').slice(0,2900);
+  const out = document.getElementById('chVoiceAuditionOut');
+  const btn = document.getElementById('chAuditionBtn');
+  const orig = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<svg class="ico"><use href="#i-refresh"/></svg> Membuat suara…';
+  out.innerHTML = `<div class="tm-meta">Menghasilkan audisi suara…</div>`;
+  try {
+    if (typeof puter === 'undefined' || !puter?.ai?.txt2speech) throw new Error('Puter.js belum termuat. Buka via https & pastikan online.');
+    const opts = { provider: c.provider, voice: c.voice };
+    if (c.style) opts.instructions = c.style;
+    if (c.provider === 'gemini') opts.model = 'gemini-2.5-flash-preview-tts';
+    if (c.provider === 'openai') opts.model = 'gpt-4o-mini-tts';
+    if (c.lang) opts.language = c.lang;
+    const audio = await puter.ai.txt2speech(text, opts);
+    const src = audio && (audio.src || (audio.querySelector && audio.querySelector('source')?.src));
+    if (!src) throw new Error('Tidak ada audio yang dihasilkan.');
+    _charEdit._lastVoiceSample = src;
+    out.innerHTML = `
+      <audio src="${src}" controls style="width:100%;margin-top:.5rem"></audio>
+      <div class="che-gen-actions">
+        <button class="btn btn-primary btn-sm" onclick="charLockVoice()"><svg class="ico"><use href="#i-save"/></svg> Pas! Kunci suara ini ke karakter</button>
+        <button class="btn btn-ghost btn-sm" onclick="charAuditionVoice()"><svg class="ico"><use href="#i-refresh"/></svg> Coba lagi</button>
+      </div>
+      <div class="tm-meta">Belum pas? Ganti voice/gaya di atas lalu "Coba suara" lagi. Kalau sudah pas, klik "Kunci suara".</div>`;
+    try { audio.play?.(); } catch(_){}
+  } catch (e) {
+    out.innerHTML = `<div class="tm-meta" style="color:var(--danger,#e05252)">Gagal: ${escapeHtml(e.message||'')}</div>`;
+  } finally { btn.disabled = false; btn.innerHTML = orig; }
+}
+function charLockVoice() {
+  _charSyncVoiceCfg();
+  _charEdit.voiceCfg.locked = true;
+  _charEdit.voiceCfg.sampleUrl = _charEdit._lastVoiceSample || '';
+  _charEdit.voiceCfg.sampleText = document.getElementById('chVoiceSample').value || '';
+  _charUpdateVoiceSavedInfo();
+  toast('Suara terkunci','Suara ini jadi referensi tetap karakter. Simpan karakter untuk menyimpan permanen.','success');
+}
+function charUnlockVoice() {
+  _charEdit.voiceCfg.locked = false;
+  _charUpdateVoiceSavedInfo();
+  toast('Silakan ganti','Atur ulang voice/gaya lalu audisi & kunci lagi.','info');
+}
+
+function charFillTemplate() {
+  if (!document.getElementById('chIdentity').value.trim() || confirm('Ganti isi identitas dengan contoh template?')) {
+    const tpl = `Young Indonesian woman, 21 years old, [peran: hijab lifestyle creator / beauty / dll]. [Pakaian khas: mis. dusty pink pashmina hijab dengan pin mutiara, blouse floral pink]. Warm bright genuine smile, gentle expressive brown eyes. Clean glowing natural skin dengan tekstur realistis. Bibir natural soft rose-nude. Proporsi ramping elegan, tinggi ~165 cm. Kepribadian: ramah, ceria, hangat, rendah hati, seperti sahabat sebelah rumah. Vibe: cozy, wholesome, trustworthy. Visual style: soft natural window light, 35mm cinematic look, subtle film grain.`;
+    document.getElementById('chIdentity').value = tpl;
+    _charEdit.identity = tpl;
+  }
+  const styleEl = document.getElementById('chVoiceStyle');
+  if (styleEl && !styleEl.value.trim()) {
+    const v = `Perempuan muda Indonesia awal 20-an: lembut, hangat, cerah, ramah; gaya vlog santai seperti ngobrol dengan sahabat; terdengar sedang tersenyum; tempo natural dengan jeda napas pas; energi ceria ringan; artikulasi jelas; hindari gaya formal/robotik.`;
+    styleEl.value = v; _charEdit.voice = v; _charSyncVoiceCfg();
+  }
+  toast('Template diisi','Sunting sesuai karaktermu, lalu buat Bible & audisi suara','success');
+}
+
+// ---- Mode: karakter fiktif vs kreator asli ----
+function charSetMode(mode) {
+  _charEdit.mode = mode;
+  document.querySelectorAll('.char-mode-opt[data-mode]').forEach(o => o.classList.toggle('on', o.dataset.mode===mode));
+  charApplyMode();
+  if (mode === 'real') {
+    // sarankan sumber suara asli
+    if (_charEdit.voiceCfg.mode !== 'own') charSetVoiceMode('own');
+    toast('Mode Kreator Asli','Unggah/ambil foto wajahmu di tab Foto, & rekam suaramu di tab Suara.','info');
+  }
+}
+function charApplyMode() {
+  const real = _charEdit.mode === 'real';
+  const wc = document.getElementById('chWebcamRow');
+  if (wc) wc.style.display = real ? 'flex' : 'none';
+  const hint = document.getElementById('chRefHint');
+  if (hint) hint.innerHTML = real
+    ? 'Ambil/unggah <strong>foto wajahmu sendiri</strong> (beberapa angle & ekspresi = hasil makin konsisten). Foto <strong>Master</strong> jadi acuan utama saat generate. Klik foto untuk jadikan Master.'
+    : 'Unggah 1–8 foto wajah/pose karakter. Foto <strong>Master</strong> (yang pertama, bertanda) dipakai sebagai acuan utama saat generate gambar baru agar wajah tetap sama. Klik foto untuk jadikan Master.';
+}
+
+// ---- Webcam capture untuk foto referensi ----
+let _charWebcamStream = null;
+async function charOpenWebcam() {
+  const box = document.getElementById('chWebcamBox');
+  try {
+    _charWebcamStream = await navigator.mediaDevices.getUserMedia({ video:{ width:1280, height:1280, facingMode:'user' }, audio:false });
+    box.innerHTML = `<video class="char-webcam-live" id="chWebcamVideo" autoplay playsinline muted></video>
+      <div class="che-gen-actions">
+        <button class="btn btn-primary btn-sm" onclick="charSnapWebcam()"><svg class="ico"><use href="#i-camera"/></svg> Jepret</button>
+        <button class="btn btn-ghost btn-sm" onclick="charCloseWebcam()">Tutup kamera</button>
+      </div>`;
+    document.getElementById('chWebcamVideo').srcObject = _charWebcamStream;
+  } catch (e) {
+    box.innerHTML = `<div class="tm-meta" style="color:var(--danger,#e05252)">Tidak bisa akses kamera: ${escapeHtml(e.message||'')}. Izinkan kamera di browser.</div>`;
+  }
+}
+function charSnapWebcam() {
+  const v = document.getElementById('chWebcamVideo');
+  if (!v) return;
+  const s = Math.min(v.videoWidth, v.videoHeight);
+  const cv = document.createElement('canvas'); cv.width = s; cv.height = s;
+  const ctx = cv.getContext('2d');
+  ctx.drawImage(v, (v.videoWidth-s)/2, (v.videoHeight-s)/2, s, s, 0, 0, s, s);
+  const url = cv.toDataURL('image/jpeg', 0.92);
+  _charEdit.refs = _charEdit.refs || [];
+  _charEdit.refs.push({ url, master: _charEdit.refs.length===0 });
+  charRenderRefs();
+  toast('Foto diambil','Ditambahkan ke referensi','success');
+}
+function charCloseWebcam() {
+  if (_charWebcamStream) { _charWebcamStream.getTracks().forEach(t=>t.stop()); _charWebcamStream = null; }
+  const box = document.getElementById('chWebcamBox'); if (box) box.innerHTML = '';
+}
+
+// ---- Sumber suara: AI vs suara asli ----
+function charSetVoiceMode(mode) {
+  _charEdit.voiceCfg.mode = mode;
+  document.querySelectorAll('.char-mode-opt[data-vmode]').forEach(o => o.classList.toggle('on', o.dataset.vmode===mode));
+  const aiBox = document.getElementById('chVoiceAiBox');
+  const ownBox = document.getElementById('chVoiceOwnBox');
+  if (aiBox) aiBox.style.display = mode==='own' ? 'none' : 'block';
+  if (ownBox) ownBox.style.display = mode==='own' ? 'block' : 'none';
+}
+let _charVoiceRec = null, _charVoiceChunks = [];
+async function charToggleVoiceRec() {
+  const btn = document.getElementById('chVoiceRecBtn');
+  if (_charVoiceRec && _charVoiceRec.state === 'recording') {
+    _charVoiceRec.stop();
+    return;
+  }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+    _charVoiceChunks = [];
+    _charVoiceRec = new MediaRecorder(stream);
+    _charVoiceRec.ondataavailable = e => { if (e.data.size) _charVoiceChunks.push(e.data); };
+    _charVoiceRec.onstop = async () => {
+      stream.getTracks().forEach(t=>t.stop());
+      const blob = new Blob(_charVoiceChunks, { type:_charVoiceChunks[0]?.type || 'audio/webm' });
+      const url = await _tbBlobToDataUrl(blob);
+      _charShowOwnVoice(url);
+      btn.innerHTML = '<svg class="ico"><use href="#i-mic"/></svg> Rekam ulang';
+    };
+    _charVoiceRec.start();
+    btn.innerHTML = '<svg class="ico"><use href="#i-x"/></svg> Stop rekam';
+    toast('Merekam…','Bicara jelas 10–30 detik, lalu klik Stop.','info');
+  } catch (e) {
+    toast('Gagal', 'Tidak bisa akses mikrofon: '+(e.message||''),'error');
+  }
+}
+async function charUploadOwnVoice(ev) {
+  const f = ev.target.files[0]; if (!f) return;
+  const url = await _tbBlobToDataUrl(f);
+  _charShowOwnVoice(url);
+  ev.target.value = '';
+}
+function _charShowOwnVoice(url) {
+  _charEdit.voiceCfg.ownVoiceUrl = url;
+  const box = document.getElementById('chOwnVoiceOut');
+  box.innerHTML = `
+    <div class="tm-meta">Sampel suaramu:</div>
+    <audio src="${url}" controls style="width:100%;margin:.35rem 0"></audio>
+    <div class="che-gen-actions">
+      <button class="btn btn-primary btn-sm" onclick="charLockOwnVoice(false)"><svg class="ico"><use href="#i-save"/></svg> Pakai suara asliku (kunci)</button>
+      <button class="btn btn-secondary btn-sm" onclick="charEnhanceOwnVoice()"><svg class="ico"><use href="#i-sparkle"/></svg> Bersihkan noise (AI)</button>
+    </div>
+    <div class="tm-meta">Suara asli ini akan dipakai untuk narasi & jadi referensi produksi video.</div>`;
+}
+async function charEnhanceOwnVoice() {
+  const url = _charEdit.voiceCfg.ownVoiceUrl;
+  if (!url) return;
+  const box = document.getElementById('chOwnVoiceOut');
+  const prev = box.innerHTML;
+  box.insertAdjacentHTML('beforeend', `<div class="tm-meta" id="chEnhStat">Membersihkan noise via AI…</div>`);
+  try {
+    if (typeof puter === 'undefined' || !puter?.ai?.speech2speech) throw new Error('Puter belum termuat');
+    // speech2speech dengan remove_background_noise, pertahankan karakter suara
+    const audio = await puter.ai.speech2speech(url, { remove_background_noise:true });
+    const src = audio && (audio.src || (audio.querySelector && audio.querySelector('source')?.src));
+    if (!src) throw new Error('Tidak ada hasil');
+    _charEdit.voiceCfg.ownVoiceUrl = src;
+    _charShowOwnVoice(src);
+    toast('Selesai','Noise dibersihkan','success');
+  } catch (e) {
+    document.getElementById('chEnhStat')?.remove();
+    toast('Gagal', e.message||'coba lagi','error');
+  }
+}
+function charLockOwnVoice() {
+  const c = _charEdit.voiceCfg;
+  if (!c.ownVoiceUrl) { toast('Belum ada','Rekam/unggah suaramu dulu','warning'); return; }
+  c.mode = 'own';
+  c.locked = true;
+  c.sampleUrl = c.ownVoiceUrl;
+  _charUpdateVoiceSavedInfo();
+  toast('Suara asli terkunci','Suaramu jadi referensi tetap karakter. Simpan karakter untuk permanen.','success');
+}
+
+function charTab(pane) {
+  document.querySelectorAll('.che-tab').forEach(t => t.classList.toggle('on', t.dataset.pane===pane));
+  document.querySelectorAll('.che-pane').forEach(p => p.classList.toggle('on', p.id==='chp-'+pane));
+}
+
+function charRenderRefs() {
+  const grid = document.getElementById('chRefGrid');
+  if (!grid) return;
+  const refs = _charEdit.refs || [];
+  grid.innerHTML = refs.map((r,i)=>`
+    <div class="che-ref ${r.master?'master':''}" onclick="charSetMaster(${i})" title="Klik untuk jadikan Master">
+      <img src="${r.url}">
+      <button class="del" onclick="event.stopPropagation();charDelRef(${i})"><svg class="ico"><use href="#i-x"/></svg></button>
+    </div>`).join('') + `
+    <label class="che-add"><svg class="ico"><use href="#i-plus"/></svg>Tambah foto
+      <input type="file" accept="image/*" multiple style="display:none" onchange="charAddRefs(event)"></label>`;
+}
+async function charAddRefs(ev) {
+  const files = [...ev.target.files];
+  for (const f of files) {
+    if (f.size > 8*1024*1024) { toast('Terlalu besar', f.name+' > 8MB, dilewati','warning'); continue; }
+    const url = await _tbReadFile(f);
+    _charEdit.refs = _charEdit.refs || [];
+    _charEdit.refs.push({ url, master: _charEdit.refs.length===0 });
+  }
+  ev.target.value = '';
+  charRenderRefs();
+}
+function charDelRef(i) {
+  const wasMaster = _charEdit.refs[i].master;
+  _charEdit.refs.splice(i,1);
+  if (wasMaster && _charEdit.refs.length) _charEdit.refs[0].master = true;
+  charRenderRefs();
+}
+function charSetMaster(i) {
+  _charEdit.refs.forEach((r,idx)=> r.master = (idx===i));
+  charRenderRefs();
+}
+
+async function charGenBible() {
+  const c = _charEdit;
+  if (!c.name && !c.identity) { toast('Isi dulu','Minimal nama & deskripsi identitas','warning'); charTab('identity'); return; }
+  const btn = document.getElementById('chBibleBtn');
+  const orig = btn.innerHTML; btn.disabled=true; btn.innerHTML='<svg class="ico"><use href="#i-refresh"/></svg> Membuat bible…';
+  try {
+    const prompt = `Kamu adalah production designer untuk karakter AI influencer/UGC. Buat "Character Bible" produksi yang lengkap dan terstruktur dalam Bahasa Indonesia untuk menjaga KONSISTENSI karakter di seluruh gambar, video, dan suara.
+
+Data karakter:
+- Nama: ${c.name||'(belum ada)'}
+- Peran: ${c.role||''}
+- Tagline: ${c.tagline||''}
+- Deskripsi identitas: ${c.identity||'(kembangkan dari nama & peran)'}
+- Profil suara: ${c.voice||'(kembangkan yang natural)'}
+
+Format keluaran = Markdown dengan bagian bernomor persis seperti ini:
+1. Identitas inti (persona, gaya konten)
+2. Identitas visual yang wajib dipertahankan (buat TABEL: Elemen | Spesifikasi penguncian — mencakup usia, wajah, kulit, rambut, makeup, tubuh/gerak, ekspresi, kamera, pencahayaan)
+3. Kepribadian
+4. Suara dan delivery (buat TABEL parameter: Tempo, Energi, Intonasi, Emosi, Jeda, Larangan)
+5. Bahasa dan catchphrase
+6. Mannerisme
+7. Batasan identitas (apa yang TIDAK boleh berubah)
+8. Disclosure dan hak penggunaan (ingatkan transparansi bahwa ini karakter AI)
+9. Checklist sebelum publikasi
+
+Tulis padat, spesifik, actionable. Jangan menambah basa-basi di luar dokumen.`;
+    const out = await callAI(prompt);
+    if (out && out.trim()) {
+      c.bible = out.trim();
+      document.getElementById('chBible').value = c.bible;
+      toast('Bible dibuat','Character Bible siap. Cek & sunting bila perlu.','success');
+    } else throw new Error('Kosong');
+  } catch (e) {
+    toast('Gagal', e.message || 'Coba lagi','error');
+  } finally { btn.disabled=false; btn.innerHTML=orig; }
+}
+function charCopyBible() { const t=document.getElementById('chBible').value; if(!t){toast('Kosong','Belum ada bible','info');return;} navigator.clipboard?.writeText(t); toast('Disalin','Character Bible disalin','success'); }
+function charDownloadBible() { const t=document.getElementById('chBible').value; if(!t){toast('Kosong','Belum ada bible','info');return;} const blob=new Blob([t],{type:'text/markdown'}); const url=URL.createObjectURL(blob); _tbDownload(url,(_charEdit.name||'karakter').replace(/\s+/g,'_')+'_bible.md'); setTimeout(()=>URL.revokeObjectURL(url),2000); }
+
+// bangun prompt gambar dari identitas + bible (ringkas)
+function _charImagePrompt(scene) {
+  const c = _charEdit;
+  let base = c.identity || '';
+  // ambil poin kunci dari bible bila identity minim
+  if (base.length < 40 && c.bible) base = c.bible.slice(0, 600);
+  const consistency = 'same face, same person, consistent facial features, identity-locked, photorealistic, high detail';
+  return `${c.name?c.name+', ':''}${base}. ${scene?('Scene: '+scene+'. '):''}${consistency}`;
+}
+
+async function charGenImage() {
+  const c = _charEdit;
+  const scene = document.getElementById('chScene').value.trim();
+  const [w,h] = (document.getElementById('chRatio').value||'1024x1024').split('x').map(Number);
+  const btn = document.getElementById('chGenImgBtn');
+  const orig = btn.innerHTML; btn.disabled=true; btn.innerHTML='<svg class="ico"><use href="#i-refresh"/></svg> Generate…';
+  const out = document.getElementById('chProduceOut');
+  out.innerHTML = `<div class="tm-meta">Membuat gambar konsisten…</div>`;
+  try {
+    const master = (c.refs||[]).find(r=>r.master) || (c.refs||[])[0];
+    const prompt = _charImagePrompt(scene);
+    const opts = { width:w, height:h };
+    if (master) opts.referenceImage = master.url; // dipakai bila provider mendukung image-to-image
+    const { dataUrl, provider } = await generateImageAI(prompt, opts);
+    out.innerHTML = `
+      <div class="tm-preview"><div class="obj-img-box" style="max-width:280px;margin:0 auto"><img src="${dataUrl}"></div></div>
+      <div class="tm-meta">Via ${escapeHtml(provider)}${master?' · pakai foto Master sbg acuan':''}</div>
+      <div class="che-gen-actions" style="justify-content:center">
+        <button class="btn btn-primary btn-sm" onclick='charSaveGen(${JSON.stringify(dataUrl)})'><svg class="ico"><use href="#i-save"/></svg> Simpan ke Assets</button>
+        <button class="btn btn-secondary btn-sm" onclick='charAddGenAsRef(${JSON.stringify(dataUrl)})'><svg class="ico"><use href="#i-plus"/></svg> Jadikan referensi</button>
+      </div>`;
+    if (!master) toast('Tips','Tambah foto Master di tab Foto Referensi untuk wajah lebih konsisten.','info');
+  } catch (e) {
+    out.innerHTML = `<div class="tm-meta" style="color:var(--danger,#e05252)">Gagal: ${escapeHtml(e.message||'')}</div>`;
+  } finally { btn.disabled=false; btn.innerHTML=orig; }
+}
+function charSaveGen(dataUrl) { _tbSaveAsset(dataUrl, (_charEdit.name||'karakter')+' — hasil', 'image'); }
+function charAddGenAsRef(dataUrl) { _charEdit.refs=_charEdit.refs||[]; _charEdit.refs.push({url:dataUrl,master:false}); charRenderRefs(); toast('Ditambahkan','Gambar jadi referensi karakter','success'); }
+
+async function charBuildStoryboard() {
+  const c = _charEdit;
+  const scene = document.getElementById('chScene').value.trim();
+  const out = document.getElementById('chProduceOut');
+  out.innerHTML = `<div class="tm-meta">Menyusun storyboard…</div>`;
+  try {
+    const prompt = `Buat storyboard video pendek (TikTok/Reels, ~30 detik) untuk karakter berikut. Fokus pada konsistensi karakter.
+Karakter: ${c.name} — ${c.tagline||c.role}
+Identitas: ${(c.identity||c.bible||'').slice(0,500)}
+Topik/adegan yang diinginkan: ${scene||'perkenalan produk affiliate yang natural'}
+
+Keluarkan 5-6 shot. Untuk tiap shot beri: nomor, durasi, deskripsi visual (angle, pose, ekspresi, setting), dan naskah dialog (Bahasa Indonesia natural sesuai gaya karakter). Format Markdown ringkas dengan heading per shot.`;
+    const res = await callAI(prompt);
+    out.innerHTML = `
+      <div class="che-hint" style="white-space:pre-wrap;max-height:320px;overflow:auto">${escapeHtml(res)}</div>
+      <div class="che-gen-actions"><button class="btn btn-secondary btn-sm" onclick='charSaveStoryboard(${JSON.stringify(res)})'><svg class="ico"><use href="#i-save"/></svg> Simpan storyboard ke Assets</button></div>`;
+  } catch (e) {
+    out.innerHTML = `<div class="tm-meta" style="color:var(--danger,#e05252)">Gagal: ${escapeHtml(e.message||'')}</div>`;
+  }
+}
+function charSaveStoryboard(text) {
+  state.assets = state.assets || [];
+  state.assets.unshift({ id:'a'+Date.now(), ts:Date.now(), type:'text', name:'Storyboard: '+(_charEdit.name||'karakter'), url:'', content:text, project:'' });
+  save('assets', state.assets);
+  toast('Tersimpan','Storyboard ditambahkan ke Assets','success');
+}
+
+// ---- Generate VIDEO via Puter.js txt2vid (gratis, tanpa API key) ----
+const CHAR_VID_MODELS = { 'veo-3.1-lite':'veo-3.1-lite', 'veo-3.1-fast':'veo-3.1-fast', 'seedance':'seedance-1-lite' };
+async function charGenVideo(testMode) {
+  const c = _charEdit;
+  const scene = document.getElementById('chVidScene').value.trim();
+  const modelKey = document.getElementById('chVidModel').value;
+  const size = document.getElementById('chVidSize').value;
+  const seconds = +document.getElementById('chVidSecs').value;
+  const useRef = document.getElementById('chVidUseRef').checked;
+  const out = document.getElementById('chVidOut');
+  const btn = document.getElementById(testMode ? 'chTestVidBtn' : 'chGenVidBtn');
+  const orig = btn.innerHTML; btn.disabled = true;
+  btn.innerHTML = '<svg class="ico"><use href="#i-refresh"/></svg> ' + (testMode ? 'Menyiapkan sampel…' : 'Merender video…');
+  out.innerHTML = `<div class="tm-meta">${testMode?'Menyiapkan klip sampel…':'Merender video… ini bisa 1-3 menit, mohon tunggu (jangan tutup jendela).'}</div>`;
+  try {
+    if (typeof puter === 'undefined' || !puter?.ai?.txt2vid) throw new Error('Puter.js belum termuat. Pastikan online & buka via https (bukan file://).');
+    const prompt = _charVideoPrompt(scene);
+    const opts = { model: CHAR_VID_MODELS[modelKey] || 'veo-3.1-lite', seconds, size };
+    // referensi wajah: reference_images (dijaga konsisten) — pakai foto Master
+    const master = (c.refs||[]).find(r=>r.master) || (c.refs||[])[0];
+    if (useRef && master) opts.reference_images = [master.url];
+    let video;
+    if (testMode) video = await puter.ai.txt2vid(prompt, true);
+    else video = await puter.ai.txt2vid(prompt, opts);
+    // puter.ai.txt2vid mengembalikan elemen <video> (punya .src)
+    const src = (video && (video.src || (video.querySelector && video.querySelector('source')?.src))) || (typeof video === 'string' ? video : '');
+    if (!src) throw new Error('Video tidak menghasilkan sumber yang bisa diputar.');
+    _charEdit._lastVideo = src;
+    const dialog = (document.getElementById('chVidDialog').value||'').trim();
+    const voiceLocked = _charEdit.voiceCfg?.locked;
+    let voHtml = '';
+    if (!testMode && dialog && voiceLocked) {
+      voHtml = `<div id="chVoOut"><div class="tm-meta">Membuat voiceover dengan suara karakter…</div></div>`;
+    } else if (!testMode && dialog && !voiceLocked) {
+      voHtml = `<div class="tm-meta" style="color:var(--warn,#c78a00)">Ada naskah dialog tapi suara belum dikunci. Buka tab Suara → audisi & kunci suara untuk voiceover.</div>`;
+    }
+    out.innerHTML = `
+      <video src="${src}" controls playsinline style="width:100%;max-height:340px;border-radius:var(--r-md);background:#000;margin-top:.5rem"></video>
+      <div class="tm-meta">${testMode?'Ini klip SAMPEL (test mode) — bukan hasil karaktermu.':'Selesai! '+(useRef&&master?'Pakai foto Master sbg referensi wajah.':'Tanpa referensi wajah.')+(voiceLocked?' Suara terkunci: '+escapeHtml(_charEdit.voiceCfg.voice)+'.':'')}</div>
+      <div class="che-gen-actions" style="justify-content:center">
+        <button class="btn btn-primary btn-sm" onclick="charSaveVideo()"><svg class="ico"><use href="#i-save"/></svg> Simpan video ke Assets</button>
+        <button class="btn btn-secondary btn-sm" onclick="_tbDownload(_charEdit._lastVideo,(_charEdit.name||'karakter')+'-video.mp4')"><svg class="ico"><use href="#i-download"/></svg> Download</button>
+      </div>${voHtml}`;
+    if (!testMode && dialog && voiceLocked) charGenDialogVoiceover(dialog);
+  } catch (e) {
+    console.error('charGenVideo', e);
+    out.innerHTML = `<div class="tm-meta" style="color:var(--danger,#e05252)">Gagal: ${escapeHtml(e.message||'coba lagi')}</div>`;
+  } finally { btn.disabled = false; btn.innerHTML = orig; }
+}
+function _charVideoPrompt(scene) {
+  const c = _charEdit;
+  let base = c.identity || (c.bible ? c.bible.slice(0,500) : '');
+  const consistency = 'consistent character, same face throughout, photorealistic, natural motion, cinematic';
+  return `${c.name?c.name+': ':''}${base}. ${scene?('Action: '+scene+'. '):''}${consistency}`;
+}
+function charSaveVideo() {
+  if (!_charEdit._lastVideo) return;
+  state.assets = state.assets || [];
+  state.assets.unshift({ id:'a'+Date.now(), ts:Date.now(), type:'video', name:(_charEdit.name||'Karakter')+' — video', url:_charEdit._lastVideo, content:'', project:'' });
+  save('assets', state.assets);
+  toast('Tersimpan','Video ditambahkan ke Assets','success');
+  if (document.getElementById('view-assets').classList.contains('active')) renderAssets();
+}
+// voiceover memakai suara TERKUNCI karakter (referensi audio otomatis)
+async function charGenDialogVoiceover(dialog) {
+  const box = document.getElementById('chVoOut');
+  if (!box) return;
+  const c = _charEdit.voiceCfg;
+  // Mode suara asli: kita punya sampel suara kreator, bukan TTS teks bebas.
+  if (c.mode === 'own') {
+    box.innerHTML = `
+      <div class="tm-meta"><svg class="ico" style="vertical-align:-2px"><use href="#i-mic"/></svg> Suara asli terkunci untuk karakter ini.</div>
+      ${c.sampleUrl?`<audio src="${c.sampleUrl}" controls style="width:100%;margin-top:.35rem"></audio>`:''}
+      <div class="tm-meta">Untuk dialog baru dengan suaramu, rekam kalimatnya di tab Suara → lalu klik "Bersihkan noise (AI)". Video Veo juga menghasilkan audio adegannya sendiri. (Kloning teks-ke-suaramu perlu layanan voice-clone berbayar — belum diaktifkan agar tetap gratis.)</div>`;
+    return;
+  }
+  try {
+    if (typeof puter === 'undefined' || !puter?.ai?.txt2speech) throw new Error('Puter belum termuat');
+    const opts = { provider: c.provider, voice: c.voice };
+    if (c.style) opts.instructions = c.style;
+    if (c.provider === 'gemini') opts.model = 'gemini-2.5-flash-preview-tts';
+    if (c.provider === 'openai') opts.model = 'gpt-4o-mini-tts';
+    if (c.lang) opts.language = c.lang;
+    const audio = await puter.ai.txt2speech(dialog.slice(0,2900), opts);
+    const src = audio && (audio.src || (audio.querySelector && audio.querySelector('source')?.src));
+    if (!src) throw new Error('Tidak ada audio');
+    _charEdit._lastVoiceover = src;
+    box.innerHTML = `
+      <div class="tm-meta"><svg class="ico" style="vertical-align:-2px"><use href="#i-mic"/></svg> Voiceover suara karakter (${escapeHtml(c.voice)}):</div>
+      <audio src="${src}" controls style="width:100%;margin-top:.35rem"></audio>
+      <div class="che-gen-actions">
+        <button class="btn btn-secondary btn-sm" onclick="charSaveVoiceover()"><svg class="ico"><use href="#i-save"/></svg> Simpan voiceover ke Assets</button>
+      </div>
+      <div class="tm-meta">Gabungkan video + voiceover ini di editor favoritmu (CapCut, dll). Video Veo juga sudah punya audio bawaan.</div>`;
+  } catch (e) {
+    box.innerHTML = `<div class="tm-meta" style="color:var(--danger,#e05252)">Voiceover gagal: ${escapeHtml(e.message||'')}</div>`;
+  }
+}
+function charSaveVoiceover() {
+  if (!_charEdit._lastVoiceover) return;
+  state.assets = state.assets || [];
+  state.assets.unshift({ id:'a'+Date.now(), ts:Date.now(), type:'audio', name:(_charEdit.name||'Karakter')+' — voiceover', url:_charEdit._lastVoiceover, content:'', project:'' });
+  save('assets', state.assets);
+  toast('Tersimpan','Voiceover ditambahkan ke Assets','success');
+  if (document.getElementById('view-assets').classList.contains('active')) renderAssets();
+}
+
+async function charTestVoice() {
+  const c = _charEdit;
+  const sample = document.getElementById('chVoiceSample').value || 'Halo, ini suara karakterku.';
+  // pakai Web Speech API (built-in) sebagai preview cepat
+  try {
+    const u = new SpeechSynthesisUtterance(sample);
+    const voices = speechSynthesis.getVoices();
+    const id = voices.find(v => /id[-_]/i.test(v.lang) || /indones/i.test(v.name));
+    if (id) u.voice = id;
+    u.lang = 'id-ID'; u.rate = 0.95; u.pitch = 1.05;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+    toast('Memutar sampel','Preview suara via browser (Web Speech).','info');
+  } catch (e) { toast('Tidak didukung','Browser tidak mendukung preview suara','warning'); }
+}
+
+function saveCharacter() {
+  const c = _charEdit;
+  c.name = (document.getElementById('chName')?.value || c.name || '').trim();
+  c.tagline = document.getElementById('chTagline')?.value || c.tagline || '';
+  c.identity = document.getElementById('chIdentity')?.value || c.identity || '';
+  c.bible = document.getElementById('chBible')?.value || c.bible || '';
+  if (document.getElementById('chVoiceProvider')) _charSyncVoiceCfg();
+  c.voice = c.voiceCfg?.style || c.voice || '';
+  delete c._lastVoiceSample; delete c._lastVideo;
+  if (!c.name) { toast('Nama wajib','Beri nama karakter dulu','warning'); charTab('identity'); return; }
+  state.characters = state.characters || [];
+  const idx = state.characters.findIndex(x => x.id === c.id);
+  if (idx >= 0) state.characters[idx] = c; else state.characters.unshift(c);
+  save('characters', state.characters);
+  closeModal();
+  renderCharacters();
+  toast('Tersimpan', `Karakter "${c.name}" disimpan`,'success');
+}
+function deleteCharacter(id) {
+  if (!confirm('Hapus karakter ini beserta bible & referensinya?')) return;
+  state.characters = (state.characters||[]).filter(c => c.id !== id);
+  save('characters', state.characters);
+  closeModal();
+  renderCharacters();
+  toast('Dihapus','Karakter dihapus','info');
+}
 
 function renderToolbox() {
   const grid = document.getElementById('toolboxGrid');
@@ -7472,5 +8286,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3e8cfc68aa0f900',t:'MTc4OTk5MTAwMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3e947af7acd4021',t:'MTc4OTk5NTkxMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
