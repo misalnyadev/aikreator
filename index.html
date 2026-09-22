@@ -1743,7 +1743,7 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
       <div class="card" style="margin-bottom:1.5rem;background:linear-gradient(135deg,rgba(166,124,34,.12),rgba(166,124,34,.04));border-color:rgba(166,124,34,.3)">
         <div class="card-header akun-head" style="align-items:flex-start;flex-wrap:nowrap">
           <div style="flex:1;min-width:0">
-            <div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-rocket"/></svg> Bangun Akun Sosmed Profesional</div>
+            <div class="card-title">Bangun Akun Sosmed Profesional</div>
             <div class="card-subtitle">Akun kredibel, aman, dan konsisten sejak hari pertama.</div>
           </div>
           <div id="akunProgressBar"></div>
@@ -2604,12 +2604,12 @@ function renderAkun(){
   const c = state.akunCheck || {};
   const box = document.getElementById('akunChecklist');
   box.innerHTML = AKUN_CHECKLIST.map(it => `
-    <label class="idea-card akun-item" style="display:flex;gap:.85rem;align-items:flex-start;cursor:pointer;margin-bottom:.6rem">
-      <div style="flex:1;min-width:0">
-        <div style="font-weight:600">${it.emo} ${escapeHtml(it.t)}</div>
-        <div style="font-size:.82rem;color:var(--text-muted);margin-top:.2rem;line-height:1.45">${escapeHtml(it.d)}</div>
+    <label class="idea-card akun-item" style="display:block;cursor:pointer;margin-bottom:.6rem">
+      <div style="display:flex;gap:.75rem;align-items:center">
+        <div style="flex:1;min-width:0;font-weight:600">${it.emo} ${escapeHtml(it.t)}</div>
+        <input type="checkbox" ${c[it.id]?'checked':''} onchange="toggleAkun('${it.id}',this.checked)" style="width:22px;height:22px;flex:none;accent-color:var(--accent);cursor:pointer">
       </div>
-      <input type="checkbox" ${c[it.id]?'checked':''} onchange="toggleAkun('${it.id}',this.checked)" style="width:22px;height:22px;margin-top:.1rem;flex:none;accent-color:var(--accent);cursor:pointer">
+      <div style="font-size:.82rem;color:var(--text-muted);margin-top:.25rem;line-height:1.45">${escapeHtml(it.d)}</div>
     </label>`).join('');
   renderAkunProgress();
 }
@@ -9472,6 +9472,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f224239decfd83',t:'MTc5MDA4ODgyNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f22ef91949ce3e',t:'MTc5MDA4OTI3MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
