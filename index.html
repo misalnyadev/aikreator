@@ -7823,11 +7823,11 @@ function renderAIStudio() {
   const inp = document.getElementById('aiInput');
   if (inp) {
     const phMap = {
-      smart:"Ketik apa saja... (mis: 'buatkan foto kopi senja' / 'video ombak' / 'ide konten dakwah')",
-      chat:"Tanya AI: ide konten, caption, skrip, hook...",
-      image:"Deskripsikan foto (mis: kopi latte art di kafe hangat).\nTag karakter tersimpan: @aira duduk di kafe — foto referensinya dipakai otomatis biar konsisten.",
-      video:"Deskripsikan adegan video pendek (mis: matahari terbit di pantai).\nBisa tag karakter: @aira berjalan di pantai saat senja.",
-      storyboard:"Konsep iklan (mis: 'iklan night cream DRVE, 5 adegan, gaya UGC hangat').\nTag banyak karakter: '@aira bertemu @indra di kafe Blok M, mereka lama tak jumpa...'\n\nATAU tempel storyboard dari GPT/ChatGPT — satu adegan per baris, atau format 'Shot 1: ...'"
+      smart:"Ketik apa saja...",
+      chat:"Tulis pesanmu...",
+      image:"Deskripsikan foto...  (coba tag @karakter)",
+      video:"Deskripsikan adegan...  (coba tag @karakter)",
+      storyboard:"Konsep atau tempel storyboard...  (coba @karakter1 @karakter2)"
     };
     inp.placeholder = phMap[studioState.mode] || '';
   }
@@ -9579,5 +9579,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f2e738dd75fc2e',t:'MTc5MDA5NjgxOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+</body>
 </html>
