@@ -530,13 +530,13 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .home-sech h2{font-size:1.05rem;letter-spacing:-.01em}
 .home-sech .more{margin-left:auto;color:var(--accent);font-size:.8rem;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:.25rem}
 /* ===== ROADMAP ===== */
-.rm-hero{display:flex;gap:1.5rem;align-items:center;justify-content:space-between;background:linear-gradient(135deg,var(--bg-card),var(--bg-elevated));border:1px solid var(--border);border-radius:var(--r-lg);padding:1.75rem 2rem;margin-bottom:1.75rem;position:relative;overflow:hidden}
-.rm-hero::after{content:'';position:absolute;top:-60%;right:-5%;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,var(--accent-glow),transparent 70%);pointer-events:none}
-.rm-kicker{font-size:.7rem;font-weight:700;letter-spacing:.14em;color:var(--accent);margin-bottom:.5rem}
-.rm-hero h1{font-size:2rem;line-height:1.12;font-weight:800;letter-spacing:-.02em;max-width:20ch}
+.rm-hero{display:flex;gap:1.5rem;align-items:center;justify-content:space-between;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.15rem 1.4rem;margin-bottom:1.25rem;position:relative;overflow:hidden}
+.rm-hero::after{display:none}
+.rm-kicker{font-size:.7rem;font-weight:700;letter-spacing:.14em;color:var(--accent);margin-bottom:.3rem}
+.rm-hero h1{font-size:1.5rem;line-height:1.15;font-weight:800;letter-spacing:-.02em;max-width:22ch}
 .rm-hero h1 .grad{color:var(--accent)}
-.rm-hero-txt p{color:var(--text-secondary);font-size:.95rem;line-height:1.55;margin-top:.6rem;max-width:52ch}
-.rm-progwrap{display:flex;align-items:center;gap:.75rem;margin-top:1.1rem}
+.rm-hero-txt p{color:var(--text-secondary);font-size:.85rem;line-height:1.5;margin-top:.4rem;max-width:52ch}
+.rm-progwrap{display:flex;align-items:center;gap:.75rem;margin-top:.85rem}
 .rm-progbar{flex:1;max-width:320px;height:8px;background:var(--bg-hover);border-radius:999px;overflow:hidden}
 .rm-progfill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-light));border-radius:999px;transition:width .6s cubic-bezier(.4,0,.2,1)}
 .rm-progwrap span{font-size:.8rem;font-weight:600;color:var(--text-secondary);white-space:nowrap}
@@ -1697,7 +1697,7 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
         <div class="rm-hero-txt">
           <div class="rm-kicker">PERJALANAN KREATOR</div>
           <h1>Dari <span class="grad">nol</span> jadi kreator yang <span class="grad">menghasilkan</span></h1>
-          <p>Enam tahap terarah — pemula, menengah, hingga profesional. Ikuti langkah demi langkah, semua tool-nya sudah ada di aplikasi ini.</p>
+          <p>Enam tahap terarah — pemula hingga profesional.</p>
           <div class="rm-progwrap"><div class="rm-progbar"><div class="rm-progfill" id="rmProgFill"></div></div><span id="rmProgLabel">0% selesai</span></div>
         </div>
         <div class="rm-hero-badge" id="rmLevelBadge"><div class="rm-lvl-ic"><svg class="ico"><use href="#i-sparkle"/></svg></div><div><b id="rmLevelName">Pemula</b><span id="rmLevelDesc">Baru mulai</span></div></div>
@@ -9579,5 +9579,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f33ad35bb632e2',t:'MTc5MDEwMDI0Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f34575ac46712c',t:'MTc5MDEwMDY3OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
