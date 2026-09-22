@@ -469,6 +469,74 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .home-sech{display:flex;align-items:center;gap:.6rem;margin:.5rem 0 .5rem}
 .home-sech h2{font-size:1.05rem;letter-spacing:-.01em}
 .home-sech .more{margin-left:auto;color:var(--accent);font-size:.8rem;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:.25rem}
+/* ===== ROADMAP ===== */
+.rm-hero{display:flex;gap:1.5rem;align-items:center;justify-content:space-between;background:linear-gradient(135deg,var(--bg-card),var(--bg-elevated));border:1px solid var(--border);border-radius:var(--r-lg);padding:1.75rem 2rem;margin-bottom:1.75rem;position:relative;overflow:hidden}
+.rm-hero::after{content:'';position:absolute;top:-60%;right:-5%;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,var(--accent-glow),transparent 70%);pointer-events:none}
+.rm-kicker{font-size:.7rem;font-weight:700;letter-spacing:.14em;color:var(--accent);margin-bottom:.5rem}
+.rm-hero h1{font-size:2rem;line-height:1.12;font-weight:800;letter-spacing:-.02em;max-width:20ch}
+.rm-hero h1 .grad{color:var(--accent)}
+.rm-hero-txt p{color:var(--text-secondary);font-size:.95rem;line-height:1.55;margin-top:.6rem;max-width:52ch}
+.rm-progwrap{display:flex;align-items:center;gap:.75rem;margin-top:1.1rem}
+.rm-progbar{flex:1;max-width:320px;height:8px;background:var(--bg-hover);border-radius:999px;overflow:hidden}
+.rm-progfill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-light));border-radius:999px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.rm-progwrap span{font-size:.8rem;font-weight:600;color:var(--text-secondary);white-space:nowrap}
+.rm-hero-badge{display:flex;align-items:center;gap:.7rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:.85rem 1.1rem;flex-shrink:0;z-index:1}
+.rm-lvl-ic{width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center}
+.rm-lvl-ic .ico{width:20px;height:20px}
+.rm-hero-badge b{font-size:1rem;display:block}
+.rm-hero-badge span{font-size:.74rem;color:var(--text-muted)}
+.rm-track{position:relative;display:flex;flex-direction:column;gap:0}
+.rm-track::before{content:'';position:absolute;left:27px;top:20px;bottom:20px;width:2px;background:var(--border)}
+.rm-stage{position:relative;display:flex;gap:1.1rem;padding:.6rem 0 1.4rem;z-index:1}
+.rm-node{width:56px;height:56px;flex-shrink:0;border-radius:50%;background:var(--bg-card);border:2px solid var(--border);display:grid;place-items:center;color:var(--text-muted);position:relative;transition:all .2s}
+.rm-node .ico{width:24px;height:24px}
+.rm-stage.done .rm-node{background:var(--accent);border-color:var(--accent);color:#fff}
+.rm-stage.current .rm-node{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 4px var(--accent-glow)}
+.rm-node-num{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--bg-elevated);border:1px solid var(--border);font-size:.62rem;font-weight:700;display:grid;place-items:center;color:var(--text-secondary)}
+.rm-stage.done .rm-node-num{background:var(--accent);color:#fff;border-color:var(--accent)}
+.rm-card{flex:1;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.1rem 1.3rem;transition:border-color .18s,transform .18s}
+.rm-card:hover{border-color:var(--accent-light);transform:translateX(3px)}
+.rm-stage.current .rm-card{border-color:var(--accent);box-shadow:0 8px 26px -14px var(--accent-glow)}
+.rm-card-top{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap}
+.rm-card-lvl{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:999px;background:var(--bg-elevated);color:var(--accent)}
+.rm-card h3{font-size:1.08rem;font-weight:700;margin-top:.1rem}
+.rm-card>p{color:var(--text-secondary);font-size:.85rem;line-height:1.5;margin-top:.35rem}
+.rm-tasks{display:flex;flex-direction:column;gap:.35rem;margin-top:.75rem}
+.rm-task{display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:var(--text-secondary)}
+.rm-task .tk{width:17px;height:17px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;display:grid;place-items:center}
+.rm-task.ok{color:var(--text-primary)}
+.rm-task.ok .tk{background:var(--accent);border-color:var(--accent);color:#fff}
+.rm-task .tk .ico{width:10px;height:10px}
+.rm-card-cta{margin-top:.9rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.rm-status{font-size:.74rem;font-weight:600}
+.rm-status.done{color:var(--success,#3d9a5c)}
+.rm-status.current{color:var(--accent)}
+.rm-status.locked{color:var(--text-muted)}
+@media(max-width:640px){.rm-hero{flex-direction:column;align-items:flex-start}.rm-hero h1{font-size:1.6rem}}
+.monet-list{display:flex;flex-direction:column;gap:.6rem}
+.monet-item{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--r-md);padding:.75rem .9rem}
+.monet-item b{font-size:.9rem}
+.monet-item p{color:var(--text-secondary);font-size:.8rem;line-height:1.45;margin-top:.2rem}
+/* hero showcase */
+.hero-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:.8rem}
+.hero-card{position:relative;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.1rem 1.2rem;cursor:pointer;transition:border-color .18s,transform .18s,box-shadow .18s;overflow:hidden}
+.hero-card:hover{transform:translateY(-3px);border-color:var(--accent-light);box-shadow:0 10px 30px -12px var(--accent-glow)}
+.hero-card.feature{display:flex;flex-direction:column;justify-content:center;background:linear-gradient(140deg,var(--bg-card),var(--bg-elevated))}
+.hero-card .hc-glow{position:absolute;top:-40%;right:-15%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,var(--accent-glow),transparent 70%);pointer-events:none}
+.hero-card .hc-badge{position:absolute;top:1rem;right:1rem;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:var(--accent);color:#fff;padding:3px 9px;border-radius:999px}
+.hero-card .hc-ic{width:46px;height:46px;border-radius:var(--r-md);display:grid;place-items:center;background:var(--accent);color:#fff;margin-bottom:.7rem}
+.hero-card .hc-ic .ico{width:24px;height:24px}
+.hero-card .hc-ic.sm{width:34px;height:34px;background:var(--bg-elevated);color:var(--accent);margin-bottom:.5rem}
+.hero-card .hc-ic.sm .ico{width:18px;height:18px}
+.hero-card.feature h3{font-size:1.35rem;font-weight:800;letter-spacing:-.02em}
+.hero-card.feature p{color:var(--text-secondary);font-size:.9rem;line-height:1.55;margin-top:.4rem;max-width:46ch}
+.hero-card h4{font-size:.98rem;font-weight:700}
+.hero-card>p{color:var(--text-muted);font-size:.8rem;line-height:1.45;margin-top:.25rem}
+.hc-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.9rem}
+.hc-tags span{font-size:.66rem;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--bg-elevated);color:var(--accent);border:1px solid var(--border)}
+.hero-side{display:flex;flex-direction:column;gap:.8rem}
+.hero-side .hero-card{flex:1}
+@media(max-width:820px){.hero-grid{grid-template-columns:1fr}}
 .tool-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem}
 .tool-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:.75rem .85rem;cursor:pointer;transition:border-color .15s,transform .15s;position:relative}
 .tool-card:hover{transform:translateY(-2px);border-color:var(--accent-light)}
@@ -611,6 +679,23 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .che-add .ico{width:22px;height:22px}
 .che-hint{font-size:.76rem;color:var(--text-muted);line-height:1.5;background:var(--bg-elevated);border-radius:var(--r-md);padding:.7rem .85rem;margin:.5rem 0}
 .che-gen-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin:.75rem 0}
+.che-ref-label{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.6);color:#fff;font-size:.6rem;font-weight:600;text-align:center;padding:1px 2px}
+/* Character Sheet */
+.sheet-opts{margin:.6rem 0}
+.sheet-cat{margin-bottom:.55rem}
+.sheet-cat-t{font-size:.74rem;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:.3rem}
+.sheet-chips{display:flex;gap:.35rem;flex-wrap:wrap}
+.sheet-chip{font-size:.72rem;padding:.28rem .6rem;border:1px solid var(--border);border-radius:999px;cursor:pointer;user-select:none;transition:all .12s;background:var(--bg-card)}
+.sheet-chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.sheet-chip input{display:none}
+.sheet-prog{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:.5rem;margin-top:.6rem}
+.sheet-cell{position:relative;aspect-ratio:1;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--border);background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;font-size:.66rem;color:var(--text-muted);text-align:center;padding:2px}
+.sheet-cell.active{border-color:var(--accent)}
+.sheet-cell.fail{border-color:var(--danger,#e05252);color:var(--danger,#e05252)}
+.sheet-cell img{width:100%;height:100%;object-fit:cover}
+.sheet-cell-l{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.6);color:#fff;font-size:.58rem;padding:1px}
+.sheet-spin{position:absolute;width:22px;height:22px;border:3px solid rgba(255,255,255,.3);border-top-color:var(--accent);border-radius:50%;animation:sheetspin .8s linear infinite}
+@keyframes sheetspin{to{transform:rotate(360deg)}}
 .char-mode-opt{flex:1;min-width:200px;display:flex;gap:.6rem;align-items:center;padding:.75rem .85rem;border:2px solid var(--border);border-radius:var(--r-md);cursor:pointer;transition:all .15s;background:var(--bg-card)}
 .char-mode-opt:hover{border-color:var(--accent)}
 .char-mode-opt.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
@@ -618,6 +703,49 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .char-mode-opt .cm-t{font-weight:700;font-size:.85rem}
 .char-mode-opt .cm-d{font-size:.72rem;color:var(--text-muted);line-height:1.35}
 .char-webcam-live{width:100%;max-width:360px;border-radius:var(--r-md);background:#000;margin:.5rem 0;display:block}
+/* ===== STUDIO REFS ===== */
+.studio-refs{margin:.75rem 0;padding:.75rem;border:1px solid var(--border);border-radius:var(--r-md);background:var(--bg-elevated)}
+.sr-head{font-size:.8rem;font-weight:700;display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem}
+.sr-head .ico{width:15px;height:15px;color:var(--accent)}
+.sr-sub{font-weight:400;color:var(--text-muted);font-size:.72rem}
+.sr-row{display:flex;gap:.4rem;align-items:center}
+.sr-charsel{flex:1}
+.sr-charprev{display:flex;align-items:center;gap:.6rem;margin-top:.6rem;padding:.4rem;background:var(--bg-card);border-radius:var(--r-sm)}
+.sr-charprev img{width:44px;height:44px;border-radius:6px;object-fit:cover}
+.sr-noimg{width:44px;height:44px;border-radius:6px;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;color:var(--text-muted)}
+.sr-charinfo{display:flex;flex-direction:column;font-size:.78rem}
+.sr-charinfo span{color:var(--text-muted);font-size:.7rem}
+.sr-label{font-size:.75rem;font-weight:600;margin:.7rem 0 .35rem}
+.sr-thumbs{display:flex;gap:.4rem;flex-wrap:wrap}
+.sr-thumb{position:relative;width:52px;height:52px;border-radius:6px;overflow:hidden;border:1px solid var(--border)}
+.sr-thumb.big{width:100%;height:90px}
+.sr-thumb img{width:100%;height:100%;object-fit:cover}
+.sr-thumb button{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.6);border:none;color:#fff;width:18px;height:18px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.sr-thumb button .ico{width:10px;height:10px}
+.sr-add{width:52px;height:52px;border:2px dashed var(--border);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);gap:2px;font-size:.62rem}
+.sr-add.big{width:100%;height:90px}
+.sr-add:hover{border-color:var(--accent);color:var(--accent)}
+.sr-add .ico{width:18px;height:18px}
+.sr-frames{display:flex;gap:.5rem}
+.sr-frame{flex:1}
+.sr-frame-t{font-size:.72rem;font-weight:600;margin-bottom:.3rem}
+.sr-usechar{width:100%;margin-top:.3rem;font-size:.68rem;padding:.3rem;border:1px solid var(--border);background:var(--bg-card);border-radius:6px;cursor:pointer;color:var(--accent)}
+.sr-usechar:hover{background:var(--accent);color:#fff}
+/* ===== STORYBOARD ===== */
+.sb-bar{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.9rem;position:sticky;top:0;background:var(--bg-card);padding:.2rem 0;z-index:2}
+.sb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.85rem}
+.sb-panel{border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;background:var(--bg-elevated);display:flex;flex-direction:column}
+.sb-media{position:relative;aspect-ratio:9/16;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.sb-media img,.sb-media video{width:100%;height:100%;object-fit:cover}
+.sb-ph{color:var(--text-muted);font-size:.8rem;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+.sb-num{position:absolute;top:6px;left:6px;background:var(--accent);color:#fff;font-size:.7rem;font-weight:700;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.sb-desc{width:100%;border:none;border-bottom:1px solid var(--border);background:transparent;padding:.5rem;font-size:.74rem;resize:vertical;font-family:inherit;color:var(--text)}
+.sb-desc:focus{outline:none;background:var(--bg-card)}
+.sb-dialog{padding:.4rem .5rem;font-size:.72rem;color:var(--text-secondary);background:var(--bg-card)}
+.sb-acts{display:flex;gap:.25rem;padding:.4rem;justify-content:flex-end}
+.sb-acts button{background:var(--bg-card);border:1px solid var(--border);border-radius:6px;width:30px;height:28px;cursor:pointer;color:var(--text-secondary);display:flex;align-items:center;justify-content:center;padding:0}
+.sb-acts button:hover{border-color:var(--accent);color:var(--accent)}
+.sb-acts button .ico{width:14px;height:14px}
 .color-pick{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.3rem}
 .color-dot{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s}
 .color-dot.on{border-color:var(--text-primary);transform:scale(1.15)}
@@ -838,6 +966,10 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
     </div>
     <div class="nav-section">
       <div class="nav-label">Perjalanan Kreator</div>
+      <div class="nav-item" data-label="Roadmap" data-view="roadmap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-3 6 3V5l-6-3-6 3-6-3v13l6 3z"/><path d="M9 2v13M15 5v13"/></svg>
+        Roadmap
+      </div>
       <div class="nav-item" data-label="Temukan Arah" data-view="arah">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
         Temukan Arah
@@ -950,8 +1082,8 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
           <div>
             <div class="home-hi" id="homeHi">Selamat datang</div>
             <h1 class="home-title">Hasilkan <span class="grad">konten berkualitas</span> siap tayang</h1>
-            <p class="home-sub">Temukan arah, dapatkan ide yang tepat, produksi, dan tumbuh dengan konsisten. AiKreator menemani langkahmu jadi kreator yang orisinal, berkualitas dan bermanfaat.</p>
-            <div class="home-prochip" id="pathJourney" onclick="lanjutPerjalanan()">
+            <p class="home-sub">Temukan arah, dapatkan ide yang tepat, produksi, dan tumbuh dengan konsisten. AiKreator menemani langkahmu jadi kreator yang orisinal, berkualitas, berpenghasilan, dan bermanfaat.</p>
+            <div class="home-prochip" id="pathJourney" onclick="switchView('roadmap')">
               <div class="ring" id="journeyRing" style="--p:0"></div>
               <div><b id="journeyPct">Perjalanan 0%</b><br><span id="journeyGo">Tahap 1 · Temukan Arah</span></div>
             </div>
@@ -972,15 +1104,39 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
           </div>
         </div>
 
-        <div class="home-sech"><h2>Produksi cepat</h2><span class="more" onclick="switchView('aistudio')">Lihat semua <svg class="ico"><use href="#i-arrow"/></svg></span></div>
+        <div class="home-sech"><h2>Studio Pro</h2><span class="more" onclick="switchView('aistudio')">Buka AI Studio <svg class="ico"><use href="#i-arrow"/></svg></span></div>
+        <div class="hero-grid">
+          <div class="hero-card feature" onclick="switchView('aistudio')">
+            <div class="hc-glow"></div>
+            <div class="hc-badge">Unggulan</div>
+            <div class="hc-ic"><svg class="ico"><use href="#i-agent"/></svg></div>
+            <h3>AI Studio</h3>
+            <p>Foto, video & storyboard dalam satu layar. Bawa referensi karakter + gambar galeri → konten konsisten, langsung produksi.</p>
+            <div class="hc-tags"><span>Text→Image</span><span>Image→Image</span><span>Image→Video</span><span>Storyboard</span></div>
+          </div>
+          <div class="hero-side">
+            <div class="hero-card" onclick="switchView('characters')">
+              <div class="hc-ic sm"><svg class="ico"><use href="#i-users"/></svg></div>
+              <h4>Karakter AI</h4>
+              <p>Kunci wajah & suara — konsisten di tiap konten.</p>
+            </div>
+            <div class="hero-card" onclick="switchView('aistudio')">
+              <div class="hc-ic sm"><svg class="ico"><use href="#i-grid"/></svg></div>
+              <h4>Storyboard → Video</h4>
+              <p>Konsep/GPT → panel → foto → iklan utuh.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="home-sech" style="margin-top:1.25rem"><h2>Produksi cepat</h2><span class="more" onclick="switchView('aistudio')">Lihat semua <svg class="ico"><use href="#i-arrow"/></svg></span></div>
         <div class="tool-grid">
+          <div class="tool-card" onclick="switchView('characters')"><div class="ic"><svg class="ico"><use href="#i-users"/></svg></div><b>Karakter AI</b><span class="desc">AI Influencer wajah & suara konsisten</span><span class="tag">pro</span></div>
+          <div class="tool-card" onclick="switchView('aistudio')"><div class="ic"><svg class="ico"><use href="#i-image"/></svg></div><b>Foto Konsisten</b><span class="desc">Karakter + produk/pakaian/lokasi</span><span class="tag">pro</span></div>
+          <div class="tool-card" onclick="switchView('aistudio')"><div class="ic"><svg class="ico"><use href="#i-video"/></svg></div><b>Video AI</b><span class="desc">Image→video, frame awal & akhir</span><span class="tag">pro</span></div>
+          <div class="tool-card" onclick="switchView('aistudio')"><div class="ic"><svg class="ico"><use href="#i-grid"/></svg></div><b>Storyboard</b><span class="desc">Adegan/iklan → video utuh</span><span class="tag">pro</span></div>
           <div class="tool-card" onclick="switchView('ideas')"><div class="ic"><svg class="ico"><use href="#i-idea"/></svg></div><b>Ide & Trend</b><span class="desc">Ide konten viral sesuai niche</span></div>
-          <div class="tool-card" onclick="switchView('flow')"><div class="ic"><svg class="ico"><use href="#i-video"/></svg></div><b>Script Video</b><span class="desc">Hook + naskah + shotlist</span><span class="tag">siap-rekam</span></div>
           <div class="tool-card" onclick="switchView('flow')"><div class="ic"><svg class="ico"><use href="#i-image"/></svg></div><b>Carousel Maker</b><span class="desc">Slide edukasi & storytelling</span><span class="tag">siap-upload</span></div>
-          <div class="tool-card" onclick="switchView('flow')"><div class="ic"><svg class="ico"><use href="#i-camera"/></svg></div><b>Foto Produk</b><span class="desc">Visual produk pro dgn AI</span><span class="tag">siap-upload</span></div>
-          <div class="tool-card" onclick="switchView('ideas')"><div class="ic"><svg class="ico"><use href="#i-pen"/></svg></div><b>Caption & Hashtag</b><span class="desc">Caption + tagar teroptimasi</span></div>
-          <div class="tool-card" onclick="switchView('aistudio')"><div class="ic"><svg class="ico"><use href="#i-mic"/></svg></div><b>Voiceover</b><span class="desc">Narasi suara untuk faceless</span></div>
-          <div class="tool-card" onclick="switchView('aistudio')"><div class="ic"><svg class="ico"><use href="#i-brush"/></svg></div><b>Thumbnail</b><span class="desc">Cover yang bikin di-klik</span></div>
+          <div class="tool-card" onclick="switchView('toolbox')"><div class="ic"><svg class="ico"><use href="#i-box"/></svg></div><b>Kotak Alat</b><span class="desc">15 utilitas: kompres, watermark, QR…</span></div>
           <div class="tool-card" onclick="switchView('schedule')"><div class="ic"><svg class="ico"><use href="#i-calendar"/></svg></div><b>Jadwal Upload</b><span class="desc">Kalender konten konsisten</span></div>
         </div>
 
@@ -1204,6 +1360,9 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
           <!-- Mode selector: teks ringkas di bawah prompt -->
           <div class="studio-modes" id="studioModes"></div>
 
+          <!-- Panel Referensi (karakter + gambar galeri) — untuk Foto & Video -->
+          <div class="studio-refs" id="studioRefs"></div>
+
           <!-- Toolbar pengaturan ringkas (ala Google Flow) -->
           <div class="sc-toolbar" id="studioOptions"></div>
 
@@ -1337,6 +1496,19 @@ Tips: atur & simpan API key dulu di menu Pengaturan.</div>
     </div>
 
     <!-- ============ TAHAP 1: TEMUKAN ARAH ============ -->
+    <div class="view" id="view-roadmap">
+      <div class="rm-hero">
+        <div class="rm-hero-txt">
+          <div class="rm-kicker">PERJALANAN KREATOR</div>
+          <h1>Dari <span class="grad">nol</span> jadi kreator yang <span class="grad">menghasilkan</span></h1>
+          <p>Enam tahap terarah — pemula, menengah, hingga profesional. Ikuti langkah demi langkah, semua tool-nya sudah ada di aplikasi ini.</p>
+          <div class="rm-progwrap"><div class="rm-progbar"><div class="rm-progfill" id="rmProgFill"></div></div><span id="rmProgLabel">0% selesai</span></div>
+        </div>
+        <div class="rm-hero-badge" id="rmLevelBadge"><div class="rm-lvl-ic"><svg class="ico"><use href="#i-sparkle"/></svg></div><div><b id="rmLevelName">Pemula</b><span id="rmLevelDesc">Baru mulai</span></div></div>
+      </div>
+      <div class="rm-track" id="rmTrack"></div>
+    </div>
+
     <div class="view" id="view-arah">
       <div class="card" style="margin-bottom:1.5rem;background:linear-gradient(135deg,rgba(166,124,34,.12),rgba(166,124,34,.04));border-color:rgba(166,124,34,.3)">
         <div class="card-header">
@@ -1619,13 +1791,15 @@ const AI_PROVIDERS = [
     desc:'★ GENERATE FOTO gratis tanpa API key — cukup login akun Puter gratis sekali (tanpa kartu)',
     url:'https://puter.com/',
     getKey:'https://puter.com/',
-    caps:['image'],
+    caps:['image','video'],
     noKey:true,
-    note:'★ PALING MUDAH & GRATIS: Tidak perlu API key sama sekali. Saat pertama generate foto, muncul popup login akun Puter (gratis, tanpa kartu) — cukup sekali. Setelah itu foto gratis pakai model Nano Banana/FLUX/GPT Image. Biaya AI ditanggung akun Puter masing-masing user (User-Pays), jadi tetap gratis untukmu.',
+    note:'★ PALING MUDAH & GRATIS: Tidak perlu API key sama sekali. Saat pertama generate foto/video, muncul popup login akun Puter (gratis, tanpa kartu) — cukup sekali. Setelah itu foto gratis pakai model Nano Banana/FLUX/GPT Image, dan video pakai Google Veo. Biaya AI ditanggung akun Puter masing-masing user (User-Pays), jadi tetap gratis untukmu.',
     models:[
       {id:'google/gemini-2.5-flash-image',name:'Nano Banana (Foto) ★ gratis',recommended:true,free:true,purpose:'image'},
       {id:'black-forest-labs/flux-schnell',name:'FLUX Schnell (cepat) gratis',free:true,purpose:'image'},
-      {id:'openai/gpt-image-2',name:'GPT Image 2 (kualitas tinggi)',free:true,purpose:'image'}
+      {id:'openai/gpt-image-2',name:'GPT Image 2 (kualitas tinggi)',free:true,purpose:'image'},
+      {id:'veo-3.1-lite',name:'Veo 3.1 Lite (Video +audio) ★',recommended:true,free:true,purpose:'video'},
+      {id:'veo-3.1-fast',name:'Veo 3.1 Fast (Video +audio)',free:true,purpose:'video'}
     ],
     format:'puter'
   },
@@ -1996,6 +2170,7 @@ document.getElementById('modalOverlay').addEventListener('click', (e) => {
 // ============ NAVIGATION ============
 const viewTitles = {
   dashboard: ['Dashboard', 'Selamat datang kembali! Ini ringkasan aktivitas Anda.'],
+  roadmap: ['Roadmap Kreator', 'Peta perjalananmu dari nol sampai jadi kreator yang menghasilkan'],
   arah: ['Temukan Arah', 'Tahap 1 — Tentukan niche, audiens, platform & gaya brand Anda'],
   akun: ['Bangun Akun', 'Tahap 2 — Siapkan akun sosmed profesional selangkah demi selangkah'],
   flow: ['Alur Konten', 'Dari ide sampai siap-upload dalam beberapa langkah'],
@@ -2048,6 +2223,7 @@ function switchView(viewId) {
   
   try {
     if (viewId === 'dashboard') renderDashboard();
+    else if (viewId === 'roadmap') renderRoadmap();
     else if (viewId === 'arah') renderArah();
     else if (viewId === 'akun') renderAkun();
     else if (viewId === 'profile') renderProfile();
@@ -4076,6 +4252,18 @@ function openCharacterEditor(id) {
       </div>
       <div id="chWebcamBox"></div>
       <div class="che-refgrid" id="chRefGrid"></div>
+
+      <!-- ===== CHARACTER SHEET GENERATOR ===== -->
+      <div style="border-top:1px solid var(--border);margin:1.25rem 0 0;padding-top:1rem">
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem"><svg class="ico" style="color:var(--accent)"><use href="#i-grid"/></svg> Character Sheet — kunci konsistensi</div>
+        <div class="che-hint">Dari foto <strong>Master</strong>, buat otomatis set referensi multi-angle & ekspresi (ala AIRA). Makin banyak referensi terkunci → hasil generate makin akurat & konsisten. Pakai Puter/Gemini (gratis, tanpa key, butuh internet).</div>
+        <div class="sheet-opts" id="chSheetOpts"></div>
+        <div class="che-gen-actions">
+          <button class="btn btn-primary btn-sm" id="chSheetBtn" onclick="charGenSheet()"><svg class="ico"><use href="#i-sparkle"/></svg> Buat Character Sheet</button>
+          <button class="btn btn-secondary btn-sm" id="chSheetDlBtn" onclick="charDownloadSheet()" style="display:none"><svg class="ico"><use href="#i-download"/></svg> Unduh lembar sheet</button>
+        </div>
+        <div id="chSheetOut"></div>
+      </div>
     </div>
 
     <div class="che-pane" id="chp-bible">
@@ -4464,12 +4652,133 @@ function charRenderRefs() {
   if (!grid) return;
   const refs = _charEdit.refs || [];
   grid.innerHTML = refs.map((r,i)=>`
-    <div class="che-ref ${r.master?'master':''}" onclick="charSetMaster(${i})" title="Klik untuk jadikan Master">
+    <div class="che-ref ${r.master?'master':''}" onclick="charSetMaster(${i})" title="${r.label?escapeHtml(r.label)+' — ':''}Klik untuk jadikan Master">
       <img src="${r.url}">
+      ${r.label?`<span class="che-ref-label">${escapeHtml(r.label)}</span>`:''}
       <button class="del" onclick="event.stopPropagation();charDelRef(${i})"><svg class="ico"><use href="#i-x"/></svg></button>
     </div>`).join('') + `
     <label class="che-add"><svg class="ico"><use href="#i-plus"/></svg>Tambah foto
       <input type="file" accept="image/*" multiple style="display:none" onchange="charAddRefs(event)"></label>`;
+  charRenderSheetOpts();
+}
+
+// Preset angle & ekspresi untuk Character Sheet (ala AIRA)
+const SHEET_ANGLES = [
+  { id:'front', label:'Front', prompt:'front view, looking straight at camera, centered' },
+  { id:'left45', label:'45° Kiri', prompt:'three-quarter view turned 45 degrees to the left' },
+  { id:'right45', label:'45° Kanan', prompt:'three-quarter view turned 45 degrees to the right' },
+  { id:'profileL', label:'Profil Kiri', prompt:'left side profile view' },
+  { id:'profileR', label:'Profil Kanan', prompt:'right side profile view' },
+];
+const SHEET_EXPR = [
+  { id:'natural', label:'Natural', prompt:'natural neutral expression' },
+  { id:'smile', label:'Senyum', prompt:'warm candid smile' },
+  { id:'laugh', label:'Tertawa', prompt:'laughing happily, joyful' },
+  { id:'lookdown', label:'Menunduk', prompt:'looking down softly, serene' },
+  { id:'thinking', label:'Berpikir', prompt:'thoughtful thinking expression, hand near chin' },
+  { id:'serious', label:'Serius Lembut', prompt:'soft serious confident expression' },
+];
+const SHEET_BODY = [
+  { id:'halfbody', label:'Setengah Badan', prompt:'half body shot, waist up' },
+  { id:'fullbody', label:'Seluruh Badan', prompt:'full body shot, head to toe, standing pose' },
+];
+function charRenderSheetOpts() {
+  const el = document.getElementById('chSheetOpts');
+  if (!el) return;
+  _charEdit._sheetSel = _charEdit._sheetSel || {
+    angles:['front','left45','right45','profileL','profileR'],
+    expr:['natural','smile','laugh','thinking'],
+    body:['halfbody','fullbody']
+  };
+  const s = _charEdit._sheetSel;
+  const chip = (cat, id, label) => `<label class="sheet-chip ${s[cat].includes(id)?'on':''}"><input type="checkbox" ${s[cat].includes(id)?'checked':''} onchange="charToggleSheet('${cat}','${id}')">${label}</label>`;
+  el.innerHTML = `
+    <div class="sheet-cat"><span class="sheet-cat-t">Angle wajah</span><div class="sheet-chips">${SHEET_ANGLES.map(a=>chip('angles',a.id,a.label)).join('')}</div></div>
+    <div class="sheet-cat"><span class="sheet-cat-t">Ekspresi</span><div class="sheet-chips">${SHEET_EXPR.map(a=>chip('expr',a.id,a.label)).join('')}</div></div>
+    <div class="sheet-cat"><span class="sheet-cat-t">Badan</span><div class="sheet-chips">${SHEET_BODY.map(a=>chip('body',a.id,a.label)).join('')}</div></div>`;
+}
+function charToggleSheet(cat, id) {
+  const s = _charEdit._sheetSel;
+  const i = s[cat].indexOf(id);
+  if (i>=0) s[cat].splice(i,1); else s[cat].push(id);
+}
+async function charGenSheet() {
+  const c = _charEdit;
+  const master = (c.refs||[]).find(r=>r.master) || (c.refs||[])[0];
+  if (!master) { toast('Perlu foto Master','Unggah/ambil minimal 1 foto & jadikan Master dulu','warning'); return; }
+  const s = c._sheetSel;
+  // susun daftar shot: angle + ekspresi + badan
+  const shots = [];
+  SHEET_ANGLES.filter(a=>s.angles.includes(a.id)).forEach(a=>shots.push({ label:a.label, prompt:a.prompt, kind:'angle' }));
+  SHEET_EXPR.filter(a=>s.expr.includes(a.id)).forEach(a=>shots.push({ label:a.label, prompt:'front view, '+a.prompt, kind:'expr' }));
+  SHEET_BODY.filter(a=>s.body.includes(a.id)).forEach(a=>shots.push({ label:a.label, prompt:a.prompt, kind:'body' }));
+  if (!shots.length) { toast('Pilih dulu','Centang minimal satu angle/ekspresi/badan','warning'); return; }
+
+  const btn = document.getElementById('chSheetBtn');
+  const orig = btn.innerHTML; btn.disabled = true;
+  const out = document.getElementById('chSheetOut');
+  const idBase = (base) => (c.identity || (c.bible? c.bible.slice(0,300):'') || 'the same person');
+  const generated = [];
+  out.innerHTML = `<div class="sheet-prog" id="chSheetProg"></div>`;
+  const prog = document.getElementById('chSheetProg');
+  for (let i=0; i<shots.length; i++) {
+    const shot = shots[i];
+    btn.innerHTML = `<svg class="ico"><use href="#i-refresh"/></svg> ${i+1}/${shots.length}…`;
+    prog.innerHTML = shots.map((sh,idx)=>`<div class="sheet-cell ${idx<i?'done':idx===i?'active':''}">${generated[idx]?`<img src="${generated[idx].url}">`:`<span>${escapeHtml(sh.label)}</span>`}${idx===i?'<div class="sheet-spin"></div>':''}</div>`).join('');
+    try {
+      const prompt = `${idBase()}. ${shot.prompt}. Keep the exact same face, identity, hairstyle and features as the reference image. Photorealistic, consistent lighting, plain neutral background, high detail`;
+      const res = await generateImageAI(prompt, { width:1024, height:1024, inputImages:[master.url] });
+      generated[i] = { url:res.dataUrl, label:shot.label };
+    } catch (e) {
+      generated[i] = null;
+      console.warn('sheet shot gagal', shot.label, e.message);
+    }
+  }
+  const ok = generated.filter(Boolean);
+  prog.innerHTML = shots.map((sh,idx)=>`<div class="sheet-cell ${generated[idx]?'done':'fail'}">${generated[idx]?`<img src="${generated[idx].url}">`:`<span>✕ ${escapeHtml(sh.label)}</span>`}${generated[idx]?`<span class="sheet-cell-l">${escapeHtml(sh.label)}</span>`:''}</div>`).join('');
+  btn.disabled = false; btn.innerHTML = orig;
+  if (!ok.length) { toast('Gagal','Tidak ada gambar yang berhasil dibuat. Cek internet/login Puter.','error'); return; }
+
+  // Simpan semua ke referensi karakter (terkunci konsistensi)
+  c.refs = c.refs || [];
+  ok.forEach(g => c.refs.push({ url:g.url, master:false, label:g.label, fromSheet:true }));
+  charRenderRefs();
+  _charEdit._lastSheet = ok;
+  document.getElementById('chSheetDlBtn').style.display = '';
+  out.insertAdjacentHTML('beforeend', `<div class="tm-meta" style="margin-top:.5rem">✅ ${ok.length} referensi ditambahkan & terkunci ke karakter. Simpan karakter untuk permanen.</div>`);
+  toast('Sheet jadi', `${ok.length} referensi konsistensi ditambahkan`,'success');
+}
+async function charDownloadSheet() {
+  const shots = _charEdit._lastSheet;
+  if (!shots || !shots.length) return;
+  // susun grid komposit berlabel
+  const cols = Math.min(4, shots.length);
+  const rows = Math.ceil(shots.length/cols);
+  const cell = 320, pad = 12, labelH = 28, headH = 60;
+  const W = cols*cell + (cols+1)*pad;
+  const H = headH + rows*(cell+labelH) + (rows+1)*pad;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  ctx.fillStyle = '#faf8f5'; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 30px sans-serif';
+  ctx.fillText(`${_charEdit.name||'Karakter'} — Character Sheet`, pad, 40);
+  const imgs = await Promise.all(shots.map(s => _tbLoadImg(s.url).catch(()=>null)));
+  imgs.forEach((im,i)=>{
+    const r = Math.floor(i/cols), col = i%cols;
+    const x = pad + col*(cell+pad), y = headH + pad + r*(cell+labelH+pad);
+    ctx.fillStyle = '#fff'; ctx.fillRect(x,y,cell,cell);
+    if (im) {
+      const sc = Math.min(cell/im.width, cell/im.height);
+      const w = im.width*sc, h = im.height*sc;
+      ctx.drawImage(im, x+(cell-w)/2, y+(cell-h)/2, w, h);
+    }
+    ctx.fillStyle = '#333'; ctx.font = '600 18px sans-serif'; ctx.textAlign='center';
+    ctx.fillText(shots[i].label||'', x+cell/2, y+cell+20);
+    ctx.textAlign='left';
+  });
+  const url = cv.toDataURL('image/jpeg', 0.92);
+  _tbDownload(url, (_charEdit.name||'karakter').replace(/\s+/g,'_')+'_sheet.jpg');
+  toast('Diunduh','Lembar Character Sheet tersimpan','success');
 }
 async function charAddRefs(ev) {
   const files = [...ev.target.files];
@@ -6472,6 +6781,91 @@ function kirimHomeCmd() {
     if (box) { box.value = val; box.focus(); }
   }, 120);
 }
+// ============================================================
+// ROADMAP ZERO-TO-HERO — 6 tahap, pemula → profesional → monetisasi
+// ============================================================
+function _roadmapStages() {
+  const arahDone = _arahLengkap(state.arah || {}) >= 4;
+  const akunDone = AKUN_CHECKLIST.filter(it => (state.akunCheck||{})[it.id]).length >= AKUN_CHECKLIST.length;
+  const hasChar = (state.characters||[]).length > 0;
+  const assetsCount = (state.assets||[]).length;
+  const hasProduced = assetsCount >= 1;
+  const hasMany = assetsCount >= 8;
+  const hasSchedule = (state.schedules||[]).length > 0;
+  return [
+    { id:'arah', lvl:'Pemula', ic:'i-compass', title:'Temukan Arah', desc:'Tentukan niche, audiens, platform & gaya brand-mu. Fondasi semua konten.',
+      tasks:[{t:'Isi niche & audiens',ok:arahDone},{t:'Pilih platform utama',ok:arahDone},{t:'Tetapkan brand voice',ok:arahDone}],
+      done:arahDone, cta:'Mulai Temukan Arah', go:()=>switchView('arah') },
+    { id:'akun', lvl:'Pemula', ic:'i-briefcase', title:'Bangun Akun Pro', desc:'Siapkan akun sosmed profesional: handle, bio, aset brand, keamanan.',
+      tasks:[{t:'Aset brand & bio',ok:akunDone},{t:'Buat akun berurutan',ok:akunDone},{t:'Mode Creator + 2FA',ok:akunDone}],
+      done:akunDone, cta:'Bangun Akun', go:()=>switchView('akun') },
+    { id:'char', lvl:'Menengah', ic:'i-users', title:'Ciptakan Karakter/Identitas', desc:'Bikin AI Influencer atau kunci identitas visual & suara agar konten selalu konsisten.',
+      tasks:[{t:'Buat 1 karakter',ok:hasChar},{t:'Foto referensi/sheet',ok:hasChar},{t:'Kunci suara',ok:(state.characters||[]).some(c=>c.voiceCfg?.locked)}],
+      done:hasChar, cta:'Buka Karakter AI', go:()=>switchView('characters') },
+    { id:'produce', lvl:'Menengah', ic:'i-agent', title:'Produksi Konten Pertama', desc:'Pakai AI Studio: foto, video, atau storyboard. Hasilkan konten pertamamu yang konsisten.',
+      tasks:[{t:'Generate konten pertama',ok:hasProduced},{t:'Simpan ke Assets',ok:hasProduced},{t:'Coba mode Storyboard',ok:hasMany}],
+      done:hasProduced, cta:'Buka AI Studio', go:()=>switchView('aistudio') },
+    { id:'consistent', lvl:'Profesional', ic:'i-calendar', title:'Konsisten & Terjadwal', desc:'Bangun kebiasaan: jadwalkan upload, produksi rutin, jaga kualitas & kuantitas.',
+      tasks:[{t:'Kumpulkan 8+ aset konten',ok:hasMany},{t:'Atur jadwal upload',ok:hasSchedule},{t:'Pakai kalender konten',ok:hasSchedule}],
+      done:hasMany && hasSchedule, cta:'Atur Jadwal', go:()=>switchView('schedule') },
+    { id:'monet', lvl:'Profesional', ic:'i-briefcase', title:'Monetisasi', desc:'Ubah audiens jadi penghasilan: affiliate, endorse/UGC brand, produk digital, program kreator.',
+      tasks:[{t:'Audiens & konten stabil',ok:hasMany && hasSchedule},{t:'Buat konten affiliate/UGC',ok:false},{t:'Tawarkan jasa/produk',ok:false}],
+      done:false, cta:'Pelajari monetisasi', go:()=>openMonetGuide() },
+  ];
+}
+function renderRoadmap() {
+  const stages = _roadmapStages();
+  const total = stages.length;
+  const doneCount = stages.filter(s=>s.done).length;
+  const pct = Math.round(doneCount/total*100);
+  const fill = document.getElementById('rmProgFill'); if (fill) fill.style.width = pct+'%';
+  const lbl = document.getElementById('rmProgLabel'); if (lbl) lbl.textContent = `${doneCount}/${total} tahap · ${pct}% selesai`;
+  // level badge dari tahap saat ini
+  const curIdx = stages.findIndex(s=>!s.done);
+  const cur = curIdx<0 ? stages[stages.length-1] : stages[curIdx];
+  const lvlName = document.getElementById('rmLevelName'); if (lvlName) lvlName.textContent = curIdx<0 ? 'Hero 🏆' : cur.lvl;
+  const lvlDesc = document.getElementById('rmLevelDesc');
+  if (lvlDesc) lvlDesc.textContent = curIdx<0 ? 'Semua tahap selesai!' : `Lanjut: ${cur.title}`;
+
+  const track = document.getElementById('rmTrack');
+  if (!track) return;
+  track.innerHTML = stages.map((s,i)=>{
+    const isCurrent = (i===curIdx);
+    const stateCls = s.done ? 'done' : isCurrent ? 'current' : 'locked';
+    const statusTxt = s.done ? '✓ Selesai' : isCurrent ? '● Sedang di sini' : 'Terkunci';
+    const btn = s.done
+      ? `<button class="btn btn-ghost btn-sm" onclick='(${s.go.toString()})()'>Tinjau ulang</button>`
+      : `<button class="btn ${isCurrent?'btn-primary':'btn-secondary'} btn-sm" onclick='(${s.go.toString()})()'><svg class="ico"><use href="#i-arrow"/></svg> ${escapeHtml(s.cta)}</button>`;
+    return `<div class="rm-stage ${stateCls}">
+      <div class="rm-node"><svg class="ico"><use href="#${s.ic}"/></svg><span class="rm-node-num">${s.done?'✓':i+1}</span></div>
+      <div class="rm-card">
+        <div class="rm-card-top"><span class="rm-card-lvl">${s.lvl}</span><span class="rm-status ${stateCls}">${statusTxt}</span></div>
+        <h3>${escapeHtml(s.title)}</h3>
+        <p>${escapeHtml(s.desc)}</p>
+        <div class="rm-tasks">${s.tasks.map(t=>`<div class="rm-task ${t.ok?'ok':''}"><span class="tk">${t.ok?'<svg class="ico"><use href="#i-check"/></svg>':''}</span>${escapeHtml(t.t)}</div>`).join('')}</div>
+        <div class="rm-card-cta">${btn}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function openMonetGuide() {
+  openModal(`
+    <div class="modal-header"><h2 class="modal-title"><svg class="ico" style="color:var(--accent)"><use href="#i-briefcase"/></svg> Jalur Monetisasi Kreator</h2>
+      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <p style="color:var(--text-secondary);font-size:.9rem;line-height:1.6;margin-bottom:1rem">Setelah audiens & konten stabil, ini cara umum kreator menghasilkan. Pilih yang paling cocok dengan niche-mu — bisa lebih dari satu.</p>
+    <div class="monet-list">
+      <div class="monet-item"><b>🛒 Affiliate (Shopee/TikTok)</b><p>Review & rekomendasi produk pakai link afiliasi. Cocok banget dgn karakter AI Influencer + storyboard iklan di aplikasi ini.</p></div>
+      <div class="monet-item"><b>🤝 Endorse / UGC Brand</b><p>Bikin konten untuk brand (berbayar). Character Sheet & konsistensi jadi nilai jual ke klien.</p></div>
+      <div class="monet-item"><b>📦 Produk Digital</b><p>Jual template, preset, ebook, atau kelas sesuai keahlianmu.</p></div>
+      <div class="monet-item"><b>💰 Program Kreator Platform</b><p>Monetisasi langsung: YouTube Partner, TikTok Creativity, dll — butuh konsistensi & jumlah pengikut tertentu.</p></div>
+      <div class="monet-item"><b>🎁 Dukungan Fans</b><p>Trakteer/Saweria, membership, konten eksklusif untuk pendukung setia.</p></div>
+    </div>
+    <div style="margin-top:1.2rem;display:flex;gap:.5rem;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="closeModal();switchView('characters')"><svg class="ico"><use href="#i-users"/></svg> Bikin AI Influencer</button>
+      <button class="btn btn-secondary" onclick="closeModal();switchView('aistudio')"><svg class="ico"><use href="#i-agent"/></svg> Produksi Konten Iklan</button>
+    </div>
+  `);
+}
 function lanjutPerjalanan() {
   const arahDone = _arahLengkap(state.arah || {});
   const akunDone = AKUN_CHECKLIST.filter(it => (state.akunCheck||{})[it.id]).length;
@@ -7105,6 +7499,7 @@ const STUDIO_MODES = [
   { id:'chat',  emo:'<svg class="ico"><use href="#i-chat"/></svg>', nm:'Chat', d:'Ide, caption, skrip', purpose:'chat' },
   { id:'image', emo:'<svg class="ico"><use href="#i-palette"/></svg>', nm:'Foto', d:'Generate gambar', purpose:'image' },
   { id:'video', emo:'<svg class="ico"><use href="#i-video"/></svg>', nm:'Video', d:'Klip pendek AI', purpose:'video' },
+  { id:'storyboard', emo:'<svg class="ico"><use href="#i-grid"/></svg>', nm:'Storyboard', d:'Adegan/iklan → foto → video', purpose:'image' },
 ];
 const studioState = {
   mode: 'smart',
@@ -7112,6 +7507,12 @@ const studioState = {
   modelByPurpose: { chat:'', image:'', video:'' },
   imgRatio: '1080x1080', imgStyle: 'Realistis',
   vidDur: '5', vidAspect: '1080x1920',
+  refCharId: '',        // karakter terpilih (foto master + bible jadi referensi)
+  imgRefs: [],          // gambar referensi tambahan utk mode Foto (pakaian/produk/lokasi/galeri)
+  vidStartFrame: null,  // frame awal video (dataUrl)
+  vidEndFrame: null,    // frame akhir video (dataUrl)
+  sbPanels: [],         // storyboard: [{desc, dialog, img, video, status}]
+  sbRatio: '1080x1920',
 };
 const STUDIO_QUICK = {
   chat: [
@@ -7162,15 +7563,16 @@ function renderAIStudio() {
   const active = studioActiveByPurpose(studioState.mode==='smart' ? null : purpose);
 
   // Judul panel hasil + placeholder + label input + label tombol, sesuai mode
-  const titleMap = { smart:'Hasil Smart', chat:'Percakapan', image:'Hasil Foto', video:'Hasil Video' };
+  const titleMap = { smart:'Hasil Smart', chat:'Percakapan', image:'Hasil Foto', video:'Hasil Video', storyboard:'Papan Cerita' };
   const hintMap = {
     smart:'Sistem menebak dari kalimatmu — hasilnya muncul di sini',
     chat:'Balasan AI muncul di sini seperti percakapan',
     image:'Foto hasil generate tampil besar di sini',
-    video:'Klip video hasil generate tampil di sini'
+    video:'Klip video hasil generate tampil di sini',
+    storyboard:'Tiap panel: foto konsisten → video. Susun jadi iklan/adegan utuh.'
   };
-  const labelMap = { smart:'Ketik apa saja', chat:'Pesan', image:'Deskripsi foto', video:'Deskripsi adegan' };
-  const btnMap = { smart:'Kirim', chat:'Kirim', image:'Generate Foto', video:'Generate Video' };
+  const labelMap = { smart:'Ketik apa saja', chat:'Pesan', image:'Deskripsi foto', video:'Deskripsi adegan', storyboard:'Konsep iklan / tempel storyboard' };
+  const btnMap = { smart:'Kirim', chat:'Kirim', image:'Generate Foto', video:'Generate Video', storyboard:'Susun Storyboard' };
   const pt = document.getElementById('studioPanelTitle'); if (pt) pt.textContent = titleMap[studioState.mode] || 'AI Studio';
   const oh = document.getElementById('studioOutputHint'); if (oh) oh.textContent = hintMap[studioState.mode] || '';
   const il = document.getElementById('studioInputLabel'); if (il) il.textContent = labelMap[studioState.mode] || 'Prompt';
@@ -7182,7 +7584,8 @@ function renderAIStudio() {
       smart:"Ketik apa saja... (mis: 'buatkan foto kopi senja' / 'video ombak' / 'ide konten dakwah')",
       chat:"Tanya AI: ide konten, caption, skrip, hook...",
       image:"Deskripsikan foto yang diinginkan (mis: kopi latte art di kafe hangat)",
-      video:"Deskripsikan adegan video pendek (mis: matahari terbit di pantai)"
+      video:"Deskripsikan adegan video pendek (mis: matahari terbit di pantai)",
+      storyboard:"Konsep iklan (mis: 'iklan night cream DRVE, 5 adegan, gaya UGC hangat')\n\nATAU tempel storyboard dari GPT/ChatGPT — satu adegan per baris, atau format 'Shot 1: ...'"
     };
     inp.placeholder = phMap[studioState.mode] || '';
   }
@@ -7206,6 +7609,7 @@ function renderAIStudio() {
   }
 
   studioRenderOptions();
+  studioRenderRefs();
   studioRenderQuick();
   studioRenderMessages();
 }
@@ -7215,15 +7619,228 @@ function scPill(emo, options, onchange) {
   return `<label class="sc-pill" title=""><span class="pill-emo">${emo}</span><select onchange="${onchange}">${options}</select></label>`;
 }
 
+// ============================================================
+// STORYBOARD STUDIO — konsep/tempelan → panel → foto konsisten → video → iklan utuh
+// ============================================================
+// Bangun daftar panel: deteksi apakah user menempel storyboard, atau minta AI menyusun.
+async function studioBuildStoryboard(message) {
+  const messages = document.getElementById('aiMessages');
+  const sendBtn = document.getElementById('aiSendBtn'); sendBtn.disabled = true;
+  messages.innerHTML = `<div class="ai-message assistant" id="sbLoad"><div class="loading-dots"><span></span><span></span><span></span></div> Menyusun papan cerita...</div>`;
+
+  // Heuristik: apakah teks sudah berupa storyboard (banyak baris / ada 'shot'/'scene'/'adegan'/nomor)?
+  const looksLikeSb = /(\n.*){2,}/.test(message) && /(shot|scene|adegan|panel|langkah|step|\d\s*[.):])/i.test(message);
+  let panels = [];
+  try {
+    if (looksLikeSb) {
+      panels = await studioParsePastedStoryboard(message);
+    } else {
+      panels = await studioAIStoryboard(message);
+    }
+  } catch (e) {
+    document.getElementById('sbLoad').innerHTML = `<svg class="ico"><use href="#i-warn"/></svg> Gagal menyusun: ${escapeHtml(e.message||'')}. Coba lagi atau tempel storyboard manual.`;
+    sendBtn.disabled = false; return;
+  }
+  if (!panels.length) {
+    document.getElementById('sbLoad').innerHTML = `<svg class="ico"><use href="#i-warn"/></svg> Tidak ada panel terdeteksi. Coba jelaskan konsep, atau tempel storyboard (1 adegan per baris).`;
+    sendBtn.disabled = false; return;
+  }
+  studioState.sbPanels = panels.map((p,i)=>({ n:i+1, desc:p.desc||'', dialog:p.dialog||'', img:null, video:null, status:'idle' }));
+  sendBtn.disabled = false;
+  studioRenderStoryboard();
+  toast('Papan cerita siap', `${panels.length} panel — generate foto tiap panel`,'success');
+}
+// Minta AI menyusun storyboard dari konsep
+async function studioAIStoryboard(concept) {
+  const c = (state.characters||[]).find(x=>x.id===studioState.refCharId);
+  const prod = (studioState.imgRefs||[]).length ? 'Ada gambar produk yang diunggah (tampilkan produk di beberapa panel).' : '';
+  const prompt = `Kamu adalah sutradara iklan pendek untuk media sosial (TikTok/Reels/UGC). Susun storyboard dari konsep berikut.
+Konsep: ${concept}
+${c?`Talent/karakter: ${c.name} — ${(c.identity||c.tagline||'').slice(0,200)}`:''}
+${prod}
+
+Keluarkan 4-6 panel. Balas HANYA JSON array valid tanpa penjelasan, format:
+[{"desc":"deskripsi visual sinematik panel (angle, aksi, ekspresi, setting, pencahayaan) dalam Bahasa Inggris untuk generator gambar","dialog":"dialog/voiceover singkat panel dalam Bahasa Indonesia natural"}]`;
+  const raw = await callAI(prompt);
+  return studioExtractJsonPanels(raw);
+}
+// Parse storyboard yang ditempel user (dari GPT dsb)
+async function studioParsePastedStoryboard(text) {
+  // Coba minta AI merapikan jadi JSON (paling andal utk beragam format)
+  try {
+    const prompt = `Ubah storyboard berikut menjadi JSON array. Tiap panel: {"desc":"deskripsi visual (Inggris, untuk generator gambar)","dialog":"dialog/narasi (biarkan bahasa aslinya)"}. Balas HANYA JSON.\n\nStoryboard:\n"""${text.slice(0,3000)}"""`;
+    const raw = await callAI(prompt);
+    const parsed = studioExtractJsonPanels(raw);
+    if (parsed.length) return parsed;
+  } catch(_) {}
+  // Fallback: pisah per baris/blok
+  return text.split(/\n{2,}|\n(?=\s*(?:shot|scene|adegan|panel|step|langkah|\d\s*[.):]))/i)
+    .map(s=>s.trim()).filter(s=>s.length>4)
+    .map(s=>({ desc:s.replace(/^(shot|scene|adegan|panel|step|langkah)\s*\d*\s*[:.)-]*/i,'').trim(), dialog:'' }));
+}
+function studioExtractJsonPanels(raw) {
+  if (!raw) return [];
+  let t = raw.trim().replace(/^```(json)?/i,'').replace(/```$/,'').trim();
+  const s = t.indexOf('['), e = t.lastIndexOf(']');
+  if (s>=0 && e>s) t = t.slice(s, e+1);
+  try {
+    const arr = JSON.parse(t);
+    if (Array.isArray(arr)) return arr.map(p=>({ desc:(p.desc||p.visual||p.scene||'').toString(), dialog:(p.dialog||p.narration||p.voiceover||'').toString() })).filter(p=>p.desc);
+  } catch(_){}
+  return [];
+}
+// Render papan cerita (grid panel)
+function studioRenderStoryboard() {
+  const messages = document.getElementById('aiMessages');
+  if (!messages) return;
+  const panels = studioState.sbPanels || [];
+  if (!panels.length) {
+    messages.innerHTML = `<div class="ai-message system media-empty"><svg class="ico"><use href="#i-grid"/></svg> <b>Storyboard Studio</b><br>Tulis konsep iklan (mis: "iklan night cream DRVE, gaya UGC hangat, 5 adegan") <b>atau tempel storyboard dari GPT</b>, lalu klik <b>Susun Storyboard</b>.<br><br><span style="font-size:.78rem;color:var(--text-muted)">Tiap panel jadi foto konsisten (pakai karakter + produk), lalu bisa diubah jadi video. Susun semuanya jadi iklan utuh.</span></div>`;
+    return;
+  }
+  const anyImg = panels.some(p=>p.img);
+  const anyVid = panels.some(p=>p.video);
+  let html = `<div class="sb-bar">
+    <button class="btn btn-primary btn-sm" onclick="studioGenAllPanels()"><svg class="ico"><use href="#i-image"/></svg> Generate semua foto</button>
+    ${anyImg?`<button class="btn btn-secondary btn-sm" onclick="studioVideoAllPanels()"><svg class="ico"><use href="#i-video"/></svg> Jadikan video semua</button>`:''}
+    ${anyImg?`<button class="btn btn-ghost btn-sm" onclick="studioSaveStoryboardSheet()"><svg class="ico"><use href="#i-download"/></svg> Unduh papan</button>`:''}
+    ${(anyImg||anyVid)?`<button class="btn btn-ghost btn-sm" onclick="studioSaveAllPanels()"><svg class="ico"><use href="#i-save"/></svg> Simpan ke Assets</button>`:''}
+    <button class="btn btn-ghost btn-sm" onclick="studioClearStoryboard()"><svg class="ico"><use href="#i-x"/></svg> Reset</button>
+  </div><div class="sb-grid">`;
+  panels.forEach((p,i)=>{
+    html += `<div class="sb-panel">
+      <div class="sb-media">
+        ${p.video?`<video src="${p.video}" controls playsinline></video>`
+          : p.img?`<img src="${p.img}">`
+          : `<div class="sb-ph">${p.status==='gen'?'<div class="sheet-spin"></div>':`<span>Panel ${p.n}</span>`}</div>`}
+        <span class="sb-num">${p.n}</span>
+      </div>
+      <textarea class="sb-desc" rows="2" oninput="studioState.sbPanels[${i}].desc=this.value" placeholder="Deskripsi visual...">${escapeHtml(p.desc)}</textarea>
+      ${p.dialog?`<div class="sb-dialog">💬 ${escapeHtml(p.dialog)}</div>`:''}
+      <div class="sb-acts">
+        <button onclick="studioGenPanel(${i})" title="Generate/regenerate foto"><svg class="ico"><use href="#i-image"/></svg></button>
+        ${p.img?`<button onclick="studioVideoPanel(${i})" title="Jadikan video"><svg class="ico"><use href="#i-video"/></svg></button>`:''}
+        ${p.img?`<button onclick="studioPanelToAsset(${i})" title="Simpan ke Assets"><svg class="ico"><use href="#i-save"/></svg></button>`:''}
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+  messages.innerHTML = html;
+}
+function studioClearStoryboard() { studioState.sbPanels = []; studioRenderStoryboard(); }
+// Bangun prompt gambar panel dgn instruksi konsistensi
+function _sbPanelPrompt(desc) {
+  const refs = studioCollectImageRefs();
+  let extra = '';
+  if (refs.length) {
+    extra = ', keep the same person/face consistent with the reference image, same identity';
+    if ((studioState.imgRefs||[]).length) extra += ', feature the referenced product naturally';
+  }
+  const styleTxt = IMG_STYLE_MAP[studioState.imgStyle] || '';
+  return `${styleTxt?styleTxt+', ':''}${desc}${extra}, high quality, cinematic, detailed`;
+}
+async function studioGenPanel(i) {
+  const p = studioState.sbPanels[i];
+  if (!p || !p.desc.trim()) { toast('Kosong','Isi deskripsi panel dulu','warning'); return; }
+  p.status = 'gen'; studioRenderStoryboard();
+  try {
+    const ratio = RATIO_PRESETS.find(r=>r.id===studioState.sbRatio) || RATIO_PRESETS[2];
+    const refs = studioCollectImageRefs();
+    const res = await generateImageAI(_sbPanelPrompt(p.desc), { width:ratio.w, height:ratio.h, inputImages: refs.length?refs:undefined });
+    p.img = res.dataUrl; p.status = 'done';
+  } catch (e) {
+    p.status = 'idle';
+    toast('Gagal panel '+p.n, e.message||'coba lagi','error');
+  }
+  studioRenderStoryboard();
+}
+async function studioGenAllPanels() {
+  for (let i=0;i<studioState.sbPanels.length;i++) {
+    if (!studioState.sbPanels[i].img) await studioGenPanel(i);
+  }
+  toast('Selesai','Semua foto panel dibuat. Cek & regenerate bila perlu.','success');
+}
+async function studioVideoPanel(i) {
+  const p = studioState.sbPanels[i];
+  if (!p || !p.img) { toast('Perlu foto','Generate foto panel dulu','warning'); return; }
+  p.status = 'gen'; studioRenderStoryboard();
+  const setMsg = ()=>{};
+  try {
+    const ratio = RATIO_PRESETS.find(r=>r.id===studioState.sbRatio) || RATIO_PRESETS[2];
+    const aspect = (ratio.w>=ratio.h)?(ratio.w/ratio.h>=1.7?'16:9':'1:1'):'9:16';
+    let enPrompt = p.desc;
+    const res = await generateVideoAI(enPrompt, { duration:'8', aspect_ratio:aspect, imageUrl:p.img, onProgress:setMsg });
+    p.video = res.url; p.status = 'done';
+  } catch (e) {
+    p.status = 'done';
+    toast('Video panel '+p.n+' gagal', e.message||'coba lagi','error');
+  }
+  studioRenderStoryboard();
+}
+async function studioVideoAllPanels() {
+  const withImg = studioState.sbPanels.filter(p=>p.img && !p.video);
+  if (!withImg.length) { toast('Belum ada foto','Generate foto panel dulu','info'); return; }
+  if (!confirm(`Jadikan video ${withImg.length} panel? Tiap video butuh 1-3 menit & memakai kredit/kuota provider. Lanjut?`)) return;
+  for (let i=0;i<studioState.sbPanels.length;i++) {
+    if (studioState.sbPanels[i].img && !studioState.sbPanels[i].video) await studioVideoPanel(i);
+  }
+  toast('Selesai','Semua panel jadi video','success');
+}
+function studioPanelToAsset(i) {
+  const p = studioState.sbPanels[i];
+  if (!p) return;
+  state.assets = state.assets || [];
+  if (p.video) state.assets.unshift({ id:'a'+Date.now(), ts:Date.now(), type:'video', name:`Storyboard panel ${p.n}`, url:p.video, content:'', project:'' });
+  if (p.img) state.assets.unshift({ id:'a'+(Date.now()+1), ts:Date.now(), type:'image', name:`Storyboard panel ${p.n}`, url:p.img, content:'', project:'' });
+  save('assets', state.assets);
+  toast('Tersimpan',`Panel ${p.n} → Assets`,'success');
+}
+function studioSaveAllPanels() {
+  let n=0;
+  studioState.sbPanels.forEach((p,i)=>{ if (p.img||p.video){ studioPanelToAsset(i); n++; } });
+  if (n) toast('Tersimpan',`${n} panel disimpan ke Assets`,'success');
+}
+async function studioSaveStoryboardSheet() {
+  const panels = studioState.sbPanels.filter(p=>p.img);
+  if (!panels.length) { toast('Belum ada foto','Generate foto panel dulu','info'); return; }
+  const cols = Math.min(3, panels.length), rows = Math.ceil(panels.length/cols);
+  const cw = 400, ch = 500, pad = 14, head = 56, labH = 34;
+  const W = cols*cw+(cols+1)*pad, H = head+rows*(ch+labH)+(rows+1)*pad;
+  const cv = document.createElement('canvas'); cv.width=W; cv.height=H;
+  const ctx = cv.getContext('2d');
+  ctx.fillStyle='#faf8f5'; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#1a1a1a'; ctx.font='bold 26px sans-serif';
+  ctx.fillText('Storyboard — '+ (new Date().toLocaleDateString('id-ID')), pad, 38);
+  const imgs = await Promise.all(panels.map(p=>_tbLoadImg(p.img).catch(()=>null)));
+  imgs.forEach((im,i)=>{
+    const r=Math.floor(i/cols), col=i%cols;
+    const x=pad+col*(cw+pad), y=head+pad+r*(ch+labH+pad);
+    ctx.fillStyle='#fff'; ctx.fillRect(x,y,cw,ch);
+    if (im){ const sc=Math.min(cw/im.width,ch/im.height),w=im.width*sc,h=im.height*sc; ctx.drawImage(im,x+(cw-w)/2,y+(ch-h)/2,w,h); }
+    ctx.fillStyle='#e8dfd0'; ctx.fillRect(x,y,44,32);
+    ctx.fillStyle='#1a1a1a'; ctx.font='bold 20px sans-serif'; ctx.fillText(panels[i].n, x+14, y+23);
+    ctx.fillStyle='#444'; ctx.font='14px sans-serif';
+    const dlg=(panels[i].dialog||panels[i].desc||'').slice(0,60);
+    ctx.fillText(dlg, x+4, y+ch+22);
+  });
+  _tbDownload(cv.toDataURL('image/jpeg',0.9), 'storyboard_'+Date.now()+'.jpg');
+  toast('Diunduh','Papan storyboard tersimpan','success');
+}
+
 function studioRenderMessages() {
   const messages = document.getElementById('aiMessages');
   if (!messages) return;
+  // Mode Storyboard: papan panel (foto→video per adegan)
+  if (studioState.mode === 'storyboard') { studioRenderStoryboard(); return; }
   // Mode Foto/Video: jangan timpa panel hasil dengan riwayat chat.
   if (studioState.mode === 'image' || studioState.mode === 'video') {
     // Bila sudah ada hasil media yang tampil, biarkan (jangan render ulang saat ganti dropdown)
     if (messages.querySelector('.media-result')) return;
     const meta = PURPOSE_META[studioState.mode];
-    messages.innerHTML = `<div class="ai-message system media-empty">${meta.icon} <b>${meta.label}</b><br>Isi deskripsi di kiri, atur pengaturan, lalu klik <b>Generate</b>. Hasil ${studioState.mode==='image'?'foto':'video'} akan tampil besar di sini.</div>`;
+    const refTip = studioState.mode==='image'
+      ? 'Tip: pilih <b>karakter</b> + tambah gambar produk/pakaian/lokasi di panel Referensi agar wajah tetap konsisten.'
+      : 'Tip: pilih <b>karakter</b> atau unggah <b>frame awal/akhir</b> di panel Referensi untuk video yang konsisten.';
+    messages.innerHTML = `<div class="ai-message system media-empty">${meta.icon} <b>${meta.label}</b><br>Isi deskripsi di kiri, atur pengaturan, lalu klik <b>Generate</b>. Hasil ${studioState.mode==='image'?'foto':'video'} akan tampil besar di sini.<br><br><span style="font-size:.78rem;color:var(--text-muted)">${refTip}</span></div>`;
     return;
   }
   if (state.chatHistory.length > 0) {
@@ -7241,6 +7858,107 @@ function studioRenderMessages() {
     messages.innerHTML = `<div class="ai-message system">Selamat datang di AI Studio! Ketik apa saja — mode <b>Smart</b> otomatis mengenali apakah kamu ingin ngobrol, membuat foto, atau video. Atau pilih mode manual di atas.
 Tips: atur & simpan API key dulu di menu Pengaturan.</div>`;
   }
+}
+
+// Panel Referensi: karakter tersimpan + gambar galeri. Muncul di mode Foto & Video.
+function studioRenderRefs() {
+  const el = document.getElementById('studioRefs');
+  if (!el) return;
+  const m = studioState.mode;
+  if (m !== 'image' && m !== 'video' && m !== 'storyboard') { el.innerHTML = ''; el.style.display='none'; return; }
+  el.style.display = 'block';
+  const chars = state.characters || [];
+  const selChar = chars.find(c => c.id === studioState.refCharId);
+
+  // Dropdown karakter
+  let html = `<div class="sr-head"><svg class="ico"><use href="#i-users"/></svg> Referensi <span class="sr-sub">(opsional — untuk konsistensi)</span></div>`;
+  html += `<div class="sr-row">
+    <select class="form-select sr-charsel" onchange="studioState.refCharId=this.value;renderAIStudio()">
+      <option value="">— Tanpa karakter —</option>
+      ${chars.map(c=>`<option value="${c.id}" ${studioState.refCharId===c.id?'selected':''}>${escapeHtml(c.name||'Tanpa nama')}</option>`).join('')}
+    </select>`;
+  if (chars.length === 0) html += `<button class="btn btn-ghost btn-sm" onclick="switchView('characters')" title="Buat karakter dulu"><svg class="ico"><use href="#i-plus"/></svg></button>`;
+  html += `</div>`;
+
+  // Pratinjau foto master karakter terpilih
+  if (selChar) {
+    const master = (selChar.refs||[]).find(r=>r.master) || (selChar.refs||[])[0];
+    html += `<div class="sr-charprev">
+      ${master?`<img src="${master.url}">`:`<div class="sr-noimg"><svg class="ico"><use href="#i-user"/></svg></div>`}
+      <div class="sr-charinfo"><b>${escapeHtml(selChar.name)}</b><span>${(selChar.refs||[]).length} foto referensi${selChar.voiceCfg?.locked?' · 🎙️ suara':''}</span></div>
+    </div>`;
+  }
+
+  if (m === 'image' || m === 'storyboard') {
+    // Gambar referensi tambahan (pakaian/produk/lokasi/galeri)
+    const lbl = m === 'storyboard' ? 'Produk / gambar untuk iklan' : 'Gambar dari galeri';
+    html += `<div class="sr-label">${lbl} <span class="sr-sub">(produk, pakaian, lokasi)</span></div>`;
+    html += `<div class="sr-thumbs">`;
+    (studioState.imgRefs||[]).forEach((r,i)=>{
+      html += `<div class="sr-thumb"><img src="${r}"><button onclick="studioDelImgRef(${i})"><svg class="ico"><use href="#i-x"/></svg></button></div>`;
+    });
+    if ((studioState.imgRefs||[]).length < 4)
+      html += `<label class="sr-add"><svg class="ico"><use href="#i-plus"/></svg><input type="file" accept="image/*" multiple style="display:none" onchange="studioAddImgRefs(event)"></label>`;
+    html += `</div>`;
+  } else if (m === 'video') {
+    // Frame awal & akhir dari galeri/karakter
+    html += `<div class="sr-label">Frame video <span class="sr-sub">(gambar awal & akhir)</span></div>`;
+    html += `<div class="sr-frames">
+      <div class="sr-frame">
+        <div class="sr-frame-t">Frame awal</div>
+        ${studioState.vidStartFrame?`<div class="sr-thumb big"><img src="${studioState.vidStartFrame}"><button onclick="studioState.vidStartFrame=null;renderAIStudio()"><svg class="ico"><use href="#i-x"/></svg></button></div>`
+          :`<label class="sr-add big"><svg class="ico"><use href="#i-plus"/></svg><span>Unggah</span><input type="file" accept="image/*" style="display:none" onchange="studioSetFrame('start',event)"></label>`}
+        ${selChar && !studioState.vidStartFrame?`<button class="sr-usechar" onclick="studioUseCharFrame('start')">Pakai foto ${escapeHtml(selChar.name)}</button>`:''}
+      </div>
+      <div class="sr-frame">
+        <div class="sr-frame-t">Frame akhir <span class="sr-sub">(opsional)</span></div>
+        ${studioState.vidEndFrame?`<div class="sr-thumb big"><img src="${studioState.vidEndFrame}"><button onclick="studioState.vidEndFrame=null;renderAIStudio()"><svg class="ico"><use href="#i-x"/></svg></button></div>`
+          :`<label class="sr-add big"><svg class="ico"><use href="#i-plus"/></svg><span>Unggah</span><input type="file" accept="image/*" style="display:none" onchange="studioSetFrame('end',event)"></label>`}
+      </div>
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+async function studioAddImgRefs(ev) {
+  const files = [...ev.target.files];
+  for (const f of files) {
+    if ((studioState.imgRefs||[]).length >= 4) break;
+    if (f.size > 8*1024*1024) { toast('Terlalu besar', f.name+' > 8MB','warning'); continue; }
+    const url = await _tbReadFile(f);
+    studioState.imgRefs = studioState.imgRefs || [];
+    studioState.imgRefs.push(url);
+  }
+  ev.target.value = '';
+  renderAIStudio();
+}
+function studioDelImgRef(i) { studioState.imgRefs.splice(i,1); renderAIStudio(); }
+async function studioSetFrame(which, ev) {
+  const f = ev.target.files[0]; if (!f) return;
+  const url = await _tbReadFile(f);
+  if (which==='start') studioState.vidStartFrame = url; else studioState.vidEndFrame = url;
+  ev.target.value = '';
+  renderAIStudio();
+}
+function studioUseCharFrame(which) {
+  const c = (state.characters||[]).find(x=>x.id===studioState.refCharId);
+  if (!c) return;
+  const master = (c.refs||[]).find(r=>r.master) || (c.refs||[])[0];
+  if (!master) { toast('Belum ada foto','Karakter ini belum punya foto master','warning'); return; }
+  if (which==='start') studioState.vidStartFrame = master.url; else studioState.vidEndFrame = master.url;
+  renderAIStudio();
+}
+// Kumpulkan semua gambar referensi untuk generate (karakter master + galeri)
+function studioCollectImageRefs() {
+  const refs = [];
+  const c = (state.characters||[]).find(x=>x.id===studioState.refCharId);
+  if (c) {
+    const master = (c.refs||[]).find(r=>r.master) || (c.refs||[])[0];
+    if (master) refs.push(master.url);
+    // sertakan hingga 2 foto tambahan karakter untuk konsistensi angle
+    (c.refs||[]).filter(r=>r!==master).slice(0,2).forEach(r=>refs.push(r.url));
+  }
+  (studioState.imgRefs||[]).forEach(u=>refs.push(u));
+  return refs.slice(0,6);
 }
 
 // Toolbar pengaturan RINGKAS (ala Google Flow): provider + model + opsi kontekstual sebagai pill dropdown
@@ -7279,10 +7997,20 @@ function studioRenderOptions() {
   } else if (m === 'video') {
     pills += scPill('<svg class="ico"><use href="#i-target"/></svg>', RATIO_PRESETS.map(r=>`<option value="${r.id}" ${studioState.vidAspect===r.id?'selected':''}>${r.nm}</option>`).join(''), 'studioState.vidAspect=this.value;renderAIStudio()');
     pills += scPill('<svg class="ico"><use href="#i-clock"/></svg>', VIDEO_CLIP_DUR.map(d=>`<option value="${d}" ${studioState.vidDur===d?'selected':''}>${d} detik</option>`).join(''), 'studioState.vidDur=this.value;renderAIStudio()');
+  } else if (m === 'storyboard') {
+    const styles = Object.keys(IMG_STYLE_MAP);
+    pills += scPill('<svg class="ico"><use href="#i-target"/></svg>', RATIO_PRESETS.map(r=>`<option value="${r.id}" ${studioState.sbRatio===r.id?'selected':''}>${r.nm}</option>`).join(''), 'studioState.sbRatio=this.value;renderAIStudio()');
+    pills += scPill('<svg class="ico"><use href="#i-palette"/></svg>', styles.map(s=>`<option value="${s}" ${studioState.imgStyle===s?'selected':''}>${s}</option>`).join(''), 'studioState.imgStyle=this.value;renderAIStudio()');
   }
 
   el.innerHTML = pills;
-  if (m === 'video' && active.length) el.innerHTML += `<div class="form-hint" style="width:100%;margin-top:.35rem;background:rgba(245,158,11,.12);color:#b45309;padding:.5rem .6rem;border-radius:.5rem"><svg class="ico"><use href="#i-warn"/></svg> <b>Video boros kredit</b> (~30–60 kredit/video vs foto cuma ~4). Dari kredit gratis biasanya cukup ~1 video. Pakai seperlunya atau top-up dulu di kie.ai. Link video berlaku ~24 jam — simpan ke Assets bila perlu.</div>`;
+  if (m === 'video' && active.length) {
+    const curProvId = studioState.provByPurpose[key] || active[0].id;
+    const isPuter = curProvId === 'puter';
+    el.innerHTML += isPuter
+      ? `<div class="form-hint" style="width:100%;margin-top:.35rem;background:rgba(139,92,246,.12);color:#7c3aed;padding:.5rem .6rem;border-radius:.5rem"><svg class="ico"><use href="#i-video"/></svg> <b>Puter Veo (gratis, +audio)</b> — render 1–3 menit. Butuh internet & login akun Puter (sekali). Dukung frame awal/akhir & referensi karakter.</div>`
+      : `<div class="form-hint" style="width:100%;margin-top:.35rem;background:rgba(245,158,11,.12);color:#b45309;padding:.5rem .6rem;border-radius:.5rem"><svg class="ico"><use href="#i-warn"/></svg> <b>Video boros kredit</b> (~30–60 kredit/video). Link video ~24 jam — simpan ke Assets. Atau pilih Puter (gratis) di pill provider.</div>`;
+  }
 }
 // Baris pemilih model untuk fungsi tertentu
 function studioModelRow(purpose) {
@@ -7379,6 +8107,9 @@ async function studioSend() {
   const message = input.value.trim();
   if (!message) return;
 
+  // Mode Storyboard: susun panel dari konsep/tempelan storyboard
+  if (studioState.mode === 'storyboard') { return studioBuildStoryboard(message); }
+
   // Tentukan fungsi
   let purpose = studioState.mode === 'smart' ? studioDetectPurpose(message) : studioCurrentPurpose();
 
@@ -7422,8 +8153,16 @@ async function studioSend() {
     if (purpose === 'image') {
       const ratio = RATIO_PRESETS.find(r => r.id === studioState.imgRatio) || RATIO_PRESETS[0];
       const styleTxt = IMG_STYLE_MAP[studioState.imgStyle] || '';
-      const imgPrompt = `${styleTxt?styleTxt+', ':''}${message}, high quality, detailed`;
-      const res = await generateImageAI(imgPrompt, { width:ratio.w, height:ratio.h, providerId:provId, model:modelId });
+      const refImgs = studioCollectImageRefs();
+      const selChar = (state.characters||[]).find(x=>x.id===studioState.refCharId);
+      // Bila ada referensi, tambahkan instruksi konsistensi ke prompt
+      let consistencyTxt = '';
+      if (refImgs.length) {
+        consistencyTxt = ', keep the person and their face exactly consistent with the reference image(s), same identity';
+        if (studioState.imgRefs.length) consistencyTxt += ', integrate the referenced product/clothing/location naturally';
+      }
+      const imgPrompt = `${styleTxt?styleTxt+', ':''}${message}${consistencyTxt}, high quality, detailed`;
+      const res = await generateImageAI(imgPrompt, { width:ratio.w, height:ratio.h, providerId:provId, model:modelId, inputImages: refImgs.length?refImgs:undefined });
       const el = document.getElementById(loadingId);
       const fbWarn = (res.fallback && res.fallback.length)
         ? `<div style="font-size:.72rem;color:var(--warning,#e0a800);margin-bottom:.3rem"><svg class="ico"><use href="#i-warn"/></svg> Provider pilihan gagal → dialihkan: ${res.fallback.map(f=>escapeHtml(f.name)+' ('+escapeHtml((f.reason||'').slice(0,70))+')').join('; ')}</div>`
@@ -7444,7 +8183,18 @@ async function studioSend() {
       if (/\b(dan|yang|dengan|di|ke|dari|sebuah|seorang|gerakan|kamera|adegan)\b/i.test(message)) {
         try { setMsg('Menerjemahkan deskripsi...'); const t = await callAI(`Terjemahkan ke Bahasa Inggris sinematik untuk AI video, jawab HANYA terjemahannya: """${message.slice(0,500)}"""`); const tc=(t||'').trim().replace(/^["']|["']$/g,'').split('\n')[0]; if (tc) enPrompt = tc; } catch(_){}
       }
-      const res = await generateVideoAI(enPrompt, { providerId:provId, model:modelId, duration:studioState.vidDur, aspect_ratio:aspect, resolution:'720p', onProgress:setMsg });
+      // Referensi: frame awal/akhir + foto karakter (subjek konsisten)
+      const c = (state.characters||[]).find(x=>x.id===studioState.refCharId);
+      let refImages = [];
+      if (c) {
+        const master = (c.refs||[]).find(r=>r.master) || (c.refs||[])[0];
+        if (master) refImages.push(master.url);
+      }
+      const vOpts = { providerId:provId, model:modelId, duration:studioState.vidDur, aspect_ratio:aspect, resolution:'720p', onProgress:setMsg };
+      if (studioState.vidStartFrame) vOpts.imageUrl = studioState.vidStartFrame;
+      if (studioState.vidEndFrame) vOpts.lastFrameUrl = studioState.vidEndFrame;
+      if (refImages.length && !studioState.vidStartFrame) vOpts.referenceImages = refImages;
+      const res = await generateVideoAI(enPrompt, vOpts);
       const el = document.getElementById(loadingId);
       el.innerHTML = `<div style="font-size:.75rem;opacity:.7;margin-bottom:.3rem"><svg class="ico"><use href="#i-video"/></svg> ${escapeHtml(res.provider)} · ${escapeHtml(res.model||'')}${res.credits?` · ${res.credits} kredit`:''}</div>
         <video src="${res.url}" controls playsinline style="max-width:100%;border-radius:10px"></video>${studioMediaActions('video', res.url, message)}`;
@@ -7663,6 +8413,12 @@ async function generateImageAI(prompt, opts = {}) {
   if (chosen) order.push(chosen);
   restKeyed.forEach(p => order.push(p));
   noKeyed.forEach(p => order.push(p)); // Pollinations selalu terakhir
+  // Bila ada gambar referensi (image-to-image), utamakan provider yang mendukungnya (Puter/Gemini).
+  const hasRefs = (opts.inputImages && opts.inputImages.length) || opts.inputImage;
+  if (hasRefs) {
+    const i2iFormats = ['puter','gemini','openai'];
+    order.sort((a, b) => (i2iFormats.includes(b.format)?1:0) - (i2iFormats.includes(a.format)?1:0));
+  }
 
   let lastError = null;
   const skipped = []; // catat provider yang gagal + alasannya (utk transparansi ke user)
@@ -7689,7 +8445,7 @@ async function generateImageAI(prompt, opts = {}) {
     for (let ki = 0; ki < keys.length && !provErr; ki++) {
       for (const imgModel of modelsToTry) {
         try {
-          const dataUrl = await callImageProvider(provider, {...cfg, apiKey: keys[ki]}, imgModel, styled, {width, height, engine: opts.engine});
+          const dataUrl = await callImageProvider(provider, {...cfg, apiKey: keys[ki]}, imgModel, styled, {width, height, engine: opts.engine, inputImages: opts.inputImages, inputImage: opts.inputImage});
           if (dataUrl) {
             notifyProviderUsed('image', provider.name + (keys.length > 1 ? ` (key ${ki+1})` : ''), imgModel);
             return { dataUrl, provider: provider.name, model: imgModel, fallback: skipped };
@@ -7729,8 +8485,16 @@ async function callImageProvider(provider, config, model, prompt, o = {}) {
       // Kita TIDAK memanggil signIn manual (memicu buka "Puter Desktop" yang membingungkan).
       // Cukup langsung generate — kalau belum login, Puter munculkan popup kecil sendiri.
       const mdl = model || 'google/gemini-2.5-flash-image';
+      // Bangun opsi. Bila ada gambar referensi → image-to-image (input_images).
+      const puterOpts = { model: mdl };
+      const refs = (o.inputImages && o.inputImages.length) ? o.inputImages : (o.inputImage ? [o.inputImage] : []);
+      if (refs.length) {
+        puterOpts.input_images = refs;
+        puterOpts.input_image_mime_type = 'image/png';
+      }
+      if (width && height) { puterOpts.width = width; puterOpts.height = height; }
       // txt2img mengembalikan elemen <img> (src = URL/dataURL) ATAU objek. Minta testMode=false.
-      const result = await puter.ai.txt2img(prompt, { model: mdl });
+      const result = await puter.ai.txt2img(prompt, puterOpts);
       let src = '';
       if (result && result.src) src = result.src;                 // elemen <img>
       else if (typeof result === 'string') src = result;          // string URL/dataURL
@@ -7973,12 +8737,12 @@ async function generateVideoAI(prompt, opts = {}) {
   const onP = typeof opts.onProgress === 'function' ? opts.onProgress : () => {};
   const needI2V = !!opts.imageUrl; // bila ada frame awal, utamakan model image-to-video
 
-  // Provider video aktif (punya key)
+  // Provider video aktif (punya key ATAU noKey seperti Puter)
   let vidProviders = AI_PROVIDERS.filter(p =>
-    (p.caps||[]).includes('video') && state.providers[p.id]?.apiKey
+    (p.caps||[]).includes('video') && (p.noKey || state.providers[p.id]?.apiKey)
   );
   if (!vidProviders.length) {
-    throw new Error('Belum ada provider video. Atur API key Kie.ai atau Pixazo di menu Pengaturan (keduanya ada kredit/free tier).');
+    throw new Error('Belum ada provider video. Puter (gratis) atau atur API key Kie.ai/Pixazo di Pengaturan.');
   }
   // Urutkan: provider terpilih dulu (walau cooldown) → sisanya (yang cooldown ke belakang)
   const _chosenVid = opts.providerId ? vidProviders.find(p => p.id === opts.providerId) : null;
@@ -8001,13 +8765,14 @@ async function generateVideoAI(prompt, opts = {}) {
       model = (cfg.model && cand.some(m=>m.id===cfg.model) ? cfg.model : null)
         || cand.find(m=>m.recommended)?.id || cand[0]?.id;
     }
-    const keys = providerKeys(cfg);
+    const keys = provider.noKey ? [''] : providerKeys(cfg);
     if (!keys.length) continue;
     for (let ki = 0; ki < keys.length; ki++) {
       try {
         onP(`Menghubungi ${provider.name}${keys.length>1?` (key ${ki+1})`:''}...`);
         let res;
-        if (provider.format === 'kie') res = await _kieVideo(provider, keys[ki], model, prompt, opts, onP);
+        if (provider.format === 'puter') res = await _puterVideo(provider, model, prompt, opts, onP);
+        else if (provider.format === 'kie') res = await _kieVideo(provider, keys[ki], model, prompt, opts, onP);
         else if (provider.format === 'pixazo') res = await _pixazoVideo(provider, keys[ki], model, prompt, opts, onP);
         else throw new Error(`${provider.name}: format video belum didukung`);
         if (res && res.url) {
@@ -8024,6 +8789,29 @@ async function generateVideoAI(prompt, opts = {}) {
     }
   }
   throw lastError || new Error('Semua provider video gagal. Cek API key & kredit di Pengaturan.');
+}
+
+// --- Puter.js: txt2vid (gratis, tanpa key). Dukung image-to-video (frame awal/akhir) & referensi. ---
+async function _puterVideo(provider, model, prompt, opts, onP) {
+  if (typeof puter === 'undefined' || !puter?.ai?.txt2vid) {
+    throw new Error('Puter.js belum termuat — periksa koneksi internet lalu muat ulang halaman.');
+  }
+  onP('Merender video via Puter (Veo)... bisa 1–3 menit.');
+  const mdl = model || 'veo-3.1-lite';
+  const pOpts = { model: mdl };
+  // durasi & ukuran
+  const secs = parseInt(opts.duration) || 8;
+  pOpts.seconds = secs;
+  const ar = opts.aspect_ratio || '9:16';
+  pOpts.size = ar === '16:9' ? '1280x720' : ar === '1:1' ? '1024x1024' : '720x1280';
+  // referensi gambar: frame awal (input_reference), frame akhir (last_frame), atau reference_images (subjek)
+  if (opts.imageUrl) pOpts.input_reference = opts.imageUrl;
+  if (opts.lastFrameUrl) pOpts.last_frame = opts.lastFrameUrl;
+  if (opts.referenceImages && opts.referenceImages.length) pOpts.reference_images = opts.referenceImages.slice(0,3);
+  const video = await puter.ai.txt2vid(prompt, pOpts);
+  const src = (video && (video.src || (video.querySelector && video.querySelector('source')?.src))) || (typeof video === 'string' ? video : '');
+  if (!src) throw new Error('Puter: video tidak menghasilkan sumber.');
+  return { url: src, provider: provider.name, model: mdl, credits: 0 };
 }
 
 // --- kie.ai: createTask + poll recordInfo ---
@@ -8286,5 +9074,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3e947af7acd4021',t:'MTc4OTk5NTkxMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3eecf040d735d38',t:'MTc5MDA1Mzg4Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+</body>
 </html>
