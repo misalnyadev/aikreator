@@ -949,6 +949,75 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
   .home-tabs{flex:1;justify-content:center}
   .topbar-utils{position:absolute;top:0;right:0}
 }
+
+/* ============================================================
+   MOBILE MAKSIMAL — layar terasa luas, padat, bisa buat ngedit
+   Prinsip: tepi layar tipis, radius kecil, hilangkan "kartu di dalam
+   kartu", 1 kalimat = 1 baris. Terinspirasi kepadatan app HP populer.
+   ============================================================ */
+@media (max-width:640px){
+  :root{--r-sm:5px;--r-md:7px;--r-lg:9px}
+  /* Konten mepet ke tepi supaya layar terasa penuh & luas */
+  .main{padding:.5rem .6rem 4.5rem}
+  .topbar{margin-bottom:.6rem;gap:.5rem}
+
+  /* Kartu: tipis, radius kecil, jarak antar-kartu rapat */
+  .card{padding:.85rem;border-radius:var(--r-md);margin-bottom:.6rem}
+  .card-header{margin-bottom:.75rem}
+  .grid-2,.grid-3{gap:.6rem;margin-bottom:.6rem}
+  .stats-grid{gap:.5rem;margin-bottom:.75rem}
+  .stat-card{padding:.85rem}
+  .stat-value{font-size:1.45rem}
+
+  /* Hilangkan efek "form di dalam form": elemen bersarang jadi rata,
+     tanpa border/latar ganda yang bikin layar terasa sesak & kecil */
+  .card .card,
+  .studio-controls .sc-block,
+  .provider-card{padding:0;border:none;background:transparent}
+  .provider-card{padding:.75rem;border:1px solid var(--border);background:var(--bg-card)}
+  .studio-controls{padding:.85rem;border-radius:var(--r-md)}
+
+  /* Input & textarea: padding ringkas, 1 baris tetap 1 baris */
+  .form-input,.form-select,.form-textarea{padding:.55rem .7rem;font-size:.9rem}
+  .form-group{margin-bottom:.85rem}
+  .form-label{margin-bottom:.35rem}
+  .form-textarea{min-height:80px;line-height:1.45}
+  .form-row{gap:.6rem}
+
+  /* Modal hampir full-screen, tepi tipis */
+  .modal-overlay{padding:.4rem}
+  .modal{padding:1rem;border-radius:var(--r-lg);max-height:94vh}
+  .modal-header{margin-bottom:1rem}
+
+  /* Tombol lebih ringkas tapi tetap mudah disentuh */
+  .btn{padding:.55rem .9rem}
+  .btn-sm{padding:.4rem .7rem}
+
+  /* Toolbox & workspace: grid rapat, tepi mepet */
+  .tb-grid,.ws-grid,.theme-grid{gap:.55rem}
+  .tb-intro,.provider-note,.form-hint{line-height:1.45}
+
+  /* Papan storyboard: 2 kolom biar muat & bisa diedit di HP */
+  .sb-grid{gap:.5rem}
+  .sb-panel{border-radius:var(--r-sm)}
+
+  /* Sidebar drawer sedikit lebih ramping */
+  .sidebar{width:230px;padding:1.1rem .8rem}
+
+  /* Chat/hasil AI: bubble rapat */
+  .ai-message{padding:.75rem;margin-bottom:.6rem}
+  .ai-messages{padding-right:.2rem}
+
+  /* Page header rapat */
+  .page-head{margin-bottom:1rem;gap:.6rem}
+  .home-wrap{padding:.25rem 0 3rem}
+}
+/* Layar sangat kecil: makin mepet lagi */
+@media (max-width:400px){
+  .main{padding:.4rem .45rem 4.5rem}
+  .card{padding:.7rem}
+  .stats-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -9379,5 +9448,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3efdfdddfe6ae68',t:'MTc5MDA2NTA1OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f01625afb6fd1e',t:'MTc5MDA2NzI4Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
