@@ -479,7 +479,7 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .home-title{font-size:1.9rem;line-height:1.12;font-weight:800;letter-spacing:-.02em;white-space:nowrap}
 .home-title .grad{color:var(--accent)}
 .home-sub{color:var(--text-secondary);font-size:.95rem;line-height:1.55;margin-top:.4rem;max-width:58ch;font-weight:450}
-.home-prochip{display:inline-flex;align-items:center;gap:.55rem;background:var(--accent-glow);border:1px solid var(--accent-light);border-radius:999px;padding:.32rem .9rem .32rem .42rem;margin-top:.4rem;font-size:.78rem;color:var(--text-secondary);cursor:pointer;transition:border-color .15s,background .15s}
+.home-prochip{display:inline-flex;align-items:center;gap:.55rem;background:var(--bg-card);border:1px solid var(--border);border-radius:999px;padding:.32rem .9rem .32rem .42rem;margin-top:.4rem;font-size:.78rem;color:var(--text-secondary);cursor:pointer;transition:border-color .15s,background .15s}
 .home-prochip:hover{border-color:var(--accent-light)}
 .home-prochip b{color:var(--text-primary);font-weight:700}
 .home-prochip .ring{--p:0;width:30px;height:30px;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--bg-elevated) 0);display:grid;place-items:center;font-size:0}
@@ -608,8 +608,8 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .hero-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:.8rem}
 .hero-card{position:relative;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.1rem 1.2rem;cursor:pointer;transition:border-color .18s,transform .18s,box-shadow .18s;overflow:hidden}
 .hero-card:hover{transform:translateY(-3px);border-color:var(--accent-light);box-shadow:0 10px 30px -12px var(--accent-glow)}
-.hero-card.feature{display:flex;flex-direction:column;justify-content:center;background:linear-gradient(140deg,var(--bg-card),var(--bg-elevated))}
-.hero-card .hc-glow{position:absolute;top:-40%;right:-15%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,var(--accent-glow),transparent 70%);pointer-events:none}
+.hero-card.feature{display:flex;flex-direction:column;justify-content:center;background:var(--bg-card)}
+.hero-card .hc-glow{display:none}
 .hero-card .hc-badge{position:absolute;top:1rem;right:1rem;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:var(--accent);color:#fff;padding:3px 9px;border-radius:999px}
 .hero-card .hc-ic{width:46px;height:46px;border-radius:var(--r-md);display:grid;place-items:center;background:var(--accent);color:#fff;margin-bottom:.7rem}
 .hero-card .hc-ic .ico{width:24px;height:24px}
@@ -8240,7 +8240,7 @@ function studioRenderMentionBar() {
   // Chip @handle yang tersedia (klik = sisipkan)
   const avail = chars.filter(c=>!mentioned.includes(c)).slice(0,8);
   if (avail.length) {
-    html += `<div class="sm-avail"><span class="sm-lbl">Tag karakter:</span> ` +
+    html += `<div class="sm-avail"><span class="sm-lbl">@ bisa lebih dari satu:</span> ` +
       avail.map(c=>`<span class="sm-chip" onclick="studioInsertMention('${_charSlug(c.name)}')" title="Sisipkan @${_charSlug(c.name)}">@${escapeHtml(_charSlug(c.name))}</span>`).join('') + `</div>`;
   }
   el.innerHTML = html;
@@ -8266,7 +8266,7 @@ function studioRenderRefs() {
   const selChar = chars.find(c => c.id === studioState.refCharId);
 
   // Dropdown karakter
-  let html = `<div class="sr-head"><svg class="ico"><use href="#i-users"/></svg> Referensi <span class="sr-sub">(opsional — untuk konsistensi)</span></div>`;
+  let html = `<div class="sr-head"><svg class="ico"><use href="#i-users"/></svg> Referensi <span class="sr-sub">(opsional)</span></div>`;
   html += `<div class="sr-row">
     <select class="form-select sr-charsel" onchange="studioState.refCharId=this.value;renderAIStudio()">
       <option value="">— Tanpa karakter —</option>
@@ -8280,14 +8280,14 @@ function studioRenderRefs() {
     const master = (selChar.refs||[]).find(r=>r.master) || (selChar.refs||[])[0];
     html += `<div class="sr-charprev">
       ${master?`<img src="${master.url}">`:`<div class="sr-noimg"><svg class="ico"><use href="#i-user"/></svg></div>`}
-      <div class="sr-charinfo"><b>${escapeHtml(selChar.name)}</b><span>${(selChar.refs||[]).length} foto referensi${selChar.voiceCfg?.locked?' · 🎙️ suara':''}</span></div>
+      <div class="sr-charinfo"><b>${escapeHtml(selChar.name)}</b><span>${(selChar.refs||[]).length} foto${selChar.voiceCfg?.locked?' · 🎙️ suara':''}</span></div>
     </div>`;
   }
 
   if (m === 'image' || m === 'storyboard') {
     // Gambar referensi tambahan (pakaian/produk/lokasi/galeri)
-    const lbl = m === 'storyboard' ? 'Produk / gambar untuk iklan' : 'Gambar dari galeri';
-    html += `<div class="sr-label">${lbl} <span class="sr-sub">(produk, pakaian, lokasi)</span></div>`;
+    const lbl = m === 'storyboard' ? 'Gambar untuk iklan' : 'Gambar pendukung';
+    html += `<div class="sr-label">${lbl} <span class="sr-sub">(opsional)</span></div>`;
     html += `<div class="sr-thumbs">`;
     (studioState.imgRefs||[]).forEach((r,i)=>{
       html += `<div class="sr-thumb"><img src="${r}"><button onclick="studioDelImgRef(${i})"><svg class="ico"><use href="#i-x"/></svg></button></div>`;
@@ -8297,7 +8297,7 @@ function studioRenderRefs() {
     html += `</div>`;
   } else if (m === 'video') {
     // Storyboard / adegan acuan (sheet gambar) — seperti Google Flow
-    html += `<div class="sr-label">Storyboard / adegan acuan <span class="sr-sub">(sheet gambar adegan)</span></div>`;
+    html += `<div class="sr-label">Adegan acuan <span class="sr-sub">(opsional)</span></div>`;
     html += `<div class="sr-thumbs">`;
     (studioState.vidStoryboards||[]).forEach((r,i)=>{
       html += `<div class="sr-thumb"><img src="${r}"><button onclick="studioDelVidSb(${i})"><svg class="ico"><use href="#i-x"/></svg></button></div>`;
@@ -8309,7 +8309,7 @@ function studioRenderRefs() {
     if ((studioState.sbPanels||[]).some(p=>p.img))
       html += `<button class="sr-usechar" style="margin-top:.35rem" onclick="studioUseSbSheet()"><svg class="ico"><use href="#i-grid"/></svg> Pakai papan Storyboard yang sudah dibuat</button>`;
     // Frame awal & akhir dari galeri/karakter
-    html += `<div class="sr-label" style="margin-top:.7rem">Frame video <span class="sr-sub">(gambar awal & akhir)</span></div>`;
+    html += `<div class="sr-label" style="margin-top:.7rem">Frame video <span class="sr-sub">(opsional)</span></div>`;
     html += `<div class="sr-frames">
       <div class="sr-frame">
         <div class="sr-frame-t">Frame awal</div>
@@ -9579,6 +9579,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f33ad35bb632e2',t:'MTc5MDEwMDI0Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
