@@ -1884,7 +1884,7 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
           <span class="ce-gen-chip" onclick="ceGenFill('ilustrasi kartun lucu')"><svg class="ico"><use href="#i-palette"/></svg> Ilustrasi</span>
           <span class="ce-gen-chip" onclick="ceGenFill('bentuk abstrak warna-warni')"><svg class="ico"><use href="#i-sparkle"/></svg> Abstrak</span>
         </div>
-        <div class="ce-gen-hint" id="ceGenHint">Provider foto Anda dipakai lebih dulu; Pollinations (gratis, tanpa API key) jadi cadangan. Provider teks dipakai untuk menyempurnakan deskripsi agar hasil lebih bagus.</div>
+        <div class="ce-gen-hint" id="ceGenHint">Deskripsi disempurnakan otomatis agar hasil foto lebih tajam & konsisten.</div>
       </div>
       <div class="ce-side-h" style="margin-top:1rem">Properti</div>
       <div id="ceProps"><div class="ce-empty-prop">Pilih elemen di kanvas untuk mengeditnya.</div></div>
@@ -1905,18 +1905,18 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 const AI_PROVIDERS = [
   {
     id:'puter',
-    name:'Puter (Gratis)',
+    name:'Bawaan',
     color:'#8b5cf6',
     short:'PU',
-    desc:'★ GENERATE FOTO gratis tanpa API key — cukup login akun Puter gratis sekali (tanpa kartu)',
+    desc:'★ Foto & video langsung pakai — tanpa perlu mengatur apa pun. Direkomendasikan.',
     url:'https://puter.com/',
     getKey:'https://puter.com/',
     caps:['image','video'],
     noKey:true,
-    note:'★ PALING MUDAH & GRATIS: Tidak perlu API key sama sekali. Saat pertama generate foto/video, muncul popup login akun Puter (gratis, tanpa kartu) — cukup sekali. Setelah itu foto gratis pakai model Nano Banana/FLUX/GPT Image, dan video pakai Google Veo. Biaya AI ditanggung akun Puter masing-masing user (User-Pays), jadi tetap gratis untukmu.',
+    note:'★ Paling mudah — tidak perlu diatur. Saat pertama membuat foto/video, muncul popup masuk sekali; setelah itu langsung produksi foto (Nano Banana/FLUX/GPT Image) & video (Google Veo).',
     models:[
-      {id:'google/gemini-2.5-flash-image',name:'Nano Banana (Foto) ★ gratis',recommended:true,free:true,purpose:'image'},
-      {id:'black-forest-labs/flux-schnell',name:'FLUX Schnell (cepat) gratis',free:true,purpose:'image'},
+      {id:'google/gemini-2.5-flash-image',name:'Nano Banana (Foto) ★',recommended:true,free:true,purpose:'image'},
+      {id:'black-forest-labs/flux-schnell',name:'FLUX Schnell (cepat)',free:true,purpose:'image'},
       {id:'openai/gpt-image-2',name:'GPT Image 2 (kualitas tinggi)',free:true,purpose:'image'},
       {id:'veo-3.1-lite',name:'Veo 3.1 Lite (Video +audio) ★',recommended:true,free:true,purpose:'video'},
       {id:'veo-3.1-fast',name:'Veo 3.1 Fast (Video +audio)',free:true,purpose:'video'}
@@ -1928,7 +1928,7 @@ const AI_PROVIDERS = [
     name:'OpenRouter',
     color:'#6366f1',
     short:'OR',
-    desc:'Router multi-model — 50 request/hari gratis, model open-weight',
+    desc:'Router multi-model — 50 permintaan/hari, model open-weight',
     url:'https://openrouter.ai/',
     getKey:'https://openrouter.ai/keys',
     caps:['chat'],
@@ -1977,8 +1977,8 @@ const AI_PROVIDERS = [
       {id:'openai/gpt-oss-120b',name:'GPT-OSS 120B',free:true,purpose:'chat'},
       {id:'deepseek-ai/DeepSeek-V3.1',name:'DeepSeek V3.1',free:true,purpose:'chat'},
       {id:'Qwen/Qwen3-8B',name:'Qwen3 8B',free:true,purpose:'chat'},
-      {id:'black-forest-labs/FLUX.1-schnell',name:'FLUX.1 Schnell (Generate Foto) ★ gratis',recommended:true,free:true,purpose:'image'},
-      {id:'stabilityai/stable-diffusion-3-medium-diffusers',name:'SD 3 Medium (Foto) gratis',free:true,purpose:'image'}
+      {id:'black-forest-labs/FLUX.1-schnell',name:'FLUX.1 Schnell (Generate Foto) ★',recommended:true,free:true,purpose:'image'},
+      {id:'stabilityai/stable-diffusion-3-medium-diffusers',name:'SD 3 Medium (Foto)',free:true,purpose:'image'}
     ],
     apiBase:'https://router.huggingface.co/v1/chat/completions',
     imageApiBase:'https://router.huggingface.co/hf-inference/models/',
@@ -1989,7 +1989,7 @@ const AI_PROVIDERS = [
     name:'Google Gemini',
     color:'#3b82f6',
     short:'GE',
-    desc:'Gemini (chat) + Nano Banana (foto, ~500 gambar/hari gratis) — GRATIS tanpa kartu',
+    desc:'Gemini (chat) + Nano Banana (foto, ~500 gambar/hari) — tanpa kartu',
     url:'https://aistudio.google.com/',
     getKey:'https://aistudio.google.com/app/apikey',
     caps:['chat','image'],
@@ -1997,7 +1997,7 @@ const AI_PROVIDERS = [
       {id:'gemini-flash-latest',name:'Gemini Flash (terbaru)',recommended:true,free:true,purpose:'chat'},
       {id:'gemini-flash-lite-latest',name:'Gemini Flash-Lite (cepat & hemat)',free:true,purpose:'chat'},
       {id:'gemini-3.6-flash',name:'Gemini 3.6 Flash',free:true,purpose:'chat'},
-      {id:'gemini-2.5-flash-image',name:'Nano Banana (Foto) ★ ~500/hari gratis',recommended:true,free:true,purpose:'image'}
+      {id:'gemini-2.5-flash-image',name:'Nano Banana (Foto) ★',recommended:true,free:true,purpose:'image'}
     ],
     apiBase:'https://generativelanguage.googleapis.com/v1beta/models/',
     format:'gemini'
@@ -2007,7 +2007,7 @@ const AI_PROVIDERS = [
     name:'NVIDIA NIM',
     color:'#84cc16',
     short:'NV',
-    desc:'NIM microservices — kredit gratis untuk eksplorasi',
+    desc:'NIM microservices — kredit awal untuk eksplorasi',
     url:'https://build.nvidia.com/',
     getKey:'https://build.nvidia.com/meta/llama-3_3-70b-instruct',
     caps:['chat'],
@@ -2133,11 +2133,11 @@ const AI_PROVIDERS = [
     name:'Kie.ai',
     color:'#0ea5e9',
     short:'KIE',
-    desc:'Andalan GENERATE FOTO (Nano Banana, ~$0.02/gbr). Bisa video juga tapi mahal. Kredit gratis saat daftar',
+    desc:'Andalan foto (Nano Banana, ~$0.02/gbr). Bisa video juga tapi mahal. Kredit awal saat daftar',
     url:'https://kie.ai/',
     getKey:'https://kie.ai/api-key',
     caps:['image','video'],
-    note:'★ REKOMENDASI untuk FOTO: Daftar di kie.ai → dapat ~50 kredit gratis (tanpa kartu). Buat API key di kie.ai/api-key. FOTO Nano Banana hemat (~4 kredit/gbr = ~12 foto gratis). ⚠️ VIDEO jauh lebih mahal (~30–60+ kredit/video = cuma ~1 video dari kredit gratis) — pakai seperlunya atau top-up dulu. Kredit TIDAK kadaluarsa; gagal generate TIDAK dipotong.',
+    note:'★ Rekomendasi untuk foto. Daftar di kie.ai → dapat ~50 kredit awal (tanpa kartu). Buat API key di kie.ai/api-key. Foto Nano Banana hemat (~4 kredit/gbr = ~12 foto). ⚠️ Video jauh lebih mahal (~30–60+ kredit/video) — pakai seperlunya atau top-up. Kredit tidak kadaluarsa; generate gagal tidak dipotong.',
     models:[
       {id:'google/nano-banana',name:'Nano Banana (Foto) ★ ~4 kredit/gbr',recommended:true,purpose:'image'},
       {id:'google/nano-banana-2',name:'Nano Banana 2 (Foto HD) ~8 kredit/gbr',purpose:'image'},
@@ -2161,7 +2161,7 @@ const AI_PROVIDERS = [
     url:'https://www.pixazo.ai/',
     getKey:'https://www.pixazo.ai/api',
     caps:['image','video'],
-    note:'Daftar di pixazo.ai (cukup email) → ambil API key di dashboard. BUKAN gratis penuh: tiap gambar ~$0.035 (Nano Banana 2 Lite) & video pakai kredit. Ada kredit awal saat daftar. Alternatif berbayar-murah bila Kie.ai/Gemini kena limit.',
+    note:'Daftar di pixazo.ai (cukup email) → ambil API key di dashboard. Berbayar: tiap gambar ~$0.035 (Nano Banana 2 Lite) & video pakai kredit. Ada kredit awal saat daftar. Alternatif murah bila Kie.ai/Gemini kena limit.',
     models:[
       {id:'nano-banana-2-lite',name:'Nano Banana 2 Lite (Foto) ★ ~$0.035/gbr',recommended:true,purpose:'image'},
       {id:'krea-2-large-fast',name:'Krea 2 Large Fast (Foto HD) ~$0.06/gbr',purpose:'image'},
@@ -2176,12 +2176,12 @@ const AI_PROVIDERS = [
     name:'Pollinations',
     color:'#10b981',
     short:'PL',
-    desc:'Generate foto — kini butuh API key gratis (kebijakan baru "Pollen" 2026)',
+    desc:'Foto cadangan — butuh API key (kebijakan "Pollen" 2026)',
     url:'https://pollinations.ai/',
     getKey:'https://enter.pollinations.ai/keys',
     caps:['image','chat'],
     optionalKey:true,
-    note:'PENTING: Sejak 2026 Pollinations pakai sistem kredit "Pollen". Tanpa API key, generate foto BARU akan gagal (error 402/saldo 0). Daftar gratis di enter.pollinations.ai/keys → tempel API key di bawah untuk dapat jatah pollen gratis. Bisa dipakai untuk FOTO & CHAT (uji key-mu lewat chat: kalau jawab, key benar). Tetap dipakai sebagai cadangan bila provider lain limit.',
+    note:'Sejak 2026 Pollinations pakai sistem kredit "Pollen". Tanpa API key, generate foto akan gagal (error 402/saldo 0). Daftar di enter.pollinations.ai/keys → tempel API key di bawah. Bisa dipakai untuk foto & chat (uji key lewat chat: kalau menjawab, key benar). Dipakai sebagai cadangan bila penyedia lain limit.',
     models:[
       {id:'flux',name:'Flux (Generate Foto)',recommended:true,free:true,purpose:'image'},
       {id:'turbo',name:'Turbo (cepat)',free:true,purpose:'image'},
@@ -2887,7 +2887,7 @@ const VIDEO_DUR = [
   { id:'60', nm:'60 detik', hint:'Penjelasan lebih lengkap' },
   { id:'180',nm:'2–3 menit',hint:'Tutorial/video panjang' },
 ];
-// Durasi KLIP video AI (penyedia gratis/murah umumnya 3–10 detik)
+// Durasi KLIP video AI (umumnya 3–10 detik)
 const VIDEO_CLIP_DUR = ['3','5','8','10'];
 const SLIDE_COUNTS = [3, 5, 6, 8, 10];
 // Peta gaya visual (Indonesia → deskriptor Inggris utk image generator)
@@ -3198,10 +3198,10 @@ function flowRenderImgProvRow() {
   const cur = flowState._imgProv || '';
   let opts = `<option value="">Otomatis (provider foto → Pollinations)</option>`;
   opts += imgActive.map(p => `<option value="${p.id}" ${cur===p.id?'selected':''}>${escapeHtml(p.name)}</option>`).join('');
-  opts += `<option value="pollinations" ${cur==='pollinations'?'selected':''}>Pollinations (gratis, tanpa key)</option>`;
+  opts += `<option value="pollinations" ${cur==='pollinations'?'selected':''}>Bawaan (cadangan)</option>`;
   const note = imgActive.length
     ? `${imgActive.length} provider foto aktif. Provider Anda dipakai lebih dulu.`
-    : `Belum ada provider foto berbayar/gratis-terdaftar. Memakai Pollinations (gratis). Aktifkan Gemini/Cloudflare/Venice di Pengaturan untuk kualitas lebih baik.`;
+    : `Memakai penyedia bawaan. Untuk kualitas lebih tinggi, aktifkan penyedia foto di Pengaturan.`;
   row.innerHTML = `<div class="form-group" style="margin-bottom:.6rem">
       <label class="form-label">Provider foto</label>
       <select class="form-select" id="flowImgProvSel" onchange="flowChangeImgProv()">${opts}</select>
@@ -3426,7 +3426,7 @@ function flowRenderVideo() {
 
   out.innerHTML = `
     <div class="flow-h" style="margin-top:1.2rem;font-size:1rem">Render Video AI ${vidProviders.map(p=>`<span class="cap-badge cap-video">${escapeHtml(p.name)}</span>`).join(' ')}</div>
-    ${!anyReady ? `<div class="provider-note" style="margin:.5rem 0"><svg class="ico"><use href="#i-warn"/></svg> Belum ada provider video. Buka <b>Pengaturan</b> lalu daftar & pasang API key <b>Kie.ai</b> atau <b>Pixazo</b> (keduanya ada kredit/free tier tanpa kartu).
+    ${!anyReady ? `<div class="provider-note" style="margin:.5rem 0"><svg class="ico"><use href="#i-warn"/></svg> Penyedia video belum aktif. Buka <b>Pengaturan</b> untuk mengaktifkannya.
       <div style="margin-top:.5rem"><button class="btn btn-secondary btn-sm" onclick="switchView('settings')"><svg class="ico"><use href="#i-settings"/></svg> Buka Pengaturan</button></div></div>` : ''}
     <div class="flow-sub">Video AI = klip pendek (3–10 detik) untuk hook/B-roll/background Reels. Agar <b>sesuai storyboard</b>, deskripsi adegan disusun dari naskahmu & bisa memakai cover/foto sebagai frame awal.</div>
 
@@ -3798,7 +3798,7 @@ function ceRenderGenProviders() {
     );
     let opts = `<option value="">Otomatis (provider foto → Pollinations)</option>`;
     opts += imgActive.map(p => `<option value="${p.id}">${escapeHtml(p.name)} (foto)</option>`).join('');
-    opts += `<option value="pollinations">Pollinations (gratis, tanpa key)</option>`;
+    opts += `<option value="pollinations">Bawaan (cadangan)</option>`;
     imgSel.innerHTML = opts;
   }
 
@@ -4087,7 +4087,7 @@ function ceRenderProps() {
       <option value="left" ${el.align==='left'?'selected':''}>Kiri</option><option value="center" ${el.align==='center'?'selected':''}>Tengah</option><option value="right" ${el.align==='right'?'selected':''}>Kanan</option></select></div>`;
   } else if (el.type === 'image') {
     html += `<div class="ce-prop-group"><label>Sudut membulat: ${el.radius||0}px</label><input type="range" min="0" max="300" value="${el.radius||0}" oninput="ceUpd('radius',+this.value)"></div>`;
-    html += `<div class="ce-prop-group"><button class="btn btn-secondary btn-sm" style="width:100%" id="ceRmBgBtn" onclick="ceRemoveBg()"><svg class="ico"><use href="#i-scissors"/></svg> Hapus Background</button><div style="font-size:.7rem;color:var(--text-muted);margin-top:.35rem;line-height:1.4">Proses AI berjalan di perangkatmu (gratis, tanpa API key). Pemakaian pertama mengunduh model AI, butuh internet & sedikit waktu.</div></div>`;
+    html += `<div class="ce-prop-group"><button class="btn btn-secondary btn-sm" style="width:100%" id="ceRmBgBtn" onclick="ceRemoveBg()"><svg class="ico"><use href="#i-scissors"/></svg> Hapus Background</button><div style="font-size:.7rem;color:var(--text-muted);margin-top:.35rem;line-height:1.4">Pemakaian pertama menyiapkan model AI, butuh internet & sedikit waktu.</div></div>`;
   } else { // rect/circle
     html += `<div class="ce-prop-group"><label>Warna</label><input type="color" value="${el.color}" oninput="ceUpd('color',this.value)"></div>`;
     if (el.type === 'rect') html += `<div class="ce-prop-group"><label>Sudut membulat: ${el.radius||0}px</label><input type="range" min="0" max="300" value="${el.radius||0}" oninput="ceUpd('radius',+this.value)"></div>`;
@@ -4099,7 +4099,7 @@ function ceRenderProps() {
   html += `<div class="ce-prop-group"><button class="btn btn-danger btn-sm" style="width:100%" onclick="ceDeleteEl(${el.id})"><svg class="ico"><use href="#i-trash"/></svg> Hapus Elemen</button></div>`;
   box.innerHTML = html;
 }
-// ---- Hapus Background (AI, di browser, tanpa API key) ----
+// ---- Hapus Background (AI, di browser) ----
 let _imglyRemoveBg = null; // cache modul agar tidak di-import ulang
 
 // Helper bersama: terima data URL/URL gambar → kembalikan data URL PNG transparan.
@@ -4171,7 +4171,7 @@ function objSwitchTab(tab) {
       state.providers[p.id]?.apiKey && state.verifiedModels[p.id]?.working);
     let opts = `<option value="">Otomatis (provider foto → Pollinations)</option>`;
     opts += imgActive.map(p => `<option value="${p.id}">${escapeHtml(p.name)} (foto)</option>`).join('');
-    opts += `<option value="pollinations">Pollinations (gratis, tanpa key)</option>`;
+    opts += `<option value="pollinations">Bawaan (cadangan)</option>`;
     body.innerHTML = `
       <div class="ce-prop-group"><label style="display:block;font-size:.78rem;font-weight:600;color:var(--text-secondary);margin-bottom:.3rem">Deskripsi objek</label>
         <input type="text" class="form-input" id="objGenPrompt" placeholder="mis: sepatu sneaker putih, gelas kopi, tas kulit coklat"></div>
@@ -4362,11 +4362,11 @@ function openCharacterEditor(id) {
       <div class="che-gen-actions">
         <button class="btn btn-secondary btn-sm" onclick="charFillTemplate()"><svg class="ico"><use href="#i-doc"/></svg> Isi contoh template</button>
       </div>
-      <div class="che-hint">Isi identitas sedetail mungkin (usia, wajah, rambut, kulit, gaya, kepribadian) — makin detail, makin konsisten hasilnya.</div>
+      <div class="che-hint">Makin detail identitas (wajah, rambut, gaya, kepribadian), makin konsisten hasilnya.</div>
     </div>
 
     <div class="che-pane" id="chp-refs">
-      <div class="che-hint" id="chRefHint">Unggah 1–8 foto wajah/pose karakter. Foto <strong>Master</strong> (yang pertama, bertanda) dipakai sebagai acuan utama saat generate gambar baru agar wajah tetap sama. Klik foto untuk jadikan Master.</div>
+      <div class="che-hint" id="chRefHint">Unggah 1–8 foto karakter. Klik satu untuk jadikan <strong>Master</strong> — acuan wajah agar tetap sama di setiap gambar baru.</div>
       <div class="che-gen-actions" id="chWebcamRow" style="display:none">
         <button class="btn btn-secondary btn-sm" onclick="charOpenWebcam()"><svg class="ico"><use href="#i-camera"/></svg> Ambil foto dari kamera</button>
       </div>
@@ -4376,7 +4376,7 @@ function openCharacterEditor(id) {
       <!-- ===== CHARACTER SHEET GENERATOR ===== -->
       <div style="border-top:1px solid var(--border);margin:1.25rem 0 0;padding-top:1rem">
         <div style="font-weight:700;font-size:.9rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem"><svg class="ico" style="color:var(--accent)"><use href="#i-grid"/></svg> Character Sheet — kunci konsistensi</div>
-        <div class="che-hint">Dari foto <strong>Master</strong>, buat otomatis set referensi multi-angle & ekspresi. Makin banyak referensi terkunci, makin akurat & konsisten.</div>
+        <div class="che-hint">Dari foto <strong>Master</strong>, buat set referensi multi-angle & ekspresi otomatis — makin akurat & konsisten.</div>
         <div class="sheet-opts" id="chSheetOpts"></div>
         <div class="che-gen-actions">
           <button class="btn btn-primary btn-sm" id="chSheetBtn" onclick="charGenSheet()"><svg class="ico"><use href="#i-sparkle"/></svg> Buat Character Sheet</button>
@@ -4396,7 +4396,7 @@ function openCharacterEditor(id) {
     </div>
 
     <div class="che-pane" id="chp-voice">
-      <div class="che-hint">🎙️ <strong>Voice Studio</strong> — audisi & "kostum" suara dulu: pilih voice, atur gaya bicara, coba sampai pas, baru tersimpan ke karakter. Setelah tersimpan, suara ini otomatis jadi referensi saat produksi video. Semua gratis via Puter (tanpa API key).</div>
+      <div class="che-hint">🎙️ <strong>Voice Studio</strong> — pilih voice & atur gaya bicara, coba sampai pas. Suara yang tersimpan otomatis jadi referensi saat produksi video.</div>
       <label style="font-weight:600;font-size:.82rem;margin-bottom:.35rem;display:block">Sumber suara</label>
       <div class="char-mode-row" style="display:flex;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap">
         <div class="char-mode-opt ${c.voiceCfg.mode!=='own'?'on':''}" data-vmode="ai" onclick="charSetVoiceMode('ai')">
@@ -4409,7 +4409,7 @@ function openCharacterEditor(id) {
         </div>
       </div>
       <div id="chVoiceOwnBox" style="display:none">
-        <div class="che-hint">Rekam atau unggah sampel suaramu (10–30 detik, jelas & tanpa musik). Suaramu bisa dipakai <strong>langsung</strong> sebagai suara karakter, atau diubah pakai voice-changer AI. Klik "Kunci suara" bila sudah pas.</div>
+        <div class="che-hint">Rekam/unggah sampel suaramu (10–30 detik, jelas tanpa musik) — bisa dipakai langsung atau diubah dengan voice-changer AI. Klik "Kunci suara" bila pas.</div>
         <div class="che-gen-actions">
           <button class="btn btn-secondary btn-sm" id="chVoiceRecBtn" onclick="charToggleVoiceRec()"><svg class="ico"><use href="#i-mic"/></svg> Mulai rekam</button>
           <label class="btn btn-ghost btn-sm" style="cursor:pointer"><svg class="ico"><use href="#i-plus"/></svg> Unggah file<input type="file" accept="audio/*" style="display:none" onchange="charUploadOwnVoice(event)"></label>
@@ -4446,7 +4446,7 @@ function openCharacterEditor(id) {
     </div>
 
     <div class="che-pane" id="chp-produce">
-      <div class="che-hint">Generate gambar baru karakter ini dengan pose/adegan berbeda — <strong>wajah tetap konsisten</strong> karena memakai foto Master + identitas sebagai acuan.</div>
+      <div class="che-hint">Buat gambar baru dengan pose/adegan berbeda — <strong>wajah tetap konsisten</strong> lewat foto Master + identitas.</div>
       <div class="ce-prop-group"><label>Adegan / pose yang diinginkan</label>
         <input class="form-input" id="chScene" placeholder="mis: sedang memegang produk skincare, senyum, background kafe"></div>
       <div class="ce-prop-group"><label>Rasio</label><select class="form-select" id="chRatio">
@@ -4461,7 +4461,7 @@ function openCharacterEditor(id) {
 
       <div style="border-top:1px solid var(--border);margin:1.25rem 0 1rem;padding-top:1rem">
         <div style="font-weight:700;font-size:.9rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem"><svg class="ico" style="color:var(--accent)"><use href="#i-video"/></svg> Generate Video (AI)</div>
-        <div class="che-hint" id="chVidRefInfo">Bikin klip video dari karakter ini — <strong>foto Master (wajah) & suara terkunci otomatis jadi referensi</strong>. Model Google Veo/Seedance via Puter (gratis, tanpa API key). Butuh internet & beberapa menit render.</div>
+        <div class="che-hint" id="chVidRefInfo">Bikin klip video dari karakter ini — <strong>foto Master (wajah) & suara terkunci otomatis jadi referensi</strong>. Butuh internet & beberapa menit render.</div>
         <div class="ce-prop-group"><label>Naskah dialog karakter (opsional — untuk voiceover suara terkunci)</label>
           <textarea class="form-input" id="chVidDialog" rows="2" placeholder="mis: Hai gais! Aku nemu skincare yang beneran bikin kulit glowing, wajib coba deh!"></textarea></div>
         <div class="ce-prop-group"><label>Deskripsi gerakan / adegan video</label>
@@ -4857,7 +4857,7 @@ async function charGenSheet() {
   const ok = generated.filter(Boolean);
   prog.innerHTML = shots.map((sh,idx)=>`<div class="sheet-cell ${generated[idx]?'done':'fail'}">${generated[idx]?`<img src="${generated[idx].url}">`:`<span>✕ ${escapeHtml(sh.label)}</span>`}${generated[idx]?`<span class="sheet-cell-l">${escapeHtml(sh.label)}</span>`:''}</div>`).join('');
   btn.disabled = false; btn.innerHTML = orig;
-  if (!ok.length) { toast('Gagal','Tidak ada gambar yang berhasil dibuat. Cek internet/login Puter.','error'); return; }
+  if (!ok.length) { toast('Gagal','Tidak ada gambar yang berhasil dibuat. Cek koneksi internetmu lalu coba lagi.','error'); return; }
 
   // Simpan semua ke referensi karakter (terkunci konsistensi)
   c.refs = c.refs || [];
@@ -5028,7 +5028,7 @@ function charSaveStoryboard(text) {
   toast('Tersimpan','Storyboard ditambahkan ke Assets','success');
 }
 
-// ---- Generate VIDEO via Puter.js txt2vid (gratis, tanpa API key) ----
+// ---- Generate VIDEO via Puter.js txt2vid ----
 const CHAR_VID_MODELS = { 'veo-3.1-lite':'veo-3.1-lite', 'veo-3.1-fast':'veo-3.1-fast', 'seedance':'seedance-1-lite' };
 async function charGenVideo(testMode) {
   const c = _charEdit;
@@ -5101,7 +5101,7 @@ async function charGenDialogVoiceover(dialog) {
     box.innerHTML = `
       <div class="tm-meta"><svg class="ico" style="vertical-align:-2px"><use href="#i-mic"/></svg> Suara asli terkunci untuk karakter ini.</div>
       ${c.sampleUrl?`<audio src="${c.sampleUrl}" controls style="width:100%;margin-top:.35rem"></audio>`:''}
-      <div class="tm-meta">Untuk dialog baru dengan suaramu, rekam kalimatnya di tab Suara → lalu klik "Bersihkan noise (AI)". Video Veo juga menghasilkan audio adegannya sendiri. (Kloning teks-ke-suaramu perlu layanan voice-clone berbayar — belum diaktifkan agar tetap gratis.)</div>`;
+      <div class="tm-meta">Untuk dialog baru dengan suaramu, rekam kalimatnya di tab Suara → lalu klik "Bersihkan noise (AI)". Video juga menghasilkan audio adegannya sendiri.</div>`;
     return;
   }
   try {
@@ -6481,7 +6481,7 @@ function renderSettings() {
             <div class="provider-desc">${p.desc}</div>
           </div>
           <span class="provider-status ${p.noKey ? 'connected' : (p.optionalKey ? (hasKey ? 'connected' : 'testing') : (hasKey ? (verified?.working ? 'connected' : 'disconnected') : 'disconnected'))}">
-            ${p.noKey ? '✓ Aktif (tanpa key)' : (p.optionalKey ? (hasKey ? '✓ Key terpasang' : '⚠ Cadangan (butuh key)') : (hasKey ? (verified?.working ? '✓ Terhubung' : '⚠ Belum test') : 'Belum diatur'))}
+            ${p.noKey ? '✓ Siap dipakai' : (p.optionalKey ? (hasKey ? '✓ Key terpasang' : '⚠ Cadangan (butuh key)') : (hasKey ? (verified?.working ? '✓ Terhubung' : '⚠ Belum test') : 'Belum diatur'))}
           </span>
         </div>
         ${p.browserBlocked ? `<div class="provider-note" style="background:rgba(239,68,68,.1);color:var(--danger)"><svg class="ico"><use href="#i-warn"/></svg> <b>${escapeHtml(p.name)} memblokir akses dari browser (CORS).</b> Provider ini hanya bisa dipanggil dari server, jadi tidak akan berfungsi di aplikasi ini yang berjalan langsung di browser. Gunakan provider lain (Groq, Gemini, OpenRouter, Cerebras, dll).</div>` : ''}
@@ -6506,7 +6506,7 @@ function renderSettings() {
                 let badge = '';
                 if (verifiedStatus === 'ok') badge = ' ✓';
                 else if (verifiedStatus === 'fail') badge = ' ✗';
-                return `<option value="${m.id}" ${m.id === selectedModel ? 'selected' : ''}>${m.name}${m.recommended ? ' ★' : ''}${m.free ? ' (Free)' : ''}${badge}</option>`;
+                return `<option value="${m.id}" ${m.id === selectedModel ? 'selected' : ''}>${m.name}${m.recommended ? ' ★' : ''}${badge}</option>`;
               }).join('');
               return `<optgroup label="${PURPOSE_META[pu]?.icon||''} ${PURPOSE_META[pu]?.label||pu}">${opts}</optgroup>`;
             }).join('')}
@@ -6609,7 +6609,7 @@ async function testProvider(id, specificModel = null) {
   const provider = AI_PROVIDERS.find(p => p.id === id);
   const config = state.providers[id];
 
-  // Provider tanpa API key (mis. Pollinations) — aktif otomatis, tak perlu test
+  // Provider tanpa-kunci (mis. Pollinations) — aktif otomatis, tak perlu test
   if (provider?.noKey) {
     if (!state.verifiedModels[id]) state.verifiedModels[id] = { models: {} };
     state.verifiedModels[id].working = true;
@@ -8372,8 +8372,8 @@ function studioRenderOptions() {
     const curProvId = studioState.provByPurpose[key] || active[0].id;
     const isPuter = curProvId === 'puter';
     el.innerHTML += isPuter
-      ? `<div class="form-hint" style="width:100%;margin-top:.35rem;background:var(--accent-glow);color:var(--accent);border:1px solid var(--border);padding:.5rem .6rem;border-radius:.5rem"><svg class="ico"><use href="#i-video"/></svg> <b>Puter Veo (gratis, +audio)</b> — render 1–3 menit. Butuh internet & login akun Puter (sekali). Dukung frame awal/akhir & referensi karakter.</div>`
-      : `<div class="form-hint" style="width:100%;margin-top:.35rem;background:rgba(184,134,59,.14);color:var(--warning);border:1px solid var(--border);padding:.5rem .6rem;border-radius:.5rem"><svg class="ico"><use href="#i-warn"/></svg> <b>Video boros kredit</b> (~30–60 kredit/video). Link video ~24 jam — simpan ke Assets. Atau pilih Puter (gratis) di pill provider.</div>`;
+      ? `<div class="form-hint" style="width:100%;margin-top:.35rem;background:var(--accent-glow);color:var(--accent);border:1px solid var(--border);padding:.5rem .6rem;border-radius:.5rem"><svg class="ico"><use href="#i-video"/></svg> <b>Video +audio</b> — render 1–3 menit. Dukung frame awal/akhir & referensi karakter.</div>`
+      : `<div class="form-hint" style="width:100%;margin-top:.35rem;background:rgba(184,134,59,.14);color:var(--warning);border:1px solid var(--border);padding:.5rem .6rem;border-radius:.5rem"><svg class="ico"><use href="#i-warn"/></svg> <b>Penyedia ini boros kredit</b>. Link video ~24 jam — simpan ke Assets.</div>`;
   }
 }
 // Baris pemilih model untuk fungsi tertentu
@@ -8857,7 +8857,7 @@ async function callImageProvider(provider, config, model, prompt, o = {}) {
   const timeoutId = setTimeout(() => controller.abort(), 60000);
   try {
     if (provider.format === 'puter') {
-      // Puter.js: generate langsung dari browser tanpa API key (User-Pays).
+      // Puter.js: generate langsung dari browser (User-Pays).
       if (typeof puter === 'undefined' || !puter?.ai?.txt2img) {
         throw new Error('Puter.js belum termuat — periksa koneksi internet lalu muat ulang halaman.');
       }
@@ -8879,7 +8879,7 @@ async function callImageProvider(provider, config, model, prompt, o = {}) {
       if (result && result.src) src = result.src;                 // elemen <img>
       else if (typeof result === 'string') src = result;          // string URL/dataURL
       else if (result && result.url) src = result.url;
-      if (!src) throw new Error('Puter: tidak ada gambar dikembalikan (mungkin login dibatalkan).');
+      if (!src) throw new Error('Tidak ada gambar dikembalikan (mungkin proses masuk dibatalkan).');
       if (src.startsWith('data:')) return src;
       // URL biasa → unduh jadi dataURL
       const ir = await fetch(src, { signal: controller.signal });
@@ -8909,14 +8909,14 @@ async function callImageProvider(provider, config, model, prompt, o = {}) {
             try { bodyTxt = await res.clone().text(); } catch(_){}
             if (res.status === 402 || /insufficient balance|pollen/i.test(bodyTxt)) {
               msg = pollKey
-                ? 'saldo Pollen key ini 0 — isi/klaim jatah gratis di enter.pollinations.ai (menu Pollen/Quests)'
+                ? 'saldo Pollen key ini 0 — isi/klaim jatah di enter.pollinations.ai (menu Pollen/Quests)'
                 : 'butuh API key (saldo Pollen 0) — daftar di enter.pollinations.ai/keys';
             } else if (res.status === 429) {
               // 429 "Queue full for IP" = permintaan dianggap ANONIM → token TIDAK terpakai
               msg = /queue full|for IP|anonymous/i.test(bodyTxt)
                 ? (pollKey
                     ? 'key belum dikenali server (masih dihitung anonim) — pastikan key sk_/pk_ tersimpan lengkap & benar di Pengaturan, lalu coba lagi'
-                    : 'batas anonim (1 permintaan/15 dtk) — pasang API key gratis di Pengaturan untuk buka limit')
+                    : 'batas anonim (1 permintaan/15 dtk) — pasang API key di Pengaturan untuk buka limit')
                 : 'terlalu sering — tunggu beberapa detik lalu coba lagi';
             }
             throw new Error(`Pollinations: ${msg}`);
@@ -9122,7 +9122,7 @@ async function generateVideoAI(prompt, opts = {}) {
     (p.caps||[]).includes('video') && (p.noKey || state.providers[p.id]?.apiKey)
   );
   if (!vidProviders.length) {
-    throw new Error('Belum ada provider video. Puter (gratis) atau atur API key Kie.ai/Pixazo di Pengaturan.');
+    throw new Error('Penyedia video belum aktif. Aktifkan di Pengaturan.');
   }
   // Urutkan: provider terpilih dulu (walau cooldown) → sisanya (yang cooldown ke belakang)
   const _chosenVid = opts.providerId ? vidProviders.find(p => p.id === opts.providerId) : null;
@@ -9171,12 +9171,12 @@ async function generateVideoAI(prompt, opts = {}) {
   throw lastError || new Error('Semua provider video gagal. Cek API key & kredit di Pengaturan.');
 }
 
-// --- Puter.js: txt2vid (gratis, tanpa key). Dukung image-to-video (frame awal/akhir) & referensi. ---
+// --- Puter.js: txt2vid. Dukung image-to-video (frame awal/akhir) & referensi. ---
 async function _puterVideo(provider, model, prompt, opts, onP) {
   if (typeof puter === 'undefined' || !puter?.ai?.txt2vid) {
     throw new Error('Puter.js belum termuat — periksa koneksi internet lalu muat ulang halaman.');
   }
-  onP('Merender video via Puter (Veo)... bisa 1–3 menit.');
+  onP('Merender video (Veo)... bisa 1–3 menit.');
   const mdl = model || 'veo-3.1-lite';
   const pOpts = { model: mdl };
   // durasi & ukuran
@@ -9190,7 +9190,7 @@ async function _puterVideo(provider, model, prompt, opts, onP) {
   if (opts.referenceImages && opts.referenceImages.length) pOpts.reference_images = opts.referenceImages.slice(0,3);
   const video = await puter.ai.txt2vid(prompt, pOpts);
   const src = (video && (video.src || (video.querySelector && video.querySelector('source')?.src))) || (typeof video === 'string' ? video : '');
-  if (!src) throw new Error('Puter: video tidak menghasilkan sumber.');
+  if (!src) throw new Error('Video tidak menghasilkan sumber.');
   return { url: src, provider: provider.name, model: mdl, credits: 0 };
 }
 
@@ -9454,6 +9454,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f192aaba792328',t:'MTc5MDA4Mjg2OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f1b6e4787c5f39',t:'MTc5MDA4NDM1Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
