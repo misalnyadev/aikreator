@@ -260,7 +260,21 @@ select option{background:var(--bg-card);color:var(--text-primary)}
 .studio-output.is-media .ai-message.media-result,.studio-output.is-media .ai-message.media-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
 .studio-output.is-media .ai-message.media-result img,.studio-output.is-media .ai-message.media-result video{width:100%;max-width:520px}
 .studio-output.is-media .ai-message.media-result .ai-msg-actions{justify-content:center}
-@media(max-width:900px){.studio-grid{grid-template-columns:1fr}.studio-controls{position:static}}
+@media(max-width:900px){
+  .studio-grid{grid-template-columns:1fr}
+  .studio-controls{position:static;order:2}
+  /* Panel Hasil di ATAS form prompt, solid & menyesuaikan isi */
+  .studio-output{order:1;min-height:0;padding:1rem}
+  .studio-output .ai-messages{min-height:0}
+  .studio-output.is-media{min-height:0}
+  .studio-output.is-media .ai-messages{min-height:0}
+  /* Empty state: kotak kecil saja bila belum ada hasil */
+  .studio-output .ai-messages .ai-message.system:only-child,
+  .studio-output .ai-messages .ai-message.media-empty:only-child{
+    padding:.85rem 1rem;font-size:.82rem;min-height:0
+  }
+  .studio-output.is-media .ai-message.media-empty:only-child{min-height:0;flex:none}
+}
 .ai-panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:.5rem}
 .ai-messages{flex:1;overflow-y:auto;margin-bottom:1rem;padding-right:.5rem;max-height:400px;min-height:200px}
 .ai-messages::-webkit-scrollbar{width:6px}.ai-messages::-webkit-scrollbar-thumb{background:var(--bg-hover);border-radius:var(--r-sm)}
@@ -1384,7 +1398,7 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
     <div class="view" id="view-aistudio">
       <div class="card" style="margin-bottom:1rem;padding:1rem 1.25rem">
         <div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-agent"/></svg> AI Studio</div>
-        <div class="card-subtitle">Tulis prompt, pilih mode & pengaturan ringkas, lihat hasil besar di kanan</div>
+        <div class="card-subtitle">Tulis prompt, pilih mode & pengaturan ringkas — hasil tampil di panel Hasil</div>
       </div>
 
       <div class="studio-grid">
@@ -9381,5 +9395,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3ef615aeaac5914',t:'MTc5MDA1OTg3Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3ef9e519e27bc78',t:'MTc5MDA2MjM3NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
