@@ -7546,6 +7546,7 @@ const studioState = {
   imgRefs: [],          // gambar referensi tambahan utk mode Foto (pakaian/produk/lokasi/galeri)
   vidStartFrame: null,  // frame awal video (dataUrl)
   vidEndFrame: null,    // frame akhir video (dataUrl)
+  vidStoryboards: [],   // sheet/gambar storyboard acuan adegan (dataUrl) — ala Google Flow
   sbPanels: [],         // storyboard: [{desc, dialog, img, video, status}]
   sbRatio: '1080x1920',
   sbCharIds: [],        // karakter yang di-tag @nama untuk storyboard
@@ -8093,8 +8094,20 @@ function studioRenderRefs() {
       html += `<label class="sr-add"><svg class="ico"><use href="#i-plus"/></svg><input type="file" accept="image/*" multiple style="display:none" onchange="studioAddImgRefs(event)"></label>`;
     html += `</div>`;
   } else if (m === 'video') {
+    // Storyboard / adegan acuan (sheet gambar) — seperti Google Flow
+    html += `<div class="sr-label">Storyboard / adegan acuan <span class="sr-sub">(sheet gambar adegan)</span></div>`;
+    html += `<div class="sr-thumbs">`;
+    (studioState.vidStoryboards||[]).forEach((r,i)=>{
+      html += `<div class="sr-thumb"><img src="${r}"><button onclick="studioDelVidSb(${i})"><svg class="ico"><use href="#i-x"/></svg></button></div>`;
+    });
+    if ((studioState.vidStoryboards||[]).length < 2)
+      html += `<label class="sr-add"><svg class="ico"><use href="#i-plus"/></svg><input type="file" accept="image/*" multiple style="display:none" onchange="studioAddVidSb(event)"></label>`;
+    html += `</div>`;
+    // Ambil dari storyboard yang sudah disusun / papan tersimpan
+    if ((studioState.sbPanels||[]).some(p=>p.img))
+      html += `<button class="sr-usechar" style="margin-top:.35rem" onclick="studioUseSbSheet()"><svg class="ico"><use href="#i-grid"/></svg> Pakai papan Storyboard yang sudah dibuat</button>`;
     // Frame awal & akhir dari galeri/karakter
-    html += `<div class="sr-label">Frame video <span class="sr-sub">(gambar awal & akhir)</span></div>`;
+    html += `<div class="sr-label" style="margin-top:.7rem">Frame video <span class="sr-sub">(gambar awal & akhir)</span></div>`;
     html += `<div class="sr-frames">
       <div class="sr-frame">
         <div class="sr-frame-t">Frame awal</div>
@@ -8124,6 +8137,40 @@ async function studioAddImgRefs(ev) {
   renderAIStudio();
 }
 function studioDelImgRef(i) { studioState.imgRefs.splice(i,1); renderAIStudio(); }
+async function studioAddVidSb(ev) {
+  const files = [...ev.target.files];
+  for (const f of files) {
+    if ((studioState.vidStoryboards||[]).length >= 2) break;
+    if (f.size > 8*1024*1024) { toast('Terlalu besar', f.name+' > 8MB','warning'); continue; }
+    const url = await _tbReadFile(f);
+    studioState.vidStoryboards = studioState.vidStoryboards || [];
+    studioState.vidStoryboards.push(url);
+  }
+  ev.target.value = '';
+  renderAIStudio();
+}
+function studioDelVidSb(i) { studioState.vidStoryboards.splice(i,1); renderAIStudio(); }
+async function studioUseSbSheet() {
+  const panels = (studioState.sbPanels||[]).filter(p=>p.img);
+  if (!panels.length) { toast('Belum ada','Susun & generate foto storyboard dulu','info'); return; }
+  // Rakit papan panel jadi 1 sheet gambar untuk acuan adegan
+  const cols = Math.min(3, panels.length), rows = Math.ceil(panels.length/cols);
+  const cw=360, ch=460, pad=10, labH=26;
+  const W=cols*cw+(cols+1)*pad, H=rows*(ch+labH)+(rows+1)*pad;
+  const cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+  const ctx=cv.getContext('2d'); ctx.fillStyle='#111'; ctx.fillRect(0,0,W,H);
+  const imgs=await Promise.all(panels.map(p=>_tbLoadImg(p.img).catch(()=>null)));
+  imgs.forEach((im,i)=>{
+    const r=Math.floor(i/cols),col=i%cols;
+    const x=pad+col*(cw+pad), y=pad+r*(ch+labH+pad);
+    if(im){const sc=Math.min(cw/im.width,ch/im.height),w=im.width*sc,h=im.height*sc;ctx.drawImage(im,x+(cw-w)/2,y+(ch-h)/2,w,h);}
+    ctx.fillStyle='#f5c451'; ctx.font='bold 18px sans-serif';
+    ctx.fillText('Adegan '+panels[i].n, x+6, y+ch+19);
+  });
+  studioState.vidStoryboards = [cv.toDataURL('image/jpeg',0.9)];
+  renderAIStudio();
+  toast('Terpasang','Papan storyboard jadi acuan adegan video','success');
+}
 async function studioSetFrame(which, ev) {
   const f = ev.target.files[0]; if (!f) return;
   const url = await _tbReadFile(f);
@@ -8429,7 +8476,7 @@ async function studioSend() {
       if (/\b(dan|yang|dengan|di|ke|dari|sebuah|seorang|gerakan|kamera|adegan)\b/i.test(resolvedVid)) {
         try { setMsg('Menerjemahkan deskripsi...'); const t = await callAI(`Terjemahkan ke Bahasa Inggris sinematik untuk AI video, jawab HANYA terjemahannya: """${resolvedVid.slice(0,500)}"""`); const tc=(t||'').trim().replace(/^["']|["']$/g,'').split('\n')[0]; if (tc) enPrompt = tc; } catch(_){}
       }
-      // Referensi: frame awal/akhir + foto karakter (subjek konsisten). @tag > dropdown.
+      // Referensi: sheet storyboard (adegan) + foto karakter (subjek konsisten). @tag > dropdown.
       let refImages = [];
       if (vidMentioned.length) {
         // Veo: reference_images jaga subjek konsisten (hingga 3). Ambil Master tiap karakter ditag.
@@ -8438,11 +8485,18 @@ async function studioSend() {
         const c = (state.characters||[]).find(x=>x.id===studioState.refCharId);
         if (c) { const master=(c.refs||[]).find(r=>r.master)||(c.refs||[])[0]; if(master) refImages.push(master.url); }
       }
+      // Sertakan sheet storyboard sebagai acuan adegan (ala Google Flow)
+      const sbSheets = studioState.vidStoryboards || [];
+      if (sbSheets.length) {
+        refImages = [...refImages, ...sbSheets];
+        enPrompt += ', follow the scene composition and sequence shown in the reference storyboard sheet';
+      }
       refImages = refImages.slice(0,3);
       const vOpts = { providerId:provId, model:modelId, duration:studioState.vidDur, aspect_ratio:aspect, resolution:'720p', onProgress:setMsg };
       if (studioState.vidStartFrame) vOpts.imageUrl = studioState.vidStartFrame;
       if (studioState.vidEndFrame) vOpts.lastFrameUrl = studioState.vidEndFrame;
-      if (refImages.length && !studioState.vidStartFrame) vOpts.referenceImages = refImages;
+      // Kirim referensi subjek/storyboard (Veo reference_images) meski ada frame awal
+      if (refImages.length) vOpts.referenceImages = refImages;
       const res = await generateVideoAI(enPrompt, vOpts);
       const el = document.getElementById(loadingId);
       el.innerHTML = `<div style="font-size:.75rem;opacity:.7;margin-bottom:.3rem"><svg class="ico"><use href="#i-video"/></svg> ${escapeHtml(res.provider)} · ${escapeHtml(res.model||'')}${res.credits?` · ${res.credits} kredit`:''}</div>
@@ -9323,5 +9377,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3ef254a2be99c59',t:'MTc5MDA1NzQxNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3ef3ae089801dd6',t:'MTc5MDA1ODMwMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
