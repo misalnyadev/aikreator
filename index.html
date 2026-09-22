@@ -7742,11 +7742,11 @@ Sesuaikan rekomendasi dengan niche & tipe kreatornya (bukan saran generik). Jika
 // ============ AI STUDIO ============
 // ============ AI STUDIO terpadu: Smart | Chat | Foto | Video ============
 const STUDIO_MODES = [
-  { id:'smart', emo:'<svg class="ico"><use href="#i-sparkle"/></svg>', nm:'Smart', d:'Deteksi otomatis dari teks', purpose:null },
-  { id:'chat',  emo:'<svg class="ico"><use href="#i-chat"/></svg>', nm:'Chat', d:'Ide, caption, skrip', purpose:'chat' },
-  { id:'image', emo:'<svg class="ico"><use href="#i-palette"/></svg>', nm:'Foto', d:'Generate gambar', purpose:'image' },
-  { id:'video', emo:'<svg class="ico"><use href="#i-video"/></svg>', nm:'Video', d:'Klip pendek AI', purpose:'video' },
-  { id:'storyboard', emo:'<svg class="ico"><use href="#i-grid"/></svg>', nm:'Storyboard', d:'Adegan/iklan → foto → video', purpose:'image' },
+  { id:'smart', emo:'<svg class="ico"><use href="#i-sparkle"/></svg>', nm:'Smart', d:'Otomatis', purpose:null },
+  { id:'chat',  emo:'<svg class="ico"><use href="#i-chat"/></svg>', nm:'Chat', d:'Teks', purpose:'chat' },
+  { id:'image', emo:'<svg class="ico"><use href="#i-palette"/></svg>', nm:'Foto', d:'Gambar', purpose:'image' },
+  { id:'video', emo:'<svg class="ico"><use href="#i-video"/></svg>', nm:'Video', d:'Klip', purpose:'video' },
+  { id:'storyboard', emo:'<svg class="ico"><use href="#i-grid"/></svg>', nm:'Storyboard', d:'Adegan', purpose:'image' },
 ];
 const studioState = {
   mode: 'smart',
@@ -7947,7 +7947,8 @@ function studioRenderStoryboard() {
   if (!messages) return;
   const panels = studioState.sbPanels || [];
   if (!panels.length) {
-    messages.innerHTML = `<div class="ai-message system media-empty"><svg class="ico"><use href="#i-grid"/></svg> Tulis konsep atau tempel storyboard — bisa tag karakter (mis. <b>@aira bertemu @indra di kafe</b>). Tiap panel → foto → video → gabung jadi 1 video.</div>`;
+    // Kosongkan — placeholder minimal seragam ('Hasil tampil di sini') via CSS :empty.
+    messages.innerHTML = '';
     return;
   }
   const anyImg = panels.some(p=>p.img);
@@ -8196,11 +8197,8 @@ function studioRenderMessages() {
   if (studioState.mode === 'image' || studioState.mode === 'video') {
     // Bila sudah ada hasil media yang tampil, biarkan (jangan render ulang saat ganti dropdown)
     if (messages.querySelector('.media-result')) return;
-    const meta = PURPOSE_META[studioState.mode];
-    const refTip = studioState.mode==='image'
-      ? 'Tip: pilih <b>karakter</b> + tambah gambar produk/pakaian/lokasi di panel Referensi agar wajah tetap konsisten.'
-      : 'Tip: pilih <b>karakter</b> atau unggah <b>frame awal/akhir</b> di panel Referensi untuk video yang konsisten.';
-    messages.innerHTML = `<div class="ai-message system media-empty">${meta.icon} <b>${meta.label}</b><br>Isi deskripsi di kiri, atur pengaturan, lalu klik <b>Generate</b>. Hasil ${studioState.mode==='image'?'foto':'video'} akan tampil besar di sini.<br><br><span style="font-size:.78rem;color:var(--text-muted)">${refTip}</span></div>`;
+    // Kosongkan — placeholder minimal seragam ('Hasil tampil di sini') via CSS :empty.
+    messages.innerHTML = '';
     return;
   }
   if (state.chatHistory.length > 0) {
@@ -9581,6 +9579,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f2d8d7ac56a8f8',t:'MTc5MDA5NjIyOQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f2e738dd75fc2e',t:'MTc5MDA5NjgxOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
