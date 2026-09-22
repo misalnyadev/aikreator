@@ -764,6 +764,9 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .sr-usechar:hover{background:var(--accent);color:#fff}
 /* ===== STORYBOARD ===== */
 .sb-bar{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.9rem;position:sticky;top:0;background:var(--bg-card);padding:.2rem 0;z-index:2}
+.sb-compose-status{font-size:.8rem;color:var(--text-secondary);margin:-.3rem 0 .8rem;min-height:0}
+.sb-compose-status:empty{display:none}
+.sb-compose-status a.btn{vertical-align:middle}
 .sb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.85rem}
 .sb-panel{border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;background:var(--bg-elevated);display:flex;flex-direction:column}
 .sb-media{position:relative;aspect-ratio:9/16;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden}
@@ -7738,18 +7741,22 @@ function studioRenderStoryboard() {
   if (!messages) return;
   const panels = studioState.sbPanels || [];
   if (!panels.length) {
-    messages.innerHTML = `<div class="ai-message system media-empty"><svg class="ico"><use href="#i-grid"/></svg> <b>Storyboard Studio</b><br>Tulis konsep iklan (mis: "iklan night cream DRVE, gaya UGC hangat, 5 adegan") <b>atau tempel storyboard dari GPT</b>, lalu klik <b>Susun Storyboard</b>.<br><br><span style="font-size:.78rem;color:var(--text-muted)">Tiap panel jadi foto konsisten (pakai karakter + produk), lalu bisa diubah jadi video. Susun semuanya jadi iklan utuh.</span></div>`;
+    messages.innerHTML = `<div class="ai-message system media-empty"><svg class="ico"><use href="#i-grid"/></svg> <b>Storyboard Studio</b><br>Tulis konsep (mis: "iklan night cream DRVE, gaya UGC hangat, 5 adegan") — bisa <b>tag karakter</b> mis. "@aira bertemu @indra di kafe" — <b>atau tempel storyboard dari GPT</b>, lalu klik <b>Susun Storyboard</b>.<br><br><span style="font-size:.78rem;color:var(--text-muted)">Alur: tiap panel → foto konsisten (@karakter + produk) → video 8 detik → <b>Gabung jadi 1 video utuh</b>. Pas untuk cerita pendek 4-5 adegan.</span></div>`;
     return;
   }
   const anyImg = panels.some(p=>p.img);
   const anyVid = panels.some(p=>p.video);
+  const vidCount = panels.filter(p=>p.video).length;
   let html = `<div class="sb-bar">
     <button class="btn btn-primary btn-sm" onclick="studioGenAllPanels()"><svg class="ico"><use href="#i-image"/></svg> Generate semua foto</button>
     ${anyImg?`<button class="btn btn-secondary btn-sm" onclick="studioVideoAllPanels()"><svg class="ico"><use href="#i-video"/></svg> Jadikan video semua</button>`:''}
+    ${vidCount>=2?`<button class="btn btn-primary btn-sm" onclick="studioComposeVideo()" title="Gabungkan ${vidCount} klip jadi 1 video utuh"><svg class="ico"><use href="#i-video"/></svg> Gabung jadi 1 video (${vidCount})</button>`:''}
     ${anyImg?`<button class="btn btn-ghost btn-sm" onclick="studioSaveStoryboardSheet()"><svg class="ico"><use href="#i-download"/></svg> Unduh papan</button>`:''}
     ${(anyImg||anyVid)?`<button class="btn btn-ghost btn-sm" onclick="studioSaveAllPanels()"><svg class="ico"><use href="#i-save"/></svg> Simpan ke Assets</button>`:''}
     <button class="btn btn-ghost btn-sm" onclick="studioClearStoryboard()"><svg class="ico"><use href="#i-x"/></svg> Reset</button>
-  </div><div class="sb-grid">`;
+  </div>
+  ${vidCount>=2?`<div class="sb-compose-status" id="sbComposeStatus"></div>`:''}
+  <div class="sb-grid">`;
   panels.forEach((p,i)=>{
     html += `<div class="sb-panel">
       <div class="sb-media">
@@ -7849,6 +7856,89 @@ async function studioVideoAllPanels() {
     if (studioState.sbPanels[i].img && !studioState.sbPanels[i].video) await studioVideoPanel(i);
   }
   toast('Selesai','Semua panel jadi video','success');
+}
+
+// ==== Gabung semua klip panel jadi 1 video utuh (Canvas + MediaRecorder, tanpa ffmpeg) ====
+async function studioComposeVideo() {
+  const clips = (studioState.sbPanels||[]).filter(p=>p.video);
+  if (clips.length < 2) { toast('Perlu ≥2 klip','Jadikan video minimal 2 panel dulu','info'); return; }
+  const bar = document.getElementById('sbComposeStatus');
+  const setS = (t)=>{ if(bar) bar.innerHTML = t; };
+  if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) {
+    toast('Tak didukung','Browser tidak mendukung penggabungan video. Unduh tiap klip & gabung di CapCut.','warning'); return;
+  }
+  try {
+    setS('<div class="sheet-spin" style="display:inline-block;vertical-align:middle"></div> Mengunduh klip untuk digabung…');
+    // 1) Ambil tiap klip sebagai blob (hindari canvas ternoda cross-origin)
+    const blobUrls = [];
+    for (let i=0;i<clips.length;i++) {
+      try {
+        const r = await fetch(clips[i].video, { mode:'cors' });
+        if (!r.ok) throw new Error('HTTP '+r.status);
+        const b = await r.blob();
+        blobUrls.push(URL.createObjectURL(b));
+      } catch(e) {
+        setS('');
+        toast('Gagal mengambil klip', 'Link video mungkin sudah kedaluwarsa / tanpa CORS. Simpan tiap klip ke Assets lalu gabung di CapCut.', 'error');
+        return;
+      }
+      setS(`<div class="sheet-spin" style="display:inline-block;vertical-align:middle"></div> Menyiapkan klip ${i+1}/${clips.length}…`);
+    }
+    // 2) Ukuran kanvas dari rasio storyboard
+    const ratio = RATIO_PRESETS.find(r=>r.id===studioState.sbRatio) || RATIO_PRESETS[2];
+    let W = ratio.w, H = ratio.h;
+    // batasi resolusi biar ringan & kompatibel
+    const cap = 1280; const sc = Math.min(1, cap/Math.max(W,H)); W=Math.round(W*sc/2)*2; H=Math.round(H*sc/2)*2;
+    const cv = document.createElement('canvas'); cv.width=W; cv.height=H;
+    const ctx = cv.getContext('2d');
+    ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
+    // 3) Audio: satukan audio tiap klip lewat satu destination
+    const AC = window.AudioContext || window.webkitAudioContext;
+    const actx = AC ? new AC() : null;
+    const adest = actx ? actx.createMediaStreamDestination() : null;
+    // 4) Stream gabungan (video kanvas + audio)
+    const vstream = cv.captureStream(30);
+    const tracks = [...vstream.getVideoTracks(), ...(adest?adest.stream.getAudioTracks():[])];
+    const mixed = new MediaStream(tracks);
+    const mime = ['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm']
+      .find(m=>MediaRecorder.isTypeSupported(m)) || 'video/webm';
+    const rec = new MediaRecorder(mixed, { mimeType:mime, videoBitsPerSecond: 6_000_000 });
+    const chunks = []; rec.ondataavailable = e=>{ if(e.data.size) chunks.push(e.data); };
+    const done = new Promise(res=> rec.onstop = res);
+    rec.start(100);
+    // 5) Putar tiap klip berurutan, gambar ke kanvas
+    const drawCover = (v)=>{ const s=Math.max(W/v.videoWidth,H/v.videoHeight); const w=v.videoWidth*s,h=v.videoHeight*s; ctx.drawImage(v,(W-w)/2,(H-h)/2,w,h); };
+    for (let i=0;i<blobUrls.length;i++) {
+      setS(`<div class="sheet-spin" style="display:inline-block;vertical-align:middle"></div> Menggabung klip ${i+1}/${blobUrls.length}… (jangan tutup halaman)`);
+      const v = document.createElement('video');
+      v.src = blobUrls[i]; v.crossOrigin='anonymous'; v.muted=false; v.playsInline=true;
+      await new Promise((res,rej)=>{ v.onloadeddata=res; v.onerror=()=>rej(new Error('load')); });
+      if (actx && adest) { try { const srcNode=actx.createMediaElementSource(v); srcNode.connect(adest); } catch(_){} }
+      if (actx && actx.state==='suspended') { try{ await actx.resume(); }catch(_){} }
+      await new Promise((res)=>{
+        let raf;
+        const step=()=>{ if(v.ended||v.paused){ cancelAnimationFrame(raf); res(); return;} drawCover(v); raf=requestAnimationFrame(step); };
+        v.onended=()=>{ cancelAnimationFrame(raf); res(); };
+        v.play().then(()=>{ raf=requestAnimationFrame(step); }).catch(()=>res());
+      });
+    }
+    rec.stop();
+    await done;
+    blobUrls.forEach(u=>URL.revokeObjectURL(u));
+    const outBlob = new Blob(chunks, { type:mime });
+    const url = URL.createObjectURL(outBlob);
+    // 6) Sajikan hasil: simpan ke Assets + download + preview
+    const dataUrl = await new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.readAsDataURL(outBlob); });
+    state.assets = state.assets || [];
+    state.assets.unshift({ id:'a'+Date.now(), ts:Date.now(), type:'video', name:'Video gabungan storyboard', url:dataUrl, content:'', project:'' });
+    save('assets', state.assets);
+    setS(`✅ Video gabungan jadi (${clips.length} klip)! Tersimpan ke Assets.
+      <a href="${url}" download="video_gabungan_${Date.now()}.webm" class="btn btn-primary btn-sm" style="margin-left:.5rem"><svg class="ico"><use href="#i-download"/></svg> Unduh</a>`);
+    toast('Selesai','Video utuh tersimpan ke Assets & siap diunduh','success');
+  } catch(e) {
+    setS('');
+    toast('Gagal menggabung', (e.message||'')+' — coba unduh tiap klip & gabung di CapCut','error');
+  }
 }
 function studioPanelToAsset(i) {
   const p = studioState.sbPanels[i];
@@ -9233,6 +9323,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3ef1107bfaa0c16',t:'MTc5MDA1NjU4Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3ef254a2be99c59',t:'MTc5MDA1NzQxNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
