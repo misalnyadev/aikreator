@@ -7233,10 +7233,29 @@ function hapusRiwayat() {
 }
 
 // ===== Mode terang / gelap =====
+function syncBrowserTheme(isDark) {
+  const color = isDark ? '#100f0d' : '#f6f5f2';
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  if (themeMeta) themeMeta.setAttribute('content', color);
+  const statusMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+  if (statusMeta) statusMeta.setAttribute('content', isDark ? 'black-translucent' : 'default');
+  document.documentElement.style.backgroundColor = color;
+  document.body.style.backgroundColor = color;
+
+  // iOS dapat menahan lapisan status bar lama setelah backdrop-filter drawer aktif.
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar && sidebar.classList.contains('open')) {
+    void sidebar.offsetHeight;
+    requestAnimationFrame(() => {
+      if (themeMeta) themeMeta.setAttribute('content', color);
+    });
+  }
+}
 function toggleDarkMode() {
   const isDark = document.documentElement.classList.toggle('dark');
   localStorage.setItem('kh_darkMode', isDark ? '1' : '0');
   updateThemeIcon(isDark);
+  syncBrowserTheme(isDark);
 }
 function updateThemeIcon(isDark) {
   const ic = document.getElementById('themeIcon');
@@ -7249,6 +7268,7 @@ function initDarkMode() {
   const saved = localStorage.getItem('kh_darkMode') === '1';
   document.documentElement.classList.toggle('dark', saved);
   updateThemeIcon(saved);
+  syncBrowserTheme(saved);
 }
 
 function useTrend(title) {
@@ -9582,5 +9602,5 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f392bfac4ca08a',t:'MTc5MDEwMzg0Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f3a372bc05f924',t:'MTc5MDEwNDUyNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
