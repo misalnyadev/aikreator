@@ -48,10 +48,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
 .app{display:grid;grid-template-columns:216px 1fr;min-height:100vh}
 .sidebar{background:var(--bg-primary);border-right:1px solid var(--border);padding:1.5rem 1rem;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
 .sidebar::-webkit-scrollbar{width:6px}.sidebar::-webkit-scrollbar-thumb{background:var(--bg-hover);border-radius:var(--r-sm)}
-.logo{display:flex;align-items:center;padding:0 .5rem 1rem;margin-bottom:2.25rem;cursor:pointer;position:relative}
+.logo{display:flex;align-items:center;padding:0 .5rem .85rem;margin-bottom:1.5rem;cursor:pointer;position:relative}
 .logo::after{content:'';position:absolute;left:.5rem;right:.5rem;bottom:0;height:1px;background:var(--border)}
 .logo:hover{opacity:.85}
-.logo-img{height:56px;width:auto;max-width:100%;display:block}
+.logo-img{height:40px;width:auto;max-width:100%;display:block}
 .logo-img-dark{display:none}
 :root.dark .logo-img-light{display:none}
 :root.dark .logo-img-dark{display:block}
@@ -377,7 +377,7 @@ select option{background:var(--bg-card);color:var(--text-primary)}
   .app{grid-template-columns:1fr}
   .app.sidebar-collapsed{grid-template-columns:1fr}
   .app.sidebar-collapsed .sidebar{padding:1.5rem 1rem}
-  .sidebar{position:fixed;left:-260px;z-index:100;transition:left .3s;width:260px}
+  .sidebar{position:fixed;left:-232px;z-index:100;transition:left .3s;width:232px}
   .sidebar.open{left:0}
   .sidebar-collapse{display:none}
   .main{padding:1.5rem}
@@ -9579,5 +9579,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f34575ac46712c',t:'MTc5MDEwMDY3OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f36342cade252c',t:'MTc5MDEwMTg5OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
