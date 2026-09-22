@@ -513,10 +513,10 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .rm-hero-badge b{font-size:1rem;display:block}
 .rm-hero-badge span{font-size:.74rem;color:var(--text-muted)}
 .rm-track{position:relative;display:flex;flex-direction:column;gap:0}
-.rm-track::before{content:'';position:absolute;left:21px;top:20px;bottom:20px;width:2px;background:var(--border)}
+.rm-track::before{content:'';position:absolute;left:17px;top:20px;bottom:20px;width:2px;background:var(--border)}
 .rm-stage{position:relative;display:flex;gap:1rem;padding:.5rem 0 1.2rem;z-index:1}
-.rm-node{width:44px;height:44px;flex-shrink:0;border-radius:50%;background:var(--bg-card);border:2px solid var(--border);display:grid;place-items:center;color:var(--text-muted);position:relative;transition:all .2s}
-.rm-node .ico{width:20px;height:20px}
+.rm-node{width:36px;height:36px;flex-shrink:0;border-radius:50%;background:var(--bg-card);border:2px solid var(--border);display:grid;place-items:center;color:var(--text-muted);position:relative;transition:all .2s}
+.rm-node .ico{width:18px;height:18px}
 .rm-stage.done .rm-node{background:var(--accent);border-color:var(--accent);color:#fff}
 .rm-stage.current .rm-node{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 4px var(--accent-glow)}
 .rm-node-num{position:absolute;top:-5px;right:-5px;width:17px;height:17px;border-radius:50%;background:var(--bg-elevated);border:1px solid var(--border);font-size:.58rem;font-weight:700;display:grid;place-items:center;color:var(--text-secondary)}
@@ -536,9 +536,9 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .rm-task .tk .ico{width:10px;height:10px}
 .rm-card-cta{margin-top:.9rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
 .rm-status{font-size:.74rem;font-weight:600}
-.rm-status.done{color:var(--success,#3d9a5c)}
+.rm-status.done{display:none}
 .rm-status.current{color:var(--accent)}
-.rm-status.locked{color:var(--text-muted)}
+.rm-status.locked{color:var(--warning)}
 /* Akun setup progress — ring ringkas, rata kanan sejajar judul */
 .akun-prog{display:flex;align-items:center;gap:.6rem;flex-shrink:0}
 .akun-prog-ring{position:relative;width:44px;height:44px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--bg-hover) 0)}
@@ -548,6 +548,8 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .akun-prog-txt{display:flex;flex-direction:column;line-height:1.2}
 .akun-prog-txt b{font-size:.85rem;color:var(--text-primary)}
 .akun-prog-txt span{font-size:.72rem;color:var(--text-muted)}
+.akun-head .card-title{align-items:flex-start}
+.akun-head #akunProgressBar{flex:none}
 @media(max-width:640px){.akun-prog-txt{display:none}}
 @media(max-width:640px){
   .rm-hero{flex-direction:column;align-items:flex-start;padding:1.25rem 1.15rem}
@@ -555,11 +557,11 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
   .rm-hero-badge{width:100%}
   .rm-progbar{max-width:none}
   /* smaller nodes + tighter timeline on phones */
-  .rm-track::before{left:19px}
-  .rm-stage{gap:.75rem;padding:.4rem 0 1.1rem}
-  .rm-node{width:40px;height:40px}
-  .rm-node .ico{width:18px;height:18px}
-  .rm-node-num{width:17px;height:17px;font-size:.58rem;top:-5px;right:-5px}
+  .rm-track::before{left:16px}
+  .rm-stage{gap:.7rem;padding:.4rem 0 1.1rem}
+  .rm-node{width:34px;height:34px}
+  .rm-node .ico{width:16px;height:16px}
+  .rm-node-num{width:16px;height:16px;font-size:.55rem;top:-4px;right:-4px}
   .rm-card{padding:.9rem 1rem}
   .rm-card h3{font-size:1rem}
   .rm-card>p{font-size:.82rem}
@@ -1739,8 +1741,8 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
     <!-- ============ TAHAP 2: BANGUN AKUN ============ -->
     <div class="view" id="view-akun">
       <div class="card" style="margin-bottom:1.5rem;background:linear-gradient(135deg,rgba(166,124,34,.12),rgba(166,124,34,.04));border-color:rgba(166,124,34,.3)">
-        <div class="card-header" style="align-items:flex-start">
-          <div>
+        <div class="card-header akun-head" style="align-items:flex-start;flex-wrap:nowrap">
+          <div style="flex:1;min-width:0">
             <div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-rocket"/></svg> Bangun Akun Sosmed Profesional</div>
             <div class="card-subtitle">Akun kredibel, aman, dan konsisten sejak hari pertama.</div>
           </div>
@@ -2602,12 +2604,12 @@ function renderAkun(){
   const c = state.akunCheck || {};
   const box = document.getElementById('akunChecklist');
   box.innerHTML = AKUN_CHECKLIST.map(it => `
-    <label class="idea-card" style="display:flex;gap:.85rem;align-items:flex-start;cursor:pointer;margin-bottom:.6rem">
-      <input type="checkbox" ${c[it.id]?'checked':''} onchange="toggleAkun('${it.id}',this.checked)" style="width:20px;height:20px;margin-top:.15rem;flex:none;accent-color:var(--accent);cursor:pointer">
+    <label class="idea-card akun-item" style="display:flex;gap:.85rem;align-items:flex-start;cursor:pointer;margin-bottom:.6rem">
       <div style="flex:1;min-width:0">
         <div style="font-weight:600">${it.emo} ${escapeHtml(it.t)}</div>
         <div style="font-size:.82rem;color:var(--text-muted);margin-top:.2rem;line-height:1.45">${escapeHtml(it.d)}</div>
       </div>
+      <input type="checkbox" ${c[it.id]?'checked':''} onchange="toggleAkun('${it.id}',this.checked)" style="width:22px;height:22px;margin-top:.1rem;flex:none;accent-color:var(--accent);cursor:pointer">
     </label>`).join('');
   renderAkunProgress();
 }
@@ -6968,7 +6970,7 @@ function renderRoadmap() {
   track.innerHTML = stages.map((s,i)=>{
     const isCurrent = (i===curIdx);
     const stateCls = s.done ? 'done' : isCurrent ? 'current' : 'locked';
-    const statusTxt = s.done ? '✓ Selesai' : isCurrent ? '● Sedang di sini' : 'Terkunci';
+    const statusTxt = s.done ? '' : isCurrent ? '● Sedang di sini' : 'Proses';
     const btn = s.done
       ? `<button class="btn btn-ghost btn-sm" onclick='(${s.go.toString()})()'>Tinjau ulang</button>`
       : `<button class="btn ${isCurrent?'btn-primary':'btn-secondary'} btn-sm" onclick='(${s.go.toString()})()'><svg class="ico"><use href="#i-arrow"/></svg> ${escapeHtml(s.cta)}</button>`;
@@ -9470,6 +9472,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f20555cbf081f2',t:'MTc5MDA4NzU2NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f224239decfd83',t:'MTc5MDA4ODgyNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
