@@ -385,12 +385,32 @@ select option{background:var(--bg-card);color:var(--text-primary)}
 .topbar-logo-dark{display:none}
 :root.dark .topbar-logo-light{display:none}
 /* ===== HOME REDESIGN (agent-first) ===== */
-.home-tabs{display:flex;gap:.4rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:999px;padding:.3rem;width:fit-content}
-.home-tab{padding:.5rem 1.2rem;border-radius:999px;font-size:.85rem;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all .18s}
+/* Menu efek kaca (glassmorphism) ala WA */
+.home-tabs{display:flex;align-items:center;gap:.3rem;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:.3rem;width:fit-content;backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);box-shadow:0 4px 18px rgba(28,25,20,.10)}
+:root.dark .home-tabs{background:rgba(40,38,32,.5);border-color:rgba(255,255,255,.1);box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.home-tab{padding:.5rem 1.2rem;border-radius:999px;font-size:.85rem;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all .18s;white-space:nowrap}
 .home-tab:hover{color:var(--text-primary)}
-.home-tab.on{background:var(--bg-card);color:var(--text-primary);box-shadow:0 2px 8px rgba(23,26,46,.10)}
+.home-tab.on{background:rgba(255,255,255,.85);color:var(--text-primary);box-shadow:0 2px 10px rgba(28,25,20,.12)}
+:root.dark .home-tab.on{background:rgba(255,255,255,.14);color:var(--text-primary)}
+/* Tab Profil: nama + foto bulat */
+.home-tab-profil{display:flex;align-items:center;gap:.45rem;padding:.3rem .35rem .3rem .85rem}
+.home-tab-profil #profilTabName{max-width:9ch;overflow:hidden;text-overflow:ellipsis}
+.profil-ava{width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--accent);color:#fff;font-size:.8rem;font-weight:800;overflow:hidden;text-transform:uppercase}
+.profil-ava img{width:100%;height:100%;object-fit:cover}
 .home-panel{display:none}
 .home-panel.on{display:block;animation:homeFade .35s ease}
+/* Panel Profil */
+.profil-card{max-width:460px;margin-top:.5rem}
+.profil-hero{display:flex;align-items:center;gap:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.1rem 1.2rem;margin-bottom:.8rem}
+.profil-hero-ava{width:64px;height:64px;border-radius:50%;flex:none;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;font-size:1.6rem;font-weight:800;overflow:hidden;text-transform:uppercase}
+.profil-hero-ava img{width:100%;height:100%;object-fit:cover}
+.profil-hero-info{min-width:0}
+.profil-hero-info b{display:block;font-size:1.1rem;line-height:1.2}
+.profil-hero-info span{font-size:.85rem;color:var(--text-muted)}
+.profil-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.9rem}
+.profil-actions .btn{flex:1;justify-content:center;min-width:130px}
+.profil-auth{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1rem 1.1rem}
+.profil-auth-note{font-size:.78rem;color:var(--text-muted);margin-top:.6rem;text-align:center;line-height:1.45}
 @keyframes homeFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .trend-row{display:flex;align-items:center;gap:.9rem;padding:.85rem 1rem;border:1px solid var(--border);border-radius:var(--r-lg);background:var(--bg-card);margin-bottom:.6rem;transition:all .18s;cursor:pointer}
 .trend-row:hover{border-color:var(--pink);transform:translateX(3px)}
@@ -965,7 +985,10 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
   /* Dashboard tabs: drop to their own centered row; utils stay top-right */
   .topbar{position:relative}
   .topbar-actions{flex:1 1 100%;justify-content:center;order:3;margin-top:.5rem}
-  .home-tabs{flex:1;justify-content:center}
+  .home-tabs{width:100%;justify-content:space-between;gap:.15rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .home-tabs::-webkit-scrollbar{display:none}
+  .home-tab{padding:.5rem .9rem;font-size:.82rem}
+  .home-tab-profil{padding:.28rem .3rem .28rem .7rem}
   .topbar-utils{position:absolute;top:0;right:0}
 }
 
@@ -1209,6 +1232,10 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
           <div class="home-tab on" data-tab="beranda" onclick="setHomeTab('beranda')">Beranda</div>
           <div class="home-tab" data-tab="trending" onclick="setHomeTab('trending')">Trending</div>
           <div class="home-tab" data-tab="riwayat" onclick="setHomeTab('riwayat')">Riwayat</div>
+          <div class="home-tab home-tab-profil" data-tab="profil" onclick="setHomeTab('profil')" title="Profil">
+            <span id="profilTabName">Kreator</span>
+            <span class="profil-ava" id="profilTabAva">K</span>
+          </div>
         </div>
         <div class="topbar-utils">
           <button class="icon-btn" title="Notifikasi">
@@ -1332,6 +1359,10 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
           </div>
           <p class="home-sub">Perintah & hasil AI terakhir yang kamu buat.</p>
           <div id="histList"></div>
+        </div>
+
+        <div class="home-panel" id="panel-profil">
+          <div id="profilBody"></div>
         </div>
       </div>
     </div>
@@ -6281,6 +6312,7 @@ function updateAvatarDisplay() {
   document.getElementById('profileDisplayName').textContent = p.name || 'Kreator';
   document.getElementById('profileDisplayHandle').textContent = p.handle ? `@${p.handle.replace('@','')}` : '@kreator';
   document.getElementById('sidebarUserName').textContent = p.name || 'Kreator';
+  if (typeof syncProfilTab === 'function') syncProfilTab();
 }
 
 // State cropper (dipakai antar-fungsi)
@@ -7076,12 +7108,60 @@ async function refreshTrends() {
   }
 }
 
-// ===== Tab beranda/trending/riwayat =====
+// ===== Tab beranda/trending/riwayat/profil =====
 function setHomeTab(tab) {
   document.querySelectorAll('.home-tab').forEach(el => el.classList.toggle('on', el.dataset.tab === tab));
   document.querySelectorAll('.home-panel').forEach(el => el.classList.toggle('on', el.id === 'panel-' + tab));
   if (tab === 'trending') refreshTrends();
   if (tab === 'riwayat') renderRiwayat();
+  if (tab === 'profil') renderProfil();
+}
+
+// Nama tampil ringkas: 1 kata saja, maks 8 karakter
+function shortName(name) {
+  const first = (name || 'Kreator').trim().split(/\s+/)[0] || 'Kreator';
+  return first.length > 8 ? first.slice(0, 8) : first;
+}
+
+// Sinkron nama + foto bulat di tab Profil
+function syncProfilTab() {
+  const p = state.profile || {};
+  const nameEl = document.getElementById('profilTabName');
+  const avaEl = document.getElementById('profilTabAva');
+  if (nameEl) nameEl.textContent = shortName(p.name);
+  if (avaEl) {
+    if (p.avatar) avaEl.innerHTML = `<img src="${p.avatar}" alt="">`;
+    else avaEl.textContent = (p.name || 'K').trim()[0] || 'K';
+  }
+}
+
+// Panel Profil di beranda — akses cepat + login/logout (auth menyusul)
+function renderProfil() {
+  syncProfilTab();
+  const p = state.profile || {};
+  const box = document.getElementById('profilBody');
+  if (!box) return;
+  const avaBig = p.avatar ? `<img src="${p.avatar}" alt="">` : ((p.name || 'K').trim()[0] || 'K');
+  const nama = p.name || 'Kreator';
+  const handle = p.handle ? '@' + p.handle.replace('@','') : '@kreator';
+  box.innerHTML = `
+    <div class="profil-card">
+      <div class="profil-hero">
+        <div class="profil-hero-ava">${avaBig}</div>
+        <div class="profil-hero-info">
+          <b>${escapeHtml(nama)}</b>
+          <span>${escapeHtml(handle)}</span>
+        </div>
+      </div>
+      <div class="profil-actions">
+        <button class="btn btn-secondary btn-sm" onclick="switchView('profile')"><svg class="ico"><use href="#i-user"/></svg> Kelola Profil</button>
+        <button class="btn btn-secondary btn-sm" onclick="switchView('settings')"><svg class="ico"><use href="#i-settings"/></svg> Pengaturan</button>
+      </div>
+      <div class="profil-auth">
+        <button class="btn btn-primary" style="width:100%" onclick="toast('Segera hadir','Sistem login/logout sedang disiapkan.','info')"><svg class="ico"><use href="#i-user"/></svg> Masuk / Daftar</button>
+        <p class="profil-auth-note">Nanti login untuk menyimpan karya & membuka fitur pro.</p>
+      </div>
+    </div>`;
 }
 
 // ===== Riwayat (history) =====
@@ -9472,5 +9552,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f22ef91949ce3e',t:'MTc5MDA4OTI3MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f24640fb413bdd',t:'MTc5MDA5MDIyNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
