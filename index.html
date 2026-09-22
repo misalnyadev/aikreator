@@ -177,6 +177,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
 .theme-emoji{font-size:2rem;margin-bottom:.5rem}
 .theme-name{font-size:.9rem;font-weight:600;margin-bottom:.25rem}
 .theme-desc{font-size:.75rem;color:var(--text-muted)}
+.idea-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem}
 .idea-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.25rem;transition:all .2s;cursor:pointer;display:flex;flex-direction:column;gap:.75rem}
 .idea-card:hover{border-color:var(--accent);transform:translateY(-3px)}
 .idea-header{display:flex;align-items:center;justify-content:space-between}
@@ -244,6 +245,18 @@ select option{background:var(--bg-card);color:var(--text-primary)}
 .ai-studio{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;min-height:500px}
 .ai-panel{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem;display:flex;flex-direction:column}
 /* Studio 2 kolom: kontrol kiri (ramping) + hasil besar kanan */
+/* Layout generate konsisten (ala AI Studio): form kiri, hasil kanan;
+   di HP hasil naik ke ATAS form supaya langsung di depan mata */
+.gen-grid{display:grid;grid-template-columns:minmax(300px,360px) 1fr;gap:1.25rem;align-items:start}
+.gen-grid .gen-form{position:sticky;top:1rem}
+@media(max-width:900px){
+  .gen-grid{grid-template-columns:1fr;gap:.8rem}
+  .gen-grid .gen-form{position:static;order:2}
+  .gen-grid .gen-result{order:1}
+}
+/* Empty state di panel hasil: ringkas, tidak makan tinggi berlebih */
+.gen-result .empty-state{padding:1.5rem 1rem}
+.gen-result .empty-state svg{width:44px;height:44px;margin-bottom:.6rem}
 .studio-grid{display:grid;grid-template-columns:360px 1fr;gap:1.25rem;align-items:start}
 .studio-controls{display:flex;flex-direction:column;padding:1.1rem;position:sticky;top:1rem}
 .studio-controls .sc-block{margin-bottom:.7rem}
@@ -1373,43 +1386,53 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
     </div>
 
     <div class="view" id="view-ideas">
-      <div class="card" style="margin-bottom:1.5rem">
-        <div class="card-header">
-          <div>
-            <div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-idea"/></svg> Temukan Ide Konten Trending</div>
-            <div class="card-subtitle">AI akan menganalisis trend realtime sesuai tema favorit Anda</div>
+      <div class="gen-grid">
+        <div class="card gen-form">
+          <div class="card-header">
+            <div>
+              <div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-idea"/></svg> Temukan Ide Konten Trending</div>
+              <div class="card-subtitle">AI akan menganalisis trend realtime sesuai tema favorit Anda</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="margin:0">
+              <label class="form-label">Pilih Tema</label>
+              <select class="form-select" id="ideaTheme"><option value="all">Semua Tema</option></select>
+            </div>
+            <div class="form-group" style="margin:0">
+              <label class="form-label">Platform Target</label>
+              <select class="form-select" id="ideaPlatform"></select>
+            </div>
+          </div>
+          <div style="margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="generateIdeas()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              Generate Ide dengan AI
+            </button>
+            <button class="btn btn-secondary" onclick="loadSavedIdeas()">Lihat Ide Tersimpan</button>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group" style="margin:0">
-            <label class="form-label">Pilih Tema</label>
-            <select class="form-select" id="ideaTheme"><option value="all">Semua Tema</option></select>
+        <div class="card gen-result">
+          <div class="card-header">
+            <div>
+              <div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-sparkle"/></svg> Hasil Ide</div>
+              <div class="card-subtitle">Ide trending siap kamu pakai</div>
+            </div>
           </div>
-          <div class="form-group" style="margin:0">
-            <label class="form-label">Platform Target</label>
-            <select class="form-select" id="ideaPlatform"></select>
+          <div id="ideasContainer">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+              <h3>Belum ada ide konten</h3>
+              <p>Klik "Generate Ide dengan AI" untuk menemukan ide konten trending</p>
+            </div>
           </div>
-        </div>
-        <div style="margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap">
-          <button class="btn btn-primary" onclick="generateIdeas()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-            Generate Ide dengan AI
-          </button>
-          <button class="btn btn-secondary" onclick="loadSavedIdeas()">Lihat Ide Tersimpan</button>
-        </div>
-      </div>
-      <div id="ideasContainer">
-        <div class="empty-state">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-          <h3>Belum ada ide konten</h3>
-          <p>Klik "Generate Ide dengan AI" untuk menemukan ide konten trending</p>
         </div>
       </div>
     </div>
 
     <div class="view" id="view-optimizer">
-      <div class="grid-2">
-        <div class="card">
+      <div class="gen-grid">
+        <div class="card gen-form">
           <div class="card-header">
             <div>
               <div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-pen"/></svg> Optimasi Konten</div>
@@ -1445,7 +1468,7 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
             Optimalkan dengan AI
           </button>
         </div>
-        <div class="card">
+        <div class="card gen-result">
           <div class="card-header">
             <div>
               <div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-sparkle"/></svg> Hasil Optimasi</div>
@@ -1490,21 +1513,8 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
           Statistik dihitung langsung dari aktivitasmu di AiKreator — bukan angka karangan.
         </div>
       </div>
-      <div class="stats-grid" id="analyticsStats"></div>
 
-      <div class="analytics-grid">
-        <div class="card">
-          <div class="card-header"><div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-chart"/></svg> Aktivitas Produksi (8 minggu terakhir)</div></div>
-          <div class="chart-container" id="analyticsChart"></div>
-          <div style="font-size:.78rem;color:var(--text-muted);margin-top:.6rem">Jumlah konten & jadwal yang kamu buat tiap minggu.</div>
-        </div>
-        <div class="card">
-          <div class="card-header"><div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-target"/></svg> Konten per Jenis/Tema</div></div>
-          <div id="themePerformance"></div>
-        </div>
-      </div>
-
-      <div class="card">
+      <div class="card" style="margin-bottom:1.25rem">
         <div class="card-header">
           <div>
             <div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-sparkle"/></svg> Rekomendasi AI</div>
@@ -1521,6 +1531,20 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
             <h3>Dapatkan rekomendasi personal</h3>
             <p>AI akan menganalisis pola konten Anda dan memberikan rekomendasi</p>
           </div>
+        </div>
+      </div>
+
+      <div class="stats-grid" id="analyticsStats"></div>
+
+      <div class="analytics-grid">
+        <div class="card">
+          <div class="card-header"><div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-chart"/></svg> Aktivitas Produksi (8 minggu terakhir)</div></div>
+          <div class="chart-container" id="analyticsChart"></div>
+          <div style="font-size:.78rem;color:var(--text-muted);margin-top:.6rem">Jumlah konten & jadwal yang kamu buat tiap minggu.</div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-target"/></svg> Konten per Jenis/Tema</div></div>
+          <div id="themePerformance"></div>
         </div>
       </div>
     </div>
@@ -7305,7 +7329,7 @@ function parseIdeasFromText(text, theme) {
 
 function renderIdeas(ideas, themeName) {
   const container = document.getElementById('ideasContainer');
-  container.innerHTML = `<div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem"><h3 style="font-size:1.1rem"> ${ideas.length} Ide untuk ${themeName}</h3></div><div class="grid-3">${ideas.map((idea, idx) => `
+  container.innerHTML = `<div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem"><h3 style="font-size:1.1rem"> ${ideas.length} Ide untuk ${themeName}</h3></div><div class="idea-grid">${ideas.map((idea, idx) => `
     <div class="idea-card">
       <div class="idea-header">
         <span class="idea-category">${themeName}</span>
@@ -9557,6 +9581,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f2b216cbdca3cf',t:'MTc5MDA5NDY0MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-</body>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f2d8d7ac56a8f8',t:'MTc5MDA5NjIyOQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
