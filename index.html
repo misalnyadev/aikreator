@@ -17,12 +17,15 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.8/index.css">
 <style>
 :root{
+  color-scheme:light;
   /* Neutral warm base + single gold accent — premium, restrained */
   --bg-primary:#f6f5f2;--bg-secondary:#ffffff;--bg-card:#ffffff;--bg-elevated:#efeee9;--bg-hover:#eceae4;
   --border:rgba(28,26,22,0.09);--border-strong:rgba(28,26,22,0.16);
   --text-primary:#1c1b18;--text-secondary:#5f5c54;--text-muted:#9a978d;
   --accent:#a67c22;--accent-light:#c8a24a;--accent-glow:rgba(166,124,34,0.16);
   --success:#3f8f5b;--warning:#b8863b;--danger:#c0453b;--info:#5a6d8c;
+  /* soft backgrounds untuk badge/status — satu sumber, konsisten lintas tema */
+  --success-soft:rgba(63,143,91,0.14);--warning-soft:rgba(184,134,59,0.14);--danger-soft:rgba(192,69,59,0.14);--info-soft:rgba(90,109,140,0.14);
   /* legacy tokens re-pointed to gold so old gradients become metallic, not rainbow */
   --pink:#c8a24a;--orange:#c8a24a;
   --shadow:0 6px 24px rgba(28,25,20,0.08);
@@ -30,10 +33,13 @@
   --r-sm:6px;--r-md:10px;--r-lg:14px;
 }
 :root.dark{
+  color-scheme:dark;
   --bg-primary:#100f0d;--bg-secondary:#171613;--bg-card:#1d1b17;--bg-elevated:#26241f;--bg-hover:#2e2b25;
   --border:rgba(255,255,255,0.07);--border-strong:rgba(255,255,255,0.14);
   --text-primary:#f4f2ec;--text-secondary:#aca699;--text-muted:#7c786e;
   --accent:#d4af5a;--accent-light:#e4c882;--accent-glow:rgba(212,175,90,0.22);
+  --success:#5cb47e;--warning:#d4a75a;--danger:#e0665c;--info:#8298bd;
+  --success-soft:rgba(92,180,126,0.18);--warning-soft:rgba(212,167,90,0.18);--danger-soft:rgba(224,102,92,0.18);--info-soft:rgba(130,152,189,0.18);
   --pink:#d4af5a;--orange:#d4af5a;
   --shadow:0 8px 32px rgba(0,0,0,0.45);
 }
@@ -206,18 +212,18 @@ select option{background:var(--bg-card);color:var(--text-primary)}
 .provider-name{font-size:.95rem;font-weight:600;margin-bottom:.2rem}
 .provider-desc{font-size:.75rem;color:var(--text-muted)}
 .provider-status{display:inline-flex;align-items:center;gap:.35rem;font-size:.7rem;padding:3px 10px;border-radius:var(--r-lg);font-weight:600}
-.provider-status.connected{background:rgba(16,185,129,.15);color:var(--success)}
+.provider-status.connected{background:var(--success-soft);color:var(--success)}
 .provider-status.disconnected{background:rgba(113,113,122,.15);color:var(--text-muted)}
-.provider-status.testing{background:rgba(59,130,246,.15);color:var(--info)}
-.provider-status.failed{background:rgba(239,68,68,.15);color:var(--danger)}
+.provider-status.testing{background:var(--info-soft);color:var(--info)}
+.provider-status.failed{background:var(--danger-soft);color:var(--danger)}
 .provider-status::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
 .provider-status.testing::before{animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .provider-actions{display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap}
 .cap-badge{display:inline-block;font-size:.6rem;font-weight:700;padding:.1rem .4rem;border-radius:var(--r-sm);margin-left:.25rem;vertical-align:middle;white-space:nowrap}
-.cap-chat{background:rgba(99,102,241,.15);color:#818cf8}
-.cap-image{background:rgba(166,124,34,.15);color:var(--accent-light)}
-.cap-video{background:rgba(16,185,129,.15);color:#34d399}
+.cap-chat{background:var(--info-soft);color:var(--info)}
+.cap-image{background:var(--accent-glow);color:var(--accent-light)}
+.cap-video{background:var(--success-soft);color:var(--success)}
 .provider-note{font-size:.72rem;color:var(--text-muted);background:var(--bg-elevated);border-radius:var(--r-md);padding:.4rem .6rem;margin-bottom:.6rem;line-height:1.4}
 .api-key-input{display:flex;gap:.5rem}
 .api-key-input input{flex:1;font-family:'Courier New',monospace;font-size:.8rem}
@@ -317,10 +323,10 @@ select option{background:var(--bg-card);color:var(--text-primary)}
 .toast.info{border-left:3px solid var(--info)}
 .toast.warning{border-left:3px solid var(--warning)}
 .toast-icon{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.toast.success .toast-icon{background:rgba(16,185,129,.15);color:var(--success)}
-.toast.error .toast-icon{background:rgba(239,68,68,.15);color:var(--danger)}
-.toast.info .toast-icon{background:rgba(59,130,246,.15);color:var(--info)}
-.toast.warning .toast-icon{background:rgba(245,158,11,.15);color:var(--warning)}
+.toast.success .toast-icon{background:var(--success-soft);color:var(--success)}
+.toast.error .toast-icon{background:var(--danger-soft);color:var(--danger)}
+.toast.info .toast-icon{background:var(--info-soft);color:var(--info)}
+.toast.warning .toast-icon{background:var(--warning-soft);color:var(--warning)}
 .toast-content{flex:1;min-width:0}
 .toast-title{font-size:.85rem;font-weight:600;margin-bottom:.15rem}
 .toast-message{font-size:.78rem;color:var(--text-muted);word-break:break-word}
@@ -346,13 +352,13 @@ select option{background:var(--bg-card);color:var(--text-primary)}
 .markdown-content ul,.markdown-content ol{margin-left:1.5rem;margin-bottom:.75rem}
 .markdown-content li{margin-bottom:.25rem}
 .markdown-content p{margin-bottom:.5rem}
-.model-badge{display:inline-block;font-size:.65rem;padding:2px 6px;border-radius:var(--r-sm);background:rgba(16,185,129,.15);color:var(--success);margin-left:.5rem;font-weight:600}
+.model-badge{display:inline-block;font-size:.65rem;padding:2px 6px;border-radius:var(--r-sm);background:var(--success-soft);color:var(--success);margin-left:.5rem;font-weight:600}
 .model-verified{display:inline-block;font-size:.6rem;padding:1px 5px;border-radius:var(--r-sm);background:rgba(16,185,129,.2);color:var(--success);margin-left:.3rem}
 .model-failed{display:inline-block;font-size:.6rem;padding:1px 5px;border-radius:var(--r-sm);background:rgba(239,68,68,.2);color:var(--danger);margin-left:.3rem}
 .provider-status-bar{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border)}
 .status-chip{font-size:.7rem;padding:3px 8px;border-radius:var(--r-lg);background:var(--bg-hover);display:flex;align-items:center;gap:.35rem}
-.status-chip.ok{background:rgba(16,185,129,.15);color:var(--success)}
-.status-chip.fail{background:rgba(239,68,68,.15);color:var(--danger)}
+.status-chip.ok{background:var(--success-soft);color:var(--success)}
+.status-chip.fail{background:var(--danger-soft);color:var(--danger)}
 .status-chip .dot{width:5px;height:5px;border-radius:50%;background:currentColor}
 @media (max-width:1024px){
   .app{grid-template-columns:1fr}
@@ -1906,7 +1912,7 @@ const AI_PROVIDERS = [
   {
     id:'puter',
     name:'Bawaan',
-    color:'#8b5cf6',
+    color:'#c8a24a',
     short:'PU',
     desc:'★ Foto & video langsung pakai — tanpa perlu mengatur apa pun. Direkomendasikan.',
     url:'https://puter.com/',
@@ -2077,7 +2083,7 @@ const AI_PROVIDERS = [
   {
     id:'venice',
     name:'Venice AI',
-    color:'#8b5cf6',
+    color:'#9b5de5',
     short:'VN',
     desc:'Privacy-first — chat + generate foto, free credits harian',
     url:'https://venice.ai/',
@@ -2641,12 +2647,12 @@ async function aiBuatPinPost(){
 }
 
 // ============ RUANG KERJA: PROJECT ============
-const PROJ_COLORS = ['#8b5cf6','#ec4899','#3b82f6','#10b981','#f59e0b','#ef4444','#06b6d4','#f97316'];
+const PROJ_COLORS = ['#c8a24a','#3f8f5b','#5a6d8c','#b8863b','#c0453b','#7a9b8e','#a67c22','#8a6d3b'];
 const PROJ_STATUS = {
-  ide:      { label:'Ide',       bg:'rgba(139,92,246,.15)', fg:'#8b5cf6' },
-  produksi: { label:'Produksi',  bg:'rgba(245,158,11,.15)', fg:'#d97706' },
-  jadwal:   { label:'Terjadwal', bg:'rgba(59,130,246,.15)', fg:'#3b82f6' },
-  selesai:  { label:'Selesai',   bg:'rgba(16,185,129,.15)', fg:'#059669' },
+  ide:      { label:'Ide',       bg:'var(--accent-glow)',  fg:'var(--accent)'  },
+  produksi: { label:'Produksi',  bg:'var(--warning-soft)', fg:'var(--warning)' },
+  jadwal:   { label:'Terjadwal', bg:'var(--info-soft)',    fg:'var(--info)'    },
+  selesai:  { label:'Selesai',   bg:'var(--success-soft)', fg:'var(--success)' },
 };
 
 function renderProjects() {
@@ -2664,7 +2670,7 @@ function renderProjects() {
     const nAsset = (state.assets || []).filter(a => a.project === p.id).length;
     const tgl = new Date(p.ts).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
     return `<div class="proj-card" onclick="openProjectModal('${p.id}')">
-      <div class="proj-top" style="background:${p.color || '#8b5cf6'}"></div>
+      <div class="proj-top" style="background:${p.color || '#c8a24a'}"></div>
       <div class="proj-body">
         <h3><svg class="ico" style="color:var(--accent)"><use href="#i-folder"/></svg> ${escapeHtml(p.name)}</h3>
         <div class="pdesc">${escapeHtml(p.desc || 'Tanpa deskripsi')}</div>
@@ -2685,7 +2691,7 @@ function renderProjects() {
 
 function openProjectModal(id) {
   const p = id ? (state.projects || []).find(x => x.id === id) : null;
-  const cur = p || { color:'#8b5cf6', status:'ide' };
+  const cur = p || { color:'#c8a24a', status:'ide' };
   openModal(`
     <div class="modal-header"><h2 class="modal-title">${p ? 'Edit Project' : 'Project Baru'}</h2>
       <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
@@ -2721,7 +2727,7 @@ function simpanProject(id) {
     name,
     desc: document.getElementById('projDesc').value.trim(),
     status: document.getElementById('projStatus').value,
-    color: window._projColor || '#8b5cf6',
+    color: window._projColor || '#c8a24a',
   };
   if (id) {
     const p = state.projects.find(x => x.id === id);
@@ -3738,8 +3744,9 @@ function goGenerateFoto() {
 }
 
 // ============ CANVAS EDITOR (Studio Komposisi) ============
-const CE_BGS = ['#ffffff','#0f172a','#7c3aed','#ec4899','#2563eb','#06b6d4','#f97316','#10b981','#fde047','#f1f5f9'];
+const CE_BGS = ['#ffffff','#f6f5f2','#1c1b18','#c8a24a','#a67c22','#0f172a','#2563eb','#06b6d4','#ec4899','#10b981','#f97316','#fde047'];
 const CE_GRADIENTS = [
+  { c1:'#c8a24a', c2:'#a67c22' },
   { c1:'#7c3aed', c2:'#ec4899' },
   { c1:'#2563eb', c2:'#06b6d4' },
   { c1:'#f97316', c2:'#ec4899' },
@@ -3985,7 +3992,7 @@ function ceAddText() {
   ceSel = ceIdSeq - 1; ceRenderStage(); ceRenderProps();
 }
 function ceAddShape(kind) {
-  ceDoc.els.push({ id: ceIdSeq++, type:kind, x:120, y:120, w:300, h:300, color: kind==='rect'?'#7c3aed':'#ec4899', radius:24, rot:0, opacity:1 });
+  ceDoc.els.push({ id: ceIdSeq++, type:kind, x:120, y:120, w:300, h:300, color: kind==='rect'?'#c8a24a':'#a67c22', radius:24, rot:0, opacity:1 });
   ceSel = ceIdSeq - 1; ceRenderStage(); ceRenderProps();
 }
 function ceAddImageSrc(src) {
@@ -5062,7 +5069,7 @@ async function charGenVideo(testMode) {
     if (!testMode && dialog && voiceLocked) {
       voHtml = `<div id="chVoOut"><div class="tm-meta">Membuat voiceover dengan suara karakter…</div></div>`;
     } else if (!testMode && dialog && !voiceLocked) {
-      voHtml = `<div class="tm-meta" style="color:var(--warn,#c78a00)">Ada naskah dialog tapi suara belum dikunci. Buka tab Suara → audisi & kunci suara untuk voiceover.</div>`;
+      voHtml = `<div class="tm-meta" style="color:var(--warning)">Ada naskah dialog tapi suara belum dikunci. Buka tab Suara → audisi & kunci suara untuk voiceover.</div>`;
     }
     out.innerHTML = `
       <video src="${src}" controls playsinline style="width:100%;max-height:340px;border-radius:var(--r-md);background:#000;margin-top:.5rem"></video>
@@ -9454,5 +9461,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f1b6e4787c5f39',t:'MTc5MDA4NDM1Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f1ca1b0f9ef87a',t:'MTc5MDA4NTEzOQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
