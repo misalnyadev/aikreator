@@ -207,6 +207,17 @@ select option{background:var(--bg-card);color:var(--text-primary)}
 .provider-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.25rem;margin-bottom:1rem;transition:all .2s}
 .provider-card:hover{border-color:var(--border-strong)}
 .provider-card.working{border-color:var(--success)}
+.settings-groups{display:flex;flex-direction:column;gap:.7rem}
+.settings-group{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden}
+.settings-group[open]{border-color:var(--border-strong)}
+.settings-group>summary{list-style:none;display:flex;align-items:center;gap:.8rem;padding:.95rem 1rem;cursor:pointer;user-select:none}
+.settings-group>summary::-webkit-details-marker{display:none}
+.sg-icon{width:36px;height:36px;display:grid;place-items:center;flex:none;border-radius:var(--r-md);background:var(--bg-elevated);color:var(--accent);font-size:1rem}
+.sg-main{min-width:0;flex:1}.sg-main b{display:block;font-size:.92rem}.sg-main span{display:block;color:var(--text-muted);font-size:.76rem;margin-top:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sg-count{font-size:.7rem;color:var(--text-muted);white-space:nowrap}.sg-arrow{color:var(--text-muted);transition:transform .18s}.settings-group[open] .sg-arrow{transform:rotate(90deg)}
+.sg-body{padding:0 .75rem .75rem;border-top:1px solid var(--border)}
+.sg-body .provider-card{margin:.75rem 0 0}
+.settings-tools{display:flex;gap:.45rem;flex-wrap:wrap;margin-bottom:1rem}
 .provider-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}
 .provider-logo{width:40px;height:40px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;color:white;flex-shrink:0}
 .provider-info{flex:1;min-width:150px}
@@ -1649,13 +1660,14 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
     </div>
 
     <div class="view" id="view-settings">
-      <div class="card" style="margin-bottom:1.5rem">
+      <div class="card" style="margin-bottom:1rem">
         <div class="card-header">
           <div>
-            <div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-key"/></svg> Pengaturan AI Provider</div>
-            <div class="card-subtitle">Konfigurasi API key. Model otomatis di-test untuk memastikan berjalan.</div>
+            <div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-key"/></svg> AI Provider</div>
+            <div class="card-subtitle">Buka kategori yang ingin diatur.</div>
           </div>
-          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        </div>
+        <div class="settings-tools">
             <button class="btn btn-primary btn-sm" onclick="testAllProviders()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
               Test Semua Provider
@@ -1669,9 +1681,8 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
               Import
             </button>
             <input type="file" id="importFile" accept=".json" style="display:none" onchange="importSettings(event)">
-          </div>
         </div>
-        <div id="providersList"></div>
+        <div id="providersList" class="settings-groups"></div>
       </div>
 
       <div class="card">
@@ -6548,7 +6559,11 @@ function populateOptimizerThemes() {
 // ============ SETTINGS ============
 function renderSettings() {
   const list = document.getElementById('providersList');
-  list.innerHTML = AI_PROVIDERS.map(p => {
+  // Hanya provider yang layak dipakai langsung dari browser ditampilkan.
+  // Integrasi lama tetap dikenali untuk kompatibilitas data, tetapi tidak merusak UI.
+  const settingsProviderIds = ['openrouter','groq','mistral','cerebras','chutes','gemini','puter','kie'];
+  const settingsProviders = AI_PROVIDERS.filter(p => settingsProviderIds.includes(p.id));
+  list.innerHTML = settingsProviders.map(p => {
     const hasKey = state.providers[p.id]?.apiKey;
     const selectedModel = state.providers[p.id]?.model || (p.models.find(m => m.recommended)?.id) || p.models[0]?.id || '';
     const verified = state.verifiedModels[p.id];
@@ -6623,11 +6638,30 @@ function renderSettings() {
       </div>
     `;
   }).join('');
+
+  // Susun provider menjadi accordion berbasis fungsi; hanya satu terbuka sekaligus.
+  const settingsGroups = [
+    {id:'text', icon:'✦', title:'Teks & Penalaran', desc:'Ide, chat, optimizer dan storyboard', ids:['openrouter','groq','mistral','cerebras','chutes']},
+    {id:'vision', icon:'◉', title:'Vision', desc:'Membaca gambar dan konteks visual', ids:['gemini']},
+    {id:'media', icon:'▣', title:'Gambar & Video', desc:'Membuat foto, adegan dan klip', ids:['puter','kie']}
+  ];
+  const cardHtml = {};
+  list.querySelectorAll('.provider-card').forEach(card => { cardHtml[card.id.replace('provider-card-','')] = card.outerHTML; });
+  list.innerHTML = settingsGroups.map((g, i) => {
+    const cards = g.ids.map(id => cardHtml[id] || '').join('');
+    return `<details class="settings-group" data-settings-group="${g.id}" ${i === 0 ? 'open' : ''}>
+      <summary onclick="settingsAccordion(event,this)">
+        <span class="sg-icon">${g.icon}</span>
+        <span class="sg-main"><b>${g.title}</b><span>${g.desc}</span></span>
+        <span class="sg-count">${g.ids.length} provider</span><span class="sg-arrow">›</span>
+      </summary><div class="sg-body">${cards}</div>
+    </details>`;
+  }).join('');
   
   const defSel = document.getElementById('defaultProvider');
   defSel.innerHTML = '<option value="">Pilih provider...</option>';
-  AI_PROVIDERS.forEach(p => {
-    if (state.providers[p.id]?.apiKey) {
+  settingsProviders.forEach(p => {
+    if (p.noKey || state.providers[p.id]?.apiKey) {
       const verified = state.verifiedModels[p.id];
       const opt = document.createElement('option');
       opt.value = p.id;
@@ -6637,6 +6671,14 @@ function renderSettings() {
   });
   defSel.value = state.defaultProvider;
   document.getElementById('outputLanguage').value = state.outputLanguage || 'id';
+}
+
+function settingsAccordion(event, summary) {
+  const current = summary.closest('.settings-group');
+  if (!current || current.open) return;
+  document.querySelectorAll('#providersList .settings-group[open]').forEach(group => {
+    if (group !== current) group.removeAttribute('open');
+  });
 }
 
 function toggleKeyVisibility(id) {
@@ -6822,7 +6864,8 @@ async function callProviderWithModel(provider, config, model, prompt) {
 }
 
 async function testAllProviders() {
-  const activeProviders = AI_PROVIDERS.filter(p => state.providers[p.id]?.apiKey);
+  const visibleIds = ['openrouter','groq','mistral','cerebras','chutes','gemini','puter','kie'];
+  const activeProviders = AI_PROVIDERS.filter(p => visibleIds.includes(p.id) && (p.noKey || state.providers[p.id]?.apiKey));
   if (activeProviders.length === 0) {
     toast('Tidak ada provider','Atur API key terlebih dahulu','warning');
     return;
@@ -9602,6 +9645,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f402d37c7b33d1',t:'MTc5MDEwODQzNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f43d588a2c81ef',t:'MTc5MDExMDgzMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
