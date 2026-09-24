@@ -480,10 +480,10 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 @media(max-width:1240px){.home-illus{display:none}}
 .home-head-side{display:flex;flex-direction:column;gap:.7rem;align-items:stretch;flex:none;width:290px;max-width:100%}
 @media(max-width:900px){.home-head{flex-wrap:wrap}.home-head-side{width:100%}}
-.produce-card{display:flex;gap:.7rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:.85rem;cursor:pointer;transition:border-color .15s,transform .15s}
-.produce-card:hover{border-color:var(--accent-light)}
-.produce-card .cell-ic{flex:none}
-.produce-main h4{font-size:.92rem;margin:0 0 .25rem;font-weight:700;white-space:nowrap}
+.produce-card{display:flex;flex-direction:column;align-items:flex-start;gap:.35rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:.85rem;cursor:pointer;transition:border-color .15s,transform .15s}
+.produce-card:hover{border-color:var(--accent-light);transform:translateY(-2px)}
+.produce-card .cell-ic{flex:none;margin-bottom:.1rem}
+.produce-main{width:100%}.produce-main h4{font-size:.92rem;margin:0;font-weight:700;white-space:normal}
 .produce-main p{color:var(--text-secondary);font-size:.8rem;line-height:1.45;margin:0}
 .produce-main .mini-row{display:flex;gap:.35rem;margin-top:.6rem;flex-wrap:wrap}
 @media(max-width:820px){.home-head-side{width:100%}}
@@ -516,6 +516,23 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .cmd-send{margin-left:auto;width:40px;height:40px;border-radius:var(--r-md);border:none;background:var(--accent);color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .15s}
 .cmd-send .ico{font-size:1.2rem;stroke-width:2}
 .cmd-send:hover{background:var(--accent-light)}
+.home-fold{margin:0 0 .65rem;border:1px solid var(--border);border-radius:var(--r-md);background:color-mix(in srgb,var(--bg-card) 82%,transparent);overflow:hidden}.home-fold-head{width:100%;min-height:38px;padding:.55rem .8rem;border:0;background:transparent;color:var(--text-secondary);display:flex;align-items:center;gap:.5rem;font:700 .76rem inherit;cursor:pointer;text-align:left}.home-fold-head:hover{color:var(--text-primary)}.home-fold-head .ico{width:14px;height:14px;color:var(--accent)}.home-fold-chevron{margin-left:auto;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;font-size:.9rem;transition:transform .18s;background:var(--bg-elevated)}.home-fold.open .home-fold-chevron{transform:rotate(180deg)}.home-fold-body{display:none;padding:0 .75rem .7rem}.home-fold.open .home-fold-body{display:block}.home-shortcuts .home-fold-body{padding-top:.1rem}.home-shortcuts .home-chips{margin:0}.home-card-group{margin-top:.6rem}.home-card-group[data-fold="quick-cards"]{margin-bottom:1rem}.home-card-group-head{cursor:pointer;user-select:none}.home-card-group-head:hover h2{color:var(--accent)}.home-card-group-body{display:none}.home-card-group.open .home-card-group-body{display:block}.home-group-chevron{flex:none;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--bg-primary);color:var(--text-secondary);font:700 13px/1 inherit;cursor:pointer;transition:transform .18s,border-color .18s,color .18s,background .18s,box-shadow .18s}.home-group-chevron:hover{color:var(--accent);border-color:var(--accent-light);background:var(--accent-glow);box-shadow:0 0 0 2px var(--accent-glow)}.home-group-chevron svg{width:15px;height:15px;transition:transform .2s}.home-card-group.open .home-group-chevron svg{transform:rotate(180deg)}.home-quick-head{justify-content:flex-start;gap:.45rem;margin:.15rem 0 .55rem}.home-quick-head h2{margin:0}.home-quick-head .home-group-chevron{margin-left:0}
+.home-composer{background:var(--bg-card);border:1px solid var(--border-strong);border-radius:var(--r-lg);padding:1rem;margin:0 0 1.25rem;box-shadow:var(--shadow);transition:border-color .18s}
+.home-composer:focus-within{border-color:var(--accent-light)}
+.home-composer textarea{display:block;width:100%;min-height:86px;max-height:220px;padding:.1rem .15rem;border:0;outline:0;resize:vertical;background:transparent;color:var(--text-primary);font:500 1rem/1.55 inherit}
+.home-composer textarea::placeholder{color:var(--text-muted)}
+.hc-assets{display:flex;gap:.5rem;min-height:0;margin-bottom:.65rem;overflow-x:auto;scrollbar-width:none}.hc-assets::-webkit-scrollbar{display:none}
+.hc-add-asset,.hc-asset{width:72px;height:64px;flex:none;border:1px dashed var(--border-strong);border-radius:var(--r-md);background:var(--bg-elevated);color:var(--text-muted);overflow:hidden;position:relative;cursor:pointer}
+.hc-add-asset{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;font-size:.63rem}.hc-add-asset .ico{width:17px;height:17px}.hc-asset img{width:100%;height:100%;object-fit:cover}.hc-asset-label{position:absolute;left:3px;right:3px;bottom:3px;padding:2px 3px;border-radius:4px;background:rgba(0,0,0,.65);color:#fff;font-size:.56rem;text-align:center;white-space:nowrap}.hc-asset button{position:absolute;top:3px;right:3px;width:18px;height:18px;border:0;border-radius:50%;background:rgba(0,0,0,.68);color:#fff;cursor:pointer;line-height:18px}
+.home-compose-tools{display:flex;align-items:center;gap:.45rem;padding-top:.75rem;border-top:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.home-compose-tools::-webkit-scrollbar{display:none}.home-fold-body .home-compose-tools{padding-top:.15rem;border-top:0}.home-compose-submit{display:flex;align-items:center;gap:.75rem;padding-top:.7rem;border-top:1px solid var(--border)}.hc-submit-hint{font-size:.68rem;color:var(--text-muted)}
+.hc-tool,.hc-select{height:36px;flex:none;border:1px solid var(--border);border-radius:999px;background:var(--bg-card);color:var(--text-secondary);font:600 .76rem inherit;cursor:pointer}
+.hc-tool{display:inline-flex;align-items:center;gap:.35rem;padding:0 .7rem}.hc-tool:hover,.hc-select:hover{border-color:var(--accent-light);color:var(--text-primary)}
+.hc-tool .ico{width:15px;height:15px}.hc-select{padding:0 1.8rem 0 .75rem;outline:none}
+.home-generate{height:38px;margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:.45rem;padding:0 .95rem;border:0;border-radius:999px;background:var(--text-primary);color:var(--bg-primary);font-weight:750;cursor:pointer}
+.home-generate:hover{background:var(--accent);color:#fff}.home-generate:disabled{opacity:.55;cursor:wait}.home-generate .ico{width:15px;height:15px}
+.hc-video-only,.hc-story-only{display:none}.home-composer[data-mode="video"] .hc-video-only{display:block}.home-composer[data-mode="storyboard"] .hc-story-only{display:flex}.home-composer[data-mode="storyboard"] select.hc-story-only{display:block}.hc-duration-total{height:36px;align-items:center;gap:.25rem;padding:0 .65rem;border:1px solid var(--border);border-radius:999px;color:var(--text-secondary);font-size:.75rem;white-space:nowrap}.hc-duration-total input{width:42px;border:0;outline:0;background:transparent;color:var(--text-primary);font:600 .76rem inherit}.hc-progress{display:none;margin-top:.75rem;color:var(--accent);font-size:.78rem;font-weight:650}.hc-progress.show{display:block}
+.home-compose-result{display:none;margin:.75rem 0 0;padding:.85rem 1rem;border-radius:var(--r-md);background:var(--bg-elevated);color:var(--text-secondary);font-size:.86rem;line-height:1.55;white-space:pre-wrap}.home-compose-result.show{display:block}.home-compose-result b{color:var(--text-primary)}.home-compose-result img,.home-compose-result video{display:block;max-width:100%;max-height:560px;margin:auto;border-radius:var(--r-md)}.hc-result-actions{display:flex;gap:.45rem;margin-top:.7rem;flex-wrap:wrap}.hc-result-actions a,.hc-result-actions button{border:1px solid var(--border);border-radius:999px;padding:.4rem .75rem;background:var(--bg-card);color:var(--text-secondary);font-size:.74rem;text-decoration:none;cursor:pointer}
 .home-chips{display:flex;gap:.45rem;flex-wrap:wrap;margin:.6rem 0 .6rem}
 .home-chip{display:inline-flex;align-items:center;gap:.35rem;background:transparent;border:1px solid var(--border);border-radius:999px;padding:.4rem .8rem;font-size:.78rem;color:var(--text-secondary);cursor:pointer;transition:all .15s}
 .home-chip .ico{font-size:.9rem;color:var(--accent)}
@@ -645,6 +662,7 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .tool-card b{font-size:.88rem;display:block}
 .tool-card .desc{color:var(--text-muted);font-size:.73rem;line-height:1.4;display:block;margin-top:.2rem}
 .tool-card .tag{position:absolute;top:.7rem;right:.7rem;font-size:.56rem;padding:2px 6px;border-radius:999px;background:var(--bg-elevated);color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+.tool-card-studio{grid-column:span 2;min-height:112px;padding:1rem 1.05rem;background:var(--bg-card)}.tool-card-studio .ic{width:38px;height:38px;margin-bottom:.55rem}.tool-card-studio b{font-size:1.08rem;letter-spacing:-.015em}.tool-card-studio .desc{max-width:78%;font-size:.76rem}.studio-eyebrow{display:block;margin-bottom:.2rem;color:var(--accent);font-size:.6rem;font-weight:750;text-transform:uppercase;letter-spacing:.08em}.studio-mini-tags{display:flex;gap:.3rem;margin-top:.65rem;flex-wrap:wrap}.studio-mini-tags span{padding:.18rem .42rem;border:1px solid var(--border);border-radius:999px;color:var(--text-secondary);background:var(--bg-elevated);font-size:.58rem;font-weight:650}
 /* quality strip */
 .qual-banner{margin-top:1.5rem;border:1px solid var(--border);background:var(--bg-card);border-radius:var(--r-lg);padding:.85rem 1.1rem;display:flex;gap:.8rem;align-items:center}
 .qual-banner .em{width:34px;height:34px;flex:none;border-radius:var(--r-md);background:var(--bg-elevated);color:var(--accent);display:grid;place-items:center}
@@ -1153,6 +1171,8 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 <symbol id="i-play" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="4"/><path d="M10 9l5 3-5 3z"/></symbol>
 <symbol id="i-thumb" viewBox="0 0 24 24"><path d="M7 10v10H4V10zM7 10l4-7a2 2 0 0 1 3 2l-1 5h5a2 2 0 0 1 2 2.3l-1.3 6A2 2 0 0 1 15 20H7"/></symbol>
 <symbol id="i-scissors" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.5 7.5 21 18M21 6 8.5 16.5"/></symbol>
+<symbol id="i-eraser" viewBox="0 0 24 24"><path d="m7 21-4-4a2 2 0 0 1 0-3L14 3a2 2 0 0 1 3 0l4 4a2 2 0 0 1 0 3L10 21H7Z"/><path d="m6.5 10.5 7 7M10 21h11"/></symbol>
+<symbol id="i-studio" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="15" rx="3"/><path d="M7 9h4M7 13h7M17 8v4M15 10h4M9 19v2M15 19v2M7 21h10"/></symbol>
 </defs></svg>
 <div class="app">
   <aside class="sidebar" id="sidebar">
@@ -1199,12 +1219,16 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
     <div class="nav-section">
       <div class="nav-label">Produksi</div>
       <div class="nav-item" data-label="AI Studio" data-view="aistudio">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m11-7h-6m-6 0H1m17.36-5.36l-4.24 4.24M9.88 14.12l-4.24 4.24m0-12.72l4.24 4.24m4.24 4.24l4.24 4.24"/></svg>
+        <svg class="ico"><use href="#i-studio"/></svg>
         AI Studio
       </div>
       <div class="nav-item" data-label="Alur Konten" data-view="flow">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         Alur Konten
+      </div>
+      <div class="nav-item" data-label="Studio Komposisi" onclick="document.getElementById('sidebar').classList.remove('open');ceOpen([], 'Kanvas Baru')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8" cy="8" r="2"/><path d="m21 15-5-5L5 21M14 5h5M16.5 2.5v5"/></svg>
+        Studio Komposisi
       </div>
       <div class="nav-item" data-label="Jadwal Upload" data-view="schedule">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -1221,9 +1245,9 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
         Ide Konten
       </div>
-      <div class="nav-item" data-label="Optimizer" data-view="optimizer">
+      <div class="nav-item" data-label="Optimasi" data-view="optimizer">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        Optimizer
+        Optimasi
       </div>
       <div class="nav-item" data-label="Analisis" data-view="analytics">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
@@ -1300,70 +1324,60 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
               <div class="cell-ic"><svg class="ico"><use href="#i-bolt"/></svg></div>
               <div class="produce-main">
                 <h4>Hasilkan konten sekarang!</h4>
-                <p>Lompat ke tool konten siap-upload tanpa basa-basi.</p>
-                <div class="mini-row">
-                  <span class="cmd-tag" onclick="event.stopPropagation();switchView('flow')"><svg class="ico"><use href="#i-video"/></svg><span>Video</span></span>
+                <div class="mini-row produce-functions" aria-label="Konten yang bisa dibuat">
+                  <span class="cmd-tag" onclick="event.stopPropagation();switchView('flow')"><svg class="ico"><use href="#i-camera"/></svg><span>Foto</span></span>
                   <span class="cmd-tag" onclick="event.stopPropagation();switchView('flow')"><svg class="ico"><use href="#i-image"/></svg><span>Carousel</span></span>
+                  <span class="cmd-tag" onclick="event.stopPropagation();switchView('flow')"><svg class="ico"><use href="#i-video"/></svg><span>Video / Reels</span></span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="home-sech"><h2>Studio Pro</h2><span class="more" onclick="switchView('aistudio')">Buka AI Studio <svg class="ico"><use href="#i-arrow"/></svg></span></div>
-        <div class="hero-grid">
-          <div class="hero-card feature" onclick="switchView('aistudio')">
-            <div class="hc-glow"></div>
-            <div class="hc-badge">Unggulan</div>
-            <div class="hc-ic"><svg class="ico"><use href="#i-agent"/></svg></div>
-            <h3>AI Studio</h3>
-            <p>Foto, video & storyboard dalam satu layar. Bawa referensi karakter + gambar galeri → konten konsisten, langsung produksi.</p>
-            <div class="hc-tags"><span>Text→Image</span><span>Image→Image</span><span>Image→Video</span><span>Storyboard</span></div>
+<section class="home-card-group" data-fold="quick-cards">
+        <div class="home-sech home-card-group-head home-quick-head"><h2>Produksi cepat</h2><button class="home-group-chevron" type="button" aria-label="Buka atau tutup Produksi cepat" onclick="event.stopPropagation();homeToggleCardGroup('quick-cards')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button></div>
+        <div class="home-card-group-body"><div class="tool-grid">
+          <div class="tool-card tool-card-studio" onclick="switchView('aistudio')">
+            <div class="ic"><svg class="ico"><use href="#i-studio"/></svg></div>
+            <span class="studio-eyebrow">Studio produksi lengkap</span><b>AI Studio</b>
+            <span class="desc">Pusat produksi teks, foto, carousel, video, dan storyboard dalam satu workspace profesional.</span>
+            <div class="studio-mini-tags"><span>Teks</span><span>Foto</span><span>Carousel</span><span>Video</span><span>Storyboard</span></div><span class="tag">unggulan</span>
           </div>
-          <div class="hero-side">
-            <div class="hero-card" onclick="switchView('characters')">
-              <div class="hc-ic sm"><svg class="ico"><use href="#i-users"/></svg></div>
-              <h4>Karakter AI</h4>
-              <p>Kunci wajah & suara — konsisten di tiap konten.</p>
-            </div>
-            <div class="hero-card" onclick="switchView('aistudio')">
-              <div class="hc-ic sm"><svg class="ico"><use href="#i-grid"/></svg></div>
-              <h4>Storyboard → Video</h4>
-              <p>Konsep/GPT → panel → foto → iklan utuh.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="home-sech" style="margin-top:1.25rem"><h2>Produksi cepat</h2><span class="more" onclick="switchView('aistudio')">Lihat semua <svg class="ico"><use href="#i-arrow"/></svg></span></div>
-        <div class="tool-grid">
           <div class="tool-card" onclick="switchView('characters')"><div class="ic"><svg class="ico"><use href="#i-users"/></svg></div><b>Karakter AI</b><span class="desc">AI Influencer wajah & suara konsisten</span><span class="tag">pro</span></div>
-          <div class="tool-card" onclick="switchView('aistudio')"><div class="ic"><svg class="ico"><use href="#i-image"/></svg></div><b>Foto Konsisten</b><span class="desc">Karakter + produk/pakaian/lokasi</span><span class="tag">pro</span></div>
-          <div class="tool-card" onclick="switchView('aistudio')"><div class="ic"><svg class="ico"><use href="#i-video"/></svg></div><b>Video AI</b><span class="desc">Image→video, frame awal & akhir</span><span class="tag">pro</span></div>
-          <div class="tool-card" onclick="switchView('aistudio')"><div class="ic"><svg class="ico"><use href="#i-grid"/></svg></div><b>Storyboard</b><span class="desc">Adegan/iklan → video utuh</span><span class="tag">pro</span></div>
-          <div class="tool-card" onclick="switchView('ideas')"><div class="ic"><svg class="ico"><use href="#i-idea"/></svg></div><b>Ide & Trend</b><span class="desc">Ide konten viral sesuai niche</span></div>
-          <div class="tool-card" onclick="switchView('flow')"><div class="ic"><svg class="ico"><use href="#i-image"/></svg></div><b>Carousel Maker</b><span class="desc">Slide edukasi & storytelling</span><span class="tag">siap-upload</span></div>
+          <div class="tool-card tool-card-schedule" onclick="switchView('schedule')"><div class="ic"><svg class="ico"><use href="#i-calendar"/></svg></div><b>Jadwal Upload</b><span class="desc" id="homeScheduleSummary">Belum ada konten terjadwal</span><span class="tag">jadwal</span></div>
           <div class="tool-card" onclick="switchView('toolbox')"><div class="ic"><svg class="ico"><use href="#i-box"/></svg></div><b>Kotak Alat</b><span class="desc">15 utilitas: kompres, watermark, QR…</span></div>
-          <div class="tool-card" onclick="switchView('schedule')"><div class="ic"><svg class="ico"><use href="#i-calendar"/></svg></div><b>Jadwal Upload</b><span class="desc">Kalender konten konsisten</span></div>
-        </div>
+          <div class="tool-card" onclick="switchView('ideas')"><div class="ic"><svg class="ico"><use href="#i-idea"/></svg></div><b>Ide Konten</b><span class="desc">Temukan ide konten relevan sesuai niche</span></div>
+          <div class="tool-card" onclick="switchView('optimizer')"><div class="ic"><svg class="ico"><use href="#i-pen"/></svg></div><b>Optimasi</b><span class="desc">Poles hook, judul, caption, dan CTA</span></div>
+          <div class="tool-card" onclick="switchView('analytics')"><div class="ic"><svg class="ico"><use href="#i-chart"/></svg></div><b>Analisis</b><span class="desc">Pantau performa konten dan perkembangan akun</span></div>
+        </div></div>
+        </section>
 
-
-        <div class="home-chips">
-          <span class="home-chip" onclick="chipToCmd('5 ide konten viral untuk niche saya')"><svg class="ico"><use href="#i-idea"/></svg>Ide konten viral</span>
-          <span class="home-chip" onclick="chipToCmd('buatkan script video pendek lengkap dengan hook')"><svg class="ico"><use href="#i-video"/></svg>Script video</span>
-          <span class="home-chip" onclick="switchView('flow')"><svg class="ico"><use href="#i-image"/></svg>Carousel slide</span>
-          <span class="home-chip" onclick="switchView('flow')"><svg class="ico"><use href="#i-camera"/></svg>Foto produk</span>
-          <span class="home-chip" onclick="chipToCmd('tulis caption menarik + 15 hashtag relevan')"><svg class="ico"><use href="#i-pen"/></svg>Caption + hashtag</span>
-          <span class="home-chip" onclick="switchView('analytics')"><svg class="ico"><use href="#i-chart"/></svg>Analisa akunku</span>
-        </div>
-
-        <div class="cmd-bar">
-          <textarea id="homeCmd" placeholder="Contoh: bikinkan 5 ide Reels faceless niche masak rumahan + script hook-nya…"></textarea>
-          <div class="cmd-row">
-            <span class="cmd-tag" id="homeTagTipe" onclick="switchView('arah')"><svg class="ico"><use href="#i-compass"/></svg><span>Tipe: —</span></span>
-            <span class="cmd-tag" id="homeTagPlat" onclick="switchView('arah')"><svg class="ico"><use href="#i-chart"/></svg><span>Platform: —</span></span>
-            <button class="cmd-send" onclick="kirimHomeCmd()" title="Kirim ke AI Studio"><svg class="ico"><use href="#i-send"/></svg></button>
+        <div class="home-composer">
+          <div class="hc-assets" id="homeAssetStrip">
+            <button class="hc-add-asset" onclick="homeChooseAsset('reference')" title="Tambah referensi"><svg class="ico"><use href="#i-image"/></svg><span>Tambah</span></button>
           </div>
+          <input id="homeAssetInput" type="file" accept="image/png,image/jpeg,image/webp" hidden onchange="homeAddAssets(event)">
+          <textarea id="homeCmd" rows="3" placeholder="Apa yang ingin kamu buat?" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();kirimHomeCmd()}"></textarea>
+          <div class="home-compose-tools">
+            <select class="hc-select" id="homeComposeMode" aria-label="Mode konten" onchange="homeComposerModeChanged()">
+              <option value="smart">Smart</option><option value="image">Foto</option><option value="video">Video</option><option value="storyboard">Storyboard</option>
+            </select>
+            <select class="hc-select" id="homeCharacter" aria-label="Karakter"><option value="">Karakter</option></select>
+            <select class="hc-select" id="homeComposeRatio" aria-label="Rasio"><option value="9:16">9:16</option><option value="1:1">1:1</option><option value="16:9">16:9</option></select>
+            <select class="hc-select hc-video-only" id="homeComposeDuration" aria-label="Durasi"><option value="3">3s</option><option value="5">5s</option><option value="8" selected>8s</option><option value="10">10s</option><option value="15">15s</option></select>
+            <label class="hc-story-only hc-duration-total"><input id="homeStoryDuration" type="number" value="1" min="0.2" max="180" step="0.5" aria-label="Durasi total storyboard"><span>menit</span></label>
+            <select class="hc-select hc-story-only" id="homeStorySegment" aria-label="Durasi per adegan"><option value="8">8s/adegan</option><option value="10">10s/adegan</option></select>
+            <select class="hc-select" id="homeComposeProvider" aria-label="Provider" onchange="homeProviderChanged()"><option value="">Provider otomatis</option></select>
+            <select class="hc-select hc-video-only" id="homeComposeModel" aria-label="Model video" onchange="homeVideoModelChanged()"></select>
+            <button class="home-generate" id="homeGenerateBtn" onclick="kirimHomeCmd()"><span>Generate</span><svg class="ico"><use href="#i-arrow"/></svg></button>
+          </div>
+          <div class="hc-progress" id="homeComposeProgress"></div>
+          <div class="home-compose-result" id="homeComposeResult"></div>
         </div>
+
+
+
+        
 
         <div class="qual-banner">
           <div class="em"><svg class="ico"><use href="#i-shield"/></svg></div>
@@ -1597,7 +1611,7 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
         <!-- KANAN: panel hasil (besar) -->
         <div class="studio-output card">
           <div class="ai-panel-header">
-            <div class="card-title" id="studioPanelTitle"><svg class="ico" style="color:var(--accent)"><use href="#i-agent"/></svg> <span class="ptxt">Hasil</span></div>
+            <div class="card-title" id="studioPanelTitle"><svg class="ico" style="color:var(--accent)"><use href="#i-studio"/></svg> <span class="ptxt">Hasil</span></div>
             <button class="btn btn-ghost btn-sm" onclick="clearChat()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
               Bersihkan
@@ -1871,9 +1885,6 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
           <span class="ws-chip" data-f="text" onclick="filterAssets('text')"><svg class="ico"><use href="#i-pen"/></svg> Teks</span>
           <span class="ws-chip" data-f="link" onclick="filterAssets('link')"><svg class="ico"><use href="#i-link"/></svg> Link</span>
         </div>
-        <button class="btn btn-secondary" onclick="switchView('toolbox')"><svg class="ico"><use href="#i-box"/></svg> Kotak Alat</button>
-        <button class="btn btn-secondary" onclick="openObjekStudio()"><svg class="ico"><use href="#i-scissors"/></svg> Studio Objek</button>
-        <button class="btn btn-secondary" onclick="ceOpen([], 'Kanvas Baru')"><svg class="ico"><use href="#i-palette"/></svg> Studio Komposisi</button>
         <button class="btn btn-primary" onclick="openAssetModal()">+ Tambah Asset</button>
       </div>
       <div id="assetGrid" class="ws-grid"></div>
@@ -2007,8 +2018,11 @@ const AI_PROVIDERS = [
       {id:'google/gemini-2.5-flash-image',name:'Nano Banana (Foto) ★',recommended:true,free:true,purpose:'image'},
       {id:'black-forest-labs/flux-schnell',name:'FLUX Schnell (cepat)',free:true,purpose:'image'},
       {id:'openai/gpt-image-2',name:'GPT Image 2 (kualitas tinggi)',free:true,purpose:'image'},
-      {id:'veo-3.1-lite',name:'Veo 3.1 Lite (Video +audio) ★',recommended:true,free:true,purpose:'video'},
-      {id:'veo-3.1-fast',name:'Veo 3.1 Fast (Video +audio)',free:true,purpose:'video'}
+      {id:'veo-3.1-lite',name:'Veo 3.1 Lite (4/6/8s +audio) ★',recommended:true,free:true,purpose:'video'},
+      {id:'veo-3.1-fast',name:'Veo 3.1 Fast (4/6/8s +audio)',free:true,purpose:'video'},
+      {id:'bytedance/seedance-2.0',name:'Seedance 2.0 (4–15s +audio)',purpose:'video'},
+      {id:'bytedance/seedance-2.5',name:'Seedance 2.5 (4–30s +audio)',purpose:'video'},
+      {id:'wan-ai/wan2.7-t2v',name:'Wan 2.7 (2–15s +audio)',purpose:'video'}
     ],
     format:'puter'
   },
@@ -2384,12 +2398,12 @@ const viewTitles = {
   akun: ['Bangun Akun', 'Siapkan akun sosmed profesional langkah demi langkah'],
   flow: ['Alur Konten', 'Dari ide sampai siap-upload'],
   ideas: ['Ide Konten', 'Cari ide trending sesuai temamu'],
-  optimizer: ['Optimizer', 'Poles hook, judul, caption & CTA'],
+  optimizer: ['Optimasi', 'Poles hook, judul, caption & CTA'],
   schedule: ['Jadwal Upload', 'Atur jadwal biar konsisten tayang'],
   analytics: ['Analisis', 'Analisa konten sebelum upload & pantau perkembangan akun'],
   projects: ['Project', 'Kelompokkan konten & ide per campaign'],
   assets: ['Assets', 'Simpan gambar, teks, link & catatan konten'],
-  aistudio: ['AI Studio', 'Generate foto, video & storyboard konsisten'],
+  aistudio: ['AI Studio', 'Produksi teks, foto, carousel, video & storyboard konsisten'],
   profile: ['Profil', 'Kelola info & foto akunmu'],
   settings: ['Pengaturan', 'API key provider AI & preferensi aplikasi'],
   toolbox: ['Kotak Alat', 'Kumpulan utility untuk produksi konten'],
@@ -4228,7 +4242,7 @@ let _objState = { srcOriginal:null, srcResult:null, busy:false };
 function openObjekStudio() {
   _objState = { srcOriginal:null, srcResult:null, busy:false };
   openModal(`
-    <div class="modal-header"><h2 class="modal-title">Studio Objek — Hapus Background</h2>
+    <div class="modal-header"><h2 class="modal-title">Hapus Background</h2>
       <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
     <p class="crop-hint" style="text-align:left;margin-top:-.5rem">Buat objek tanpa background dari file galeri atau hasil generate AI, lalu simpan jadi asset siap pakai di Studio Komposisi.</p>
     <div class="obj-tabs">
@@ -4362,8 +4376,9 @@ function objDownload() {
 // ============================================================
 let _tbState = {};
 const TOOLBOX = [
+  { id:'removebg', ic:'i-eraser', name:'Hapus Background', desc:'Hapus latar foto dan simpan objek transparan untuk dipakai kembali.', fn:'openObjekStudio', group:'Gambar' },
   { id:'compress', ic:'i-download', name:'Kompres Gambar', desc:'Perkecil ukuran file JPG/WebP/PNG sebelum upload, tanpa turun kualitas drastis.', fn:'tbCompress', group:'Gambar' },
-  { id:'trim',     ic:'i-scissors', name:'Rapikan Objek', desc:'Potong pinggiran transparan otomatis agar objek pas & rapat. Pasangan Studio Objek.', fn:'tbTrim', group:'Gambar' },
+  { id:'trim',     ic:'i-scissors', name:'Rapikan Objek', desc:'Potong pinggiran transparan otomatis agar objek pas dan rapat setelah background dihapus.', fn:'tbTrim', group:'Gambar' },
   { id:'carousel', ic:'i-grid',     name:'Split Carousel', desc:'Belah 1 gambar panjang jadi beberapa slide mulus untuk carousel Instagram.', fn:'tbCarousel', group:'Gambar' },
   { id:'watermark',ic:'i-shield',   name:'Watermark', desc:'Tambahkan teks watermark ke gambar untuk melindungi karyamu.', fn:'tbWatermark', group:'Gambar' },
   { id:'palette',  ic:'i-palette',  name:'Ekstrak Palet Warna', desc:'Ambil palet warna dominan dari foto untuk konsistensi brand.', fn:'tbPalette', group:'Gambar' },
@@ -4430,7 +4445,6 @@ function openCharacterEditor(id) {
       <button class="che-tab" data-pane="refs" onclick="charTab('refs')"><svg class="ico"><use href="#i-image"/></svg> Foto Referensi</button>
       <button class="che-tab" data-pane="bible" onclick="charTab('bible')"><svg class="ico"><use href="#i-doc"/></svg> Character Bible</button>
       <button class="che-tab" data-pane="voice" onclick="charTab('voice')"><svg class="ico"><use href="#i-mic"/></svg> Suara</button>
-      <button class="che-tab" data-pane="produce" onclick="charTab('produce')"><svg class="ico"><use href="#i-sparkle"/></svg> Produksi</button>
     </div>
 
     <div class="che-pane on" id="chp-identity">
@@ -4487,7 +4501,7 @@ function openCharacterEditor(id) {
     </div>
 
     <div class="che-pane" id="chp-voice">
-      <div class="che-hint">🎙️ <strong>Voice Studio</strong> — pilih voice & atur gaya bicara, coba sampai pas. Suara yang tersimpan otomatis jadi referensi saat produksi video.</div>
+      <div class="che-hint">🎙️ <strong>Voice Studio</strong> — pilih voice & atur gaya bicara, coba sampai pas. Suara yang dikunci otomatis tersedia saat karakter dipakai di AI Studio.</div>
       <label style="font-weight:600;font-size:.82rem;margin-bottom:.35rem;display:block">Sumber suara</label>
       <div class="char-mode-row" style="display:flex;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap">
         <div class="char-mode-opt ${c.voiceCfg.mode!=='own'?'on':''}" data-vmode="ai" onclick="charSetVoiceMode('ai')">
@@ -4534,52 +4548,6 @@ function openCharacterEditor(id) {
         <div id="chVoiceAuditionOut"></div>
       </div>
       <div class="che-hint" id="chVoiceSavedInfo" style="display:none"></div>
-    </div>
-
-    <div class="che-pane" id="chp-produce">
-      <div class="che-hint">Buat gambar baru dengan pose/adegan berbeda — <strong>wajah tetap konsisten</strong> lewat foto Master + identitas.</div>
-      <div class="ce-prop-group"><label>Adegan / pose yang diinginkan</label>
-        <input class="form-input" id="chScene" placeholder="mis: sedang memegang produk skincare, senyum, background kafe"></div>
-      <div class="ce-prop-group"><label>Rasio</label><select class="form-select" id="chRatio">
-        <option value="1024x1024">Persegi 1:1</option>
-        <option value="768x1344">Potret 9:16 (Reels/TikTok)</option>
-        <option value="1344x768">Lanskap 16:9</option></select></div>
-      <div class="che-gen-actions">
-        <button class="btn btn-primary" id="chGenImgBtn" onclick="charGenImage()"><svg class="ico"><use href="#i-sparkle"/></svg> Generate Gambar Konsisten</button>
-        <button class="btn btn-secondary" onclick="charBuildStoryboard()"><svg class="ico"><use href="#i-grid"/></svg> Buat Storyboard (AI)</button>
-      </div>
-      <div id="chProduceOut"></div>
-
-      <div style="border-top:1px solid var(--border);margin:1.25rem 0 1rem;padding-top:1rem">
-        <div style="font-weight:700;font-size:.9rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem"><svg class="ico" style="color:var(--accent)"><use href="#i-video"/></svg> Generate Video (AI)</div>
-        <div class="che-hint" id="chVidRefInfo">Bikin klip video dari karakter ini — <strong>foto Master (wajah) & suara terkunci otomatis jadi referensi</strong>. Butuh internet & beberapa menit render.</div>
-        <div class="ce-prop-group"><label>Naskah dialog karakter (opsional — untuk voiceover suara terkunci)</label>
-          <textarea class="form-input" id="chVidDialog" rows="2" placeholder="mis: Hai gais! Aku nemu skincare yang beneran bikin kulit glowing, wajib coba deh!"></textarea></div>
-        <div class="ce-prop-group"><label>Deskripsi gerakan / adegan video</label>
-          <textarea class="form-input" id="chVidScene" rows="3" placeholder="mis: berjalan santai di trotoar sambil tersenyum ke kamera, memegang produk, angin sepoi menerpa rambut"></textarea></div>
-        <div class="ce-prop-row" style="display:flex;gap:.5rem;flex-wrap:wrap">
-          <div class="ce-prop-group" style="flex:1;min-width:130px"><label>Model</label>
-            <select class="form-select" id="chVidModel">
-              <option value="veo-3.1-lite">Veo 3.1 Lite (hemat, +audio)</option>
-              <option value="veo-3.1-fast">Veo 3.1 Fast (cepat, +audio)</option>
-              <option value="seedance">Seedance (alternatif)</option>
-            </select></div>
-          <div class="ce-prop-group" style="flex:1;min-width:110px"><label>Rasio</label>
-            <select class="form-select" id="chVidSize">
-              <option value="720x1280">9:16 (Reels/TikTok)</option>
-              <option value="1280x720">16:9 (YouTube)</option>
-            </select></div>
-          <div class="ce-prop-group" style="flex:1;min-width:90px"><label>Durasi</label>
-            <select class="form-select" id="chVidSecs"><option value="4">4 detik</option><option value="6">6 detik</option><option value="8">8 detik</option></select></div>
-        </div>
-        <label style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--text-secondary);margin:.25rem 0 .5rem">
-          <input type="checkbox" id="chVidUseRef" checked style="width:auto"> Pakai foto Master sebagai referensi wajah (image-to-video)</label>
-        <div class="che-gen-actions">
-          <button class="btn btn-primary" id="chGenVidBtn" onclick="charGenVideo()"><svg class="ico"><use href="#i-video"/></svg> Generate Video</button>
-          <button class="btn btn-ghost" id="chTestVidBtn" onclick="charGenVideo(true)" title="Sampel tanpa memakai kredit">Coba (test mode)</button>
-        </div>
-        <div id="chVidOut"></div>
-      </div>
     </div>
 
     <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:1.25rem;border-top:1px solid var(--border);padding-top:1rem">
@@ -6641,7 +6609,7 @@ function renderSettings() {
 
   // Susun provider menjadi accordion berbasis fungsi; hanya satu terbuka sekaligus.
   const settingsGroups = [
-    {id:'text', icon:'✦', title:'Teks & Penalaran', desc:'Ide, chat, optimizer dan storyboard', ids:['openrouter','groq','mistral','cerebras','chutes']},
+    {id:'text', icon:'✦', title:'Teks & Penalaran', desc:'Ide, chat, optimasi dan storyboard', ids:['openrouter','groq','mistral','cerebras','chutes']},
     {id:'vision', icon:'◉', title:'Vision', desc:'Membaca gambar dan konteks visual', ids:['gemini']},
     {id:'media', icon:'▣', title:'Gambar & Video', desc:'Membuat foto, adegan dan klip', ids:['puter','kie']}
   ];
@@ -6986,6 +6954,10 @@ function renderDashboard() {
                     : (arahDone > 0 ? 'agent' : 'alur');
   }
   applyHomeMode();
+  homeRestoreFolds();
+  homeSyncScheduleCard();
+  homeSyncCharacters();
+  homeComposerModeChanged();
 }
 
 function setHomeMode(mode) {
@@ -7012,19 +6984,184 @@ function chipToCmd(text) {
   const cmd = document.getElementById('homeCmd');
   if (cmd) { cmd.value = text; cmd.focus(); }
 }
-function kirimHomeCmd() {
-  const cmd = document.getElementById('homeCmd');
-  const val = (cmd && cmd.value.trim()) || '';
-  if (!val) { toast('Kosong','Tulis dulu apa yang mau dibuat','warning'); return; }
-  pushRiwayat('Home', val, '');
-  // Bawa perintah ke AI Studio
-  window._homePrompt = val;
-  switchView('aistudio');
-  setTimeout(() => {
-    const box = document.getElementById('aiInput') || document.querySelector('#view-aistudio textarea');
-    if (box) { box.value = val; box.focus(); }
-  }, 120);
+const homeComposerState = { refs: [], versions: [], pendingAssetType: 'reference' };
+function homeToggleFold(id, force) {
+  const el=document.querySelector(`.home-fold[data-fold="${id}"]`); if(!el)return;
+  const open=typeof force==='boolean'?force:!el.classList.contains('open');
+  el.classList.toggle('open',open);
+  try{localStorage.setItem(`aik-home-fold-${id}`,open?'1':'0')}catch(e){}
 }
+function homeRestoreFolds() {
+  document.querySelectorAll('.home-fold[data-fold],.home-card-group[data-fold]').forEach(el=>{
+    const id=el.dataset.fold; let open=false;
+    try{open=localStorage.getItem(`aik-home-fold-${id}`)==='1'}catch(e){}
+    el.classList.toggle('open',open);
+  });
+}
+function homeToggleCardGroup(id) {
+  const el=document.querySelector(`.home-card-group[data-fold="${id}"]`); if(!el)return;
+  const open=!el.classList.contains('open'); el.classList.toggle('open',open);
+  try{localStorage.setItem(`aik-home-fold-${id}`,open?'1':'0')}catch(e){}
+}
+function homeShortcutMode(mode) {
+  const sel=document.getElementById('homeComposeMode'); if(sel){sel.value=mode;homeComposerModeChanged()}
+  document.getElementById('homeCmd')?.focus();
+}
+function homeSyncScheduleCard() {
+  const el=document.getElementById('homeScheduleSummary'); if(!el)return;
+  const all=Array.isArray(state.schedules)?state.schedules:[];
+  const now=new Date();
+  const upcoming=all.map(s=>({s,date:new Date(`${s.date||''}T${s.time||'00:00'}`)}))
+    .filter(x=>!Number.isNaN(x.date.getTime())&&x.date>=now).sort((a,b)=>a.date-b.date);
+  if(upcoming.length){
+    const {s,date}=upcoming[0];
+    const when=date.toLocaleDateString('id-ID',{day:'numeric',month:'short'})+(s.time?` · ${s.time}`:'');
+    el.textContent=`Berikutnya: ${s.title||'Konten'} · ${when}`;
+  } else if(all.length) el.textContent=`${all.length} jadwal tersimpan · belum ada jadwal mendatang`;
+  else el.textContent='Belum ada konten terjadwal';
+}
+function homeComposerModeChanged() {
+  const mode = document.getElementById('homeComposeMode')?.value || 'smart';
+  document.querySelector('.home-composer')?.setAttribute('data-mode', mode);
+  homeRenderAssets();
+  const purpose = mode === 'image' ? 'image' : mode === 'video' ? 'video' : 'chat';
+  const providers = studioActiveByPurpose(purpose);
+  const sel = document.getElementById('homeComposeProvider');
+  if (sel) {
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">Provider otomatis</option>' + providers.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('');
+    if (providers.some(p => p.id === cur)) sel.value = cur;
+  }
+  homeProviderChanged();
+}
+const HOME_VIDEO_DURATIONS = [
+  {test:/seedance-2\.5|seedance-2-5/i,min:4,max:30,def:5},
+  {test:/seedance-2\.0|seedance-2-0|seedance-2-fast/i,min:4,max:15,def:5},
+  {test:/wan2\.7|wan2-7/i,min:2,max:15,def:5},
+  {test:/veo-3\.1/i,values:[4,6,8],def:8},
+  {test:/hailuo-02/i,values:[10],def:10},
+  {test:/kling|pixverse|vidu|seedance-1/i,values:[5],def:5}
+];
+function homeProviderChanged() {
+  const mode=document.getElementById('homeComposeMode')?.value||'smart';
+  const pid=document.getElementById('homeComposeProvider')?.value||'';
+  const modelSel=document.getElementById('homeComposeModel'); if(!modelSel)return;
+  if(mode!=='video'){modelSel.innerHTML='';return;}
+  let provider=AI_PROVIDERS.find(p=>p.id===pid);
+  if(!provider) provider=studioActiveByPurpose('video')[0];
+  const models=providerModelsByPurpose(provider||{},'video');
+  modelSel.innerHTML=models.map(m=>`<option value="${m.id}">${escapeHtml(m.name)}</option>`).join('');
+  const recommended=models.find(m=>m.recommended)||models[0]; if(recommended)modelSel.value=recommended.id;
+  homeVideoModelChanged();
+}
+function homeVideoModelChanged() {
+  const model=document.getElementById('homeComposeModel')?.value||'';
+  const sel=document.getElementById('homeComposeDuration'); if(!sel)return;
+  const cap=HOME_VIDEO_DURATIONS.find(x=>x.test.test(model));
+  let values=cap?.values||[];
+  if(!values.length&&cap?.min) for(let i=cap.min;i<=cap.max;i++)values.push(i);
+  if(!values.length)values=[3,5,8,10,15];
+  sel.innerHTML=values.map(v=>`<option value="${v}">${v}s</option>`).join('');
+  sel.value=String(values.includes(cap?.def)?cap.def:values[0]);
+}
+function homeChooseAsset(type='reference') {
+  homeComposerState.pendingAssetType = type;
+  document.getElementById('homeAssetInput')?.click();
+}
+function homeAddAssets(event) {
+  const file = [...(event.target.files || [])].find(f => /^image\/(png|jpeg|webp)$/.test(f.type));
+  if (!file) { event.target.value=''; return; }
+  const type = homeComposerState.pendingAssetType || 'reference';
+  const r = new FileReader();
+  r.onload = () => {
+    homeComposerState.refs = homeComposerState.refs.filter(x => x.type !== type);
+    homeComposerState.refs.push({name:file.name,url:r.result,type});
+    homeRenderAssets();
+  };
+  r.readAsDataURL(file); event.target.value='';
+}
+function homeRemoveAsset(type) {
+  homeComposerState.refs = homeComposerState.refs.filter(x => x.type !== type); homeRenderAssets();
+}
+function homeAssetSlot(type,label) {
+  const item=homeComposerState.refs.find(x=>x.type===type);
+  return item ? `<div class="hc-asset" title="${label}"><img src="${item.url}" alt="${label}"><span class="hc-asset-label">${label}</span><button onclick="homeRemoveAsset('${type}')" title="Hapus">×</button></div>` : `<button class="hc-add-asset" onclick="homeChooseAsset('${type}')" title="${label}"><svg class="ico"><use href="#i-image"/></svg><span>${label}</span></button>`;
+}
+function homeRenderAssets() {
+  const strip=document.getElementById('homeAssetStrip'); if(!strip)return;
+  const mode=document.getElementById('homeComposeMode')?.value||'smart';
+  strip.innerHTML = mode==='video' ? homeAssetSlot('reference','Foto')+homeAssetSlot('start','Frame awal')+homeAssetSlot('end','Frame akhir') : homeAssetSlot('reference','Tambah');
+}
+function homeSyncCharacters() {
+  const sel=document.getElementById('homeCharacter'); if(!sel)return;
+  const cur=sel.value; sel.innerHTML='<option value="">Karakter</option>'+(state.characters||[]).map(c=>`<option value="${c.id}">@${escapeHtml(c.name)}</option>`).join(''); sel.value=cur;
+}
+function homeComposerStatus(text='') {
+  const el=document.getElementById('homeComposeProgress'); if(!el)return;
+  el.textContent=text; el.classList.toggle('show',!!text);
+}
+function homeShowMedia(kind,url,label) {
+  const out=document.getElementById('homeComposeResult'); if(!out)return;
+  const version=homeComposerState.versions.length+1; homeComposerState.versions.push({kind,url,label,version});
+  out.className='home-compose-result show';
+  out.innerHTML=`${kind==='video'?`<video controls src="${url}"></video>`:`<img src="${url}" alt="Hasil">`}<div class="hc-result-actions"><a href="${url}" download="AiKreator-${kind}-V${version}.${kind==='video'?'mp4':'png'}">Unduh</a><button onclick="kirimHomeCmd()">Buat versi baru</button><button onclick="switchView('aistudio')">Lanjutkan di Studio</button><span>V${version} · ${escapeHtml(label||'Selesai')}</span></div>`;
+}
+async function kirimHomeCmd() {
+  const cmd=document.getElementById('homeCmd'); const val=cmd?.value.trim()||'';
+  if(!val){toast('Kosong','Tulis dulu apa yang mau dibuat','warning');return;}
+  let mode=document.getElementById('homeComposeMode')?.value||'smart';
+  const ratio=document.getElementById('homeComposeRatio')?.value||'9:16';
+  const duration=document.getElementById('homeComposeDuration')?.value||'4';
+  const providerId=document.getElementById('homeComposeProvider')?.value||'';
+  const videoModel=document.getElementById('homeComposeModel')?.value||'';
+  const storyMinutes=Math.max(.2,Number(document.getElementById('homeStoryDuration')?.value)||1);
+  const storySegment=Number(document.getElementById('homeStorySegment')?.value)||8;
+  const charId=document.getElementById('homeCharacter')?.value||'';
+  const char=(state.characters||[]).find(c=>c.id===charId);
+  if(mode==='smart') mode=/storyboard|adegan/i.test(val)?'storyboard':(/video|klip|gerak|animasi/i.test(val)?'video':(/foto|gambar|image|visual|poster/i.test(val)?'image':'chat'));
+  const btn=document.getElementById('homeGenerateBtn'); const out=document.getElementById('homeComposeResult'); if(btn)btn.disabled=true;
+  const charRefs=(char?.refs||[]).map(r=>r.url).filter(Boolean);
+  const picked=type=>homeComposerState.refs.find(r=>r.type===type)?.url||'';
+  const refs=[...charRefs,...homeComposerState.refs.map(r=>r.url)].filter(Boolean);
+  const startFrame=picked('start')||'';
+  const endFrame=picked('end')||'';
+  const subjectRefs=[...charRefs,picked('reference')].filter(Boolean);
+  const dims=ratio==='16:9'?{w:1920,h:1080}:ratio==='1:1'?{w:1080,h:1080}:{w:1080,h:1920};
+  try {
+    pushRiwayat('Home',val,'');
+    if(mode==='image'){
+      homeComposerStatus('Membuat foto…');
+      const res=await generateImageAI(val,{width:dims.w,height:dims.h,providerId:providerId||undefined,inputImages:refs.length?refs:undefined});
+      homeShowMedia('image',res.dataUrl,res.provider);
+    } else if(mode==='video'){
+      homeComposerStatus('Menyiapkan video…');
+      const canMixRefs = providerId==='kie' && /seedance-2/i.test(videoModel);
+      const videoRefs = (canMixRefs || (!startFrame && !endFrame)) ? subjectRefs : [];
+      const res=await generateVideoAI(val,{providerId:providerId||undefined,model:videoModel||undefined,duration,aspect_ratio:ratio,imageUrl:startFrame||undefined,lastFrameUrl:endFrame||undefined,referenceImages:videoRefs.length?videoRefs:undefined,onProgress:homeComposerStatus});
+      homeShowMedia('video',res.url,res.provider);
+    } else {
+      homeComposerStatus(mode==='storyboard'?'Menyusun storyboard panjang…':'Menulis…');
+      const sceneCount=Math.ceil(storyMinutes*60/storySegment);
+      let text='';
+      if(mode==='storyboard') {
+        const batchSize=20; let continuity='Mulai cerita.';
+        for(let start=1;start<=sceneCount;start+=batchSize) {
+          const end=Math.min(sceneCount,start+batchSize-1);
+          homeComposerStatus(`Menyusun adegan ${start}–${end} dari ${sceneCount}…`);
+          const batchPrompt=`Buat BAGIAN storyboard film berdurasi total ${storyMinutes} menit dari konsep: ${val}\nAdegan total: ${sceneCount}, masing-masing maksimal ${storySegment} detik. Tulis HANYA adegan ${start} sampai ${end}. Konteks sambungan sebelumnya: ${continuity}\nUntuk setiap adegan tulis padat: nomor dan timecode, durasi, visual/subjek, aksi, kamera, dialog/audio, FRAME AWAL, FRAME AKHIR. Frame akhir N harus menyambung logis ke frame awal N+1. Jaga karakter, pakaian, lokasi, cahaya, properti, dan alur.`;
+          const part=await callAI(batchPrompt,{providerId:providerId||undefined});
+          text+=(text?'\n\n':'')+part;
+          continuity=part.slice(-900);
+        }
+        homeComposerState.storyboardPlan={text,durationMinutes:storyMinutes,segmentSeconds:storySegment,sceneCount,ratio,prompt:val};
+      } else text=await callAI(val,{providerId:providerId||undefined});
+      out.className='home-compose-result show'; out.textContent=text; pushRiwayat('Home',val,text);
+    }
+  } catch(err) {
+    if(out){out.className='home-compose-result show';out.textContent='Belum bisa memproses: '+(err?.message||'Provider belum siap.');}
+  } finally { homeComposerStatus(''); if(btn)btn.disabled=false; }
+}
+
 // ============================================================
 // ROADMAP ZERO-TO-HERO — 6 tahap, pemula → profesional → monetisasi
 // ============================================================
@@ -7046,7 +7183,7 @@ function _roadmapStages() {
     { id:'char', lvl:'Menengah', ic:'i-users', title:'Ciptakan Karakter/Identitas', desc:'Bikin AI Influencer atau kunci identitas visual & suara agar konten selalu konsisten.',
       tasks:[{t:'Buat 1 karakter',ok:hasChar},{t:'Foto referensi/sheet',ok:hasChar},{t:'Kunci suara',ok:(state.characters||[]).some(c=>c.voiceCfg?.locked)}],
       done:hasChar, cta:'Buka Karakter AI', go:()=>switchView('characters') },
-    { id:'produce', lvl:'Menengah', ic:'i-agent', title:'Produksi Konten Pertama', desc:'Pakai AI Studio: foto, video, atau storyboard. Hasilkan konten pertamamu yang konsisten.',
+    { id:'produce', lvl:'Menengah', ic:'i-studio', title:'Produksi Konten Pertama', desc:'Pakai AI Studio: foto, video, atau storyboard. Hasilkan konten pertamamu yang konsisten.',
       tasks:[{t:'Generate konten pertama',ok:hasProduced},{t:'Simpan ke Assets',ok:hasProduced},{t:'Coba mode Storyboard',ok:hasMany}],
       done:hasProduced, cta:'Buka AI Studio', go:()=>switchView('aistudio') },
     { id:'consistent', lvl:'Profesional', ic:'i-calendar', title:'Konsisten & Terjadwal', desc:'Bangun kebiasaan: jadwalkan upload, produksi rutin, jaga kualitas & kuantitas.',
@@ -7320,7 +7457,7 @@ function useTrend(title) {
   setTimeout(() => {
     document.getElementById('optIdea').value = title;
   }, 100);
-  toast('Trend digunakan', `Ide ditambahkan ke optimizer`,'info');
+  toast('Trend digunakan', `Ide ditambahkan ke Optimasi`,'info');
 }
 
 // ============ IDEAS GENERATION ============
@@ -7428,7 +7565,7 @@ function useIdea(idx) {
   setTimeout(() => {
     document.getElementById('optIdea').value = (idea.title || '') + '\n\n' + (idea.desc || '');
   }, 100);
-  toast('Ide digunakan','Silakan optimalkan di menu Optimizer','info');
+  toast('Ide digunakan','Silakan optimalkan di menu Optimasi','info');
 }
 
 function optimizeIdea(idx) {
@@ -7809,8 +7946,9 @@ Sesuaikan rekomendasi dengan niche & tipe kreatornya (bukan saran generik). Jika
 // ============ AI STUDIO terpadu: Smart | Chat | Foto | Video ============
 const STUDIO_MODES = [
   { id:'smart', emo:'<svg class="ico"><use href="#i-sparkle"/></svg>', nm:'Smart', d:'Otomatis', purpose:null },
-  { id:'chat',  emo:'<svg class="ico"><use href="#i-chat"/></svg>', nm:'Chat', d:'Teks', purpose:'chat' },
+  { id:'chat',  emo:'<svg class="ico"><use href="#i-chat"/></svg>', nm:'Teks', d:'Naskah', purpose:'chat' },
   { id:'image', emo:'<svg class="ico"><use href="#i-palette"/></svg>', nm:'Foto', d:'Gambar', purpose:'image' },
+  { id:'carousel', emo:'<svg class="ico"><use href="#i-grid"/></svg>', nm:'Carousel', d:'Slide', purpose:'chat' },
   { id:'video', emo:'<svg class="ico"><use href="#i-video"/></svg>', nm:'Video', d:'Klip', purpose:'video' },
   { id:'storyboard', emo:'<svg class="ico"><use href="#i-grid"/></svg>', nm:'Storyboard', d:'Adegan', purpose:'image' },
 ];
@@ -7819,7 +7957,7 @@ const studioState = {
   provByPurpose: { chat:'', image:'', video:'' }, // provider terpilih per fungsi
   modelByPurpose: { chat:'', image:'', video:'' },
   imgRatio: '1080x1080', imgStyle: 'Realistis',
-  vidDur: '5', vidAspect: '1080x1920',
+  vidDur: '5', vidAspect: '1080x1920', vidDialog: '',
   refCharId: '',        // karakter terpilih (foto master + bible jadi referensi)
   imgRefs: [],          // gambar referensi tambahan utk mode Foto (pakaian/produk/lokasi/galeri)
   vidStartFrame: null,  // frame awal video (dataUrl)
@@ -7827,6 +7965,8 @@ const studioState = {
   vidStoryboards: [],   // sheet/gambar storyboard acuan adegan (dataUrl) — ala Google Flow
   sbPanels: [],         // storyboard: [{desc, dialog, img, video, status}]
   sbRatio: '1080x1920',
+  carouselCount: '6',
+  carouselRatio: '1080x1350',
   sbCharIds: [],        // karakter yang di-tag @nama untuk storyboard
 };
 const STUDIO_QUICK = {
@@ -7837,6 +7977,12 @@ const STUDIO_QUICK = {
     ['Skrip TikTok','Buatkan skrip video TikTok 30 detik (hook, isi, CTA) tentang '],
     ['10 Judul Click-worthy','Buatkan 10 judul yang click-worthy untuk video tentang '],
     ['Konten Edukatif','Buatkan konten edukatif yang mudah dipahami tentang '],
+  ],
+  carousel: [
+    ['Carousel edukasi','Buat carousel edukasi yang mudah dipahami tentang '],
+    ['Tips praktis','Buat carousel berisi tips praktis tentang '],
+    ['Storytelling','Buat carousel storytelling yang emosional tentang '],
+    ['Promosi produk','Buat carousel promosi produk yang elegan tentang '],
   ],
   image: [
     ['Produk estetik','foto produk kopi di meja kayu, suasana senja hangat, estetik'],
@@ -7878,9 +8024,9 @@ function renderAIStudio() {
   const active = studioActiveByPurpose(studioState.mode==='smart' ? null : purpose);
 
   // Judul panel hasil + placeholder + label input + label tombol, sesuai mode
-  const titleMap = { smart:'Hasil', chat:'Percakapan', image:'Foto', video:'Video', storyboard:'Papan Cerita' };
-  const labelMap = { smart:'Ketik apa saja', chat:'Pesan', image:'Deskripsi foto', video:'Deskripsi adegan', storyboard:'Konsep iklan / tempel storyboard' };
-  const btnMap = { smart:'Kirim', chat:'Kirim', image:'Generate Foto', video:'Generate Video', storyboard:'Susun Storyboard' };
+  const titleMap = { smart:'Hasil', chat:'Konten Teks', image:'Foto', carousel:'Carousel', video:'Video', storyboard:'Papan Cerita' };
+  const labelMap = { smart:'Ketik apa saja', chat:'Brief konten', image:'Deskripsi foto', carousel:'Topik carousel', video:'Deskripsi adegan', storyboard:'Konsep iklan / tempel storyboard' };
+  const btnMap = { smart:'Kirim', chat:'Buat Teks', image:'Generate Foto', carousel:'Susun Carousel', video:'Generate Video', storyboard:'Susun Storyboard' };
   const pt = document.getElementById('studioPanelTitle');
   if (pt) { const t = pt.querySelector('.ptxt'); if (t) t.textContent = titleMap[studioState.mode] || 'Hasil'; }
   const il = document.getElementById('studioInputLabel'); if (il) il.textContent = labelMap[studioState.mode] || 'Prompt';
@@ -7892,6 +8038,7 @@ function renderAIStudio() {
       smart:"Ketik apa saja...",
       chat:"Tulis pesanmu...",
       image:"Deskripsikan foto...  (coba tag @karakter)",
+      carousel:"Topik, tujuan, dan audiens carousel...",
       video:"Deskripsikan adegan...  (coba tag @karakter)",
       storyboard:"Konsep atau tempel storyboard...  (coba @karakter1 @karakter2)"
     };
@@ -8549,6 +8696,9 @@ function studioRenderOptions() {
     const styles = Object.keys(IMG_STYLE_MAP);
     pills += scPill('<svg class="ico"><use href="#i-target"/></svg>', RATIO_PRESETS.map(r=>`<option value="${r.id}" ${studioState.imgRatio===r.id?'selected':''}>${r.nm}</option>`).join(''), 'studioState.imgRatio=this.value;renderAIStudio()');
     pills += scPill('<svg class="ico"><use href="#i-palette"/></svg>', styles.map(s=>`<option value="${s}" ${studioState.imgStyle===s?'selected':''}>${s}</option>`).join(''), 'studioState.imgStyle=this.value;renderAIStudio()');
+  } else if (m === 'carousel') {
+    pills += scPill('<svg class="ico"><use href="#i-grid"/></svg>', [3,4,5,6,7,8,9,10].map(n=>`<option value="${n}" ${String(studioState.carouselCount)===String(n)?'selected':''}>${n} slide</option>`).join(''), 'studioState.carouselCount=this.value;renderAIStudio()');
+    pills += scPill('<svg class="ico"><use href="#i-target"/></svg>', RATIO_PRESETS.filter(r=>r.id==='1080x1080'||r.id==='1080x1350').map(r=>`<option value="${r.id}" ${studioState.carouselRatio===r.id?'selected':''}>${r.nm}</option>`).join(''), 'studioState.carouselRatio=this.value;renderAIStudio()');
   } else if (m === 'video') {
     pills += scPill('<svg class="ico"><use href="#i-target"/></svg>', RATIO_PRESETS.map(r=>`<option value="${r.id}" ${studioState.vidAspect===r.id?'selected':''}>${r.nm}</option>`).join(''), 'studioState.vidAspect=this.value;renderAIStudio()');
     pills += scPill('<svg class="ico"><use href="#i-clock"/></svg>', VIDEO_CLIP_DUR.map(d=>`<option value="${d}" ${studioState.vidDur===d?'selected':''}>${d} detik</option>`).join(''), 'studioState.vidDur=this.value;renderAIStudio()');
@@ -8565,6 +8715,7 @@ function studioRenderOptions() {
     el.innerHTML += isPuter
       ? `<div class="form-hint" style="width:100%;margin-top:.35rem;background:var(--accent-glow);color:var(--accent);border:1px solid var(--border);padding:.5rem .6rem;border-radius:.5rem"><svg class="ico"><use href="#i-video"/></svg> <b>Video +audio</b> — render 1–3 menit. Dukung frame awal/akhir & referensi karakter.</div>`
       : `<div class="form-hint" style="width:100%;margin-top:.35rem;background:rgba(184,134,59,.14);color:var(--warning);border:1px solid var(--border);padding:.5rem .6rem;border-radius:.5rem"><svg class="ico"><use href="#i-warn"/></svg> <b>Penyedia ini boros kredit</b>. Link video ~24 jam — simpan ke Assets.</div>`;
+    el.innerHTML += `<div style="width:100%;margin-top:.5rem"><div class="form-label"><svg class="ico"><use href="#i-mic"/></svg> Dialog / voiceover karakter (opsional)</div><textarea class="form-input" rows="2" placeholder="Pilih karakter bersuara, lalu tulis dialognya..." oninput="studioState.vidDialog=this.value">${escapeHtml(studioState.vidDialog||'')}</textarea><div class="form-hint">Jika karakter terpilih memiliki suara terkunci, AI Studio membuat voiceover otomatis setelah video selesai.</div></div>`;
   }
 }
 // Baris pemilih model untuk fungsi tertentu
@@ -8630,8 +8781,10 @@ function studioMediaActions(kind, url, caption) {
   window._studioMedia = window._studioMedia || {};
   const id = 'sm' + Math.random().toString(36).slice(2, 8);
   window._studioMedia[id] = { kind, url, caption };
+  const base=kind==='video'?'video':kind==='audio'?'voiceover':'foto';
+  const ext=kind==='video'?'mp4':kind==='audio'?'mp3':'png';
   return `<div class="ai-msg-actions">
-    <a href="${url}" download="${kind==='video'?'video':'foto'}-studio.${kind==='video'?'mp4':'png'}" target="_blank" rel="noopener"><svg class="ico"><use href="#i-download"/></svg> Download</a>
+    <a href="${url}" download="${base}-studio.${ext}" target="_blank" rel="noopener"><svg class="ico"><use href="#i-download"/></svg> Download</a>
     <button onclick="studioSaveMedia('${id}')"><svg class="ico"><use href="#i-save"/></svg> Simpan ke Assets</button>
   </div>`;
 }
@@ -8640,12 +8793,33 @@ function studioSaveMedia(id) {
   if (!m) return;
   state.assets.unshift({
     id:'a'+Date.now(), ts:Date.now(),
-    type: m.kind==='video'?'video':'image',
+    type: m.kind==='video'?'video':m.kind==='audio'?'audio':'image',
     name: (m.caption||('Hasil '+m.kind)).slice(0,60),
     url: m.url, content: m.caption||'', project:''
   });
   save('assets', state.assets);
   toast('Tersimpan', `${m.kind==='video'?'Video':'Foto'} masuk ke Assets `,'success');
+}
+
+async function studioGenerateCharacterVoiceover(dialog, boxId) {
+  const box=document.getElementById(boxId); if(!box||!dialog)return;
+  const c=(state.characters||[]).find(x=>x.id===studioState.refCharId);
+  const v=c?.voiceCfg;
+  if(!c){box.innerHTML='<div class="form-hint">Pilih karakter untuk membuat voiceover.</div>';return;}
+  if(!v?.locked){box.innerHTML='<div class="form-hint" style="color:var(--warning)">Suara karakter belum dikunci. Atur di Karakter → Suara.</div>';return;}
+  if(v.mode==='own'){
+    box.innerHTML=`<div class="form-hint">Suara asli ${escapeHtml(c.name)} terkunci. Rekam dialog baru dari menu Karakter → Suara.${v.sampleUrl?`</div><audio src="${v.sampleUrl}" controls style="width:100%;margin-top:.4rem"></audio>`:'</div>'}`;return;
+  }
+  box.innerHTML='<div class="form-hint">Membuat voiceover dengan suara karakter...</div>';
+  try{
+    if(typeof puter==='undefined'||!puter?.ai?.txt2speech)throw new Error('Puter TTS belum termuat');
+    const opts={provider:v.provider,voice:v.voice}; if(v.style)opts.instructions=v.style;if(v.lang)opts.language=v.lang;
+    if(v.provider==='gemini')opts.model='gemini-2.5-flash-preview-tts';
+    if(v.provider==='openai')opts.model='gpt-4o-mini-tts';
+    const audio=await puter.ai.txt2speech(dialog.slice(0,2900),opts);
+    const src=audio&&(audio.src||(audio.querySelector&&audio.querySelector('source')?.src));if(!src)throw new Error('Audio kosong');
+    box.innerHTML=`<div class="form-hint"><svg class="ico"><use href="#i-mic"/></svg> Voiceover ${escapeHtml(c.name)} · ${escapeHtml(v.voice||'suara terkunci')}</div><audio src="${src}" controls style="width:100%;margin-top:.4rem"></audio>${studioMediaActions('audio',src,`${c.name} — voiceover`)}`;
+  }catch(e){box.innerHTML=`<div class="form-hint" style="color:var(--danger)">Voiceover gagal: ${escapeHtml(e.message||'')}</div>`;}
 }
 
 function clearChat() {
@@ -8656,14 +8830,35 @@ function clearChat() {
   toast('Chat dibersihkan','History telah dihapus','info');
 }
 
+async function studioBuildCarousel(message) {
+  const messages=document.getElementById('aiMessages');
+  const btn=document.getElementById('aiSendBtn'); const n=Number(studioState.carouselCount)||6;
+  btn.disabled=true; messages.innerHTML='<div class="ai-message assistant"><div class="loading-dots"><span></span><span></span><span></span></div> Menyusun carousel...</div>';
+  try {
+    const providerId=studioState.provByPurpose.chat||undefined;
+    const model=studioState.modelByPurpose.chat||undefined;
+    const prompt=`Buat carousel media sosial ${n} slide tentang: "${message}". Format WAJIB tanpa markdown: SLIDE 1 | Judul: ... | Isi: ... lalu lanjut sampai SLIDE ${n}. Slide pertama harus berupa hook kuat, slide terakhir CTA. Isi maksimal 22 kata per slide. Setelah semuanya tulis CAPTION: lalu caption dan 8 hashtag. Bahasa Indonesia, orisinal, bermanfaat, tidak clickbait.`;
+    const res=await callAI(prompt,{providerId,model});
+    flowState.idea=message; flowState.jenis='slide'; flowState.result=res; flowState.detail={ratio:studioState.carouselRatio,slideCount:n};
+    messages.innerHTML=`<div class="carousel-studio-result"><div class="flow-sub">Struktur ${n} slide—edit bila perlu, lalu render menjadi gambar.</div><textarea class="form-textarea" id="flowEditable" rows="13">${escapeHtml(res)}</textarea><div class="flow-nav"><button class="btn btn-primary" onclick="flowBuatSlide()"><svg class="ico"><use href="#i-palette"/></svg> Render Carousel</button><button class="btn btn-secondary" onclick="studioSaveCarouselText()"><svg class="ico"><use href="#i-save"/></svg> Simpan naskah</button></div><div id="flowKontenOut"></div></div>`;
+  } catch(e) { messages.innerHTML=`<div class="ai-message assistant" style="color:var(--danger)">Gagal membuat carousel: ${escapeHtml(e.message||'')}</div>`; }
+  finally { btn.disabled=false; }
+}
+function studioSaveCarouselText() {
+  const content=document.getElementById('flowEditable')?.value||flowState.result||''; if(!content)return;
+  state.assets.unshift({id:'a'+Date.now(),ts:Date.now(),type:'text',name:'Naskah Carousel — '+(flowState.idea||'Konten').slice(0,45),content,url:'',project:''});
+  save('assets',state.assets); toast('Tersimpan','Naskah carousel masuk ke Assets','success');
+}
+
 // Router utama AI Studio: tentukan fungsi (chat/image/video) lalu jalankan
 async function studioSend() {
   const input = document.getElementById('aiInput');
   const message = input.value.trim();
   if (!message) return;
 
-  // Mode Storyboard: susun panel dari konsep/tempelan storyboard
+  // Mode khusus dengan workspace hasil terstruktur
   if (studioState.mode === 'storyboard') { return studioBuildStoryboard(message); }
+  if (studioState.mode === 'carousel') { return studioBuildCarousel(message); }
 
   // Tentukan fungsi
   let purpose = studioState.mode === 'smart' ? studioDetectPurpose(message) : studioCurrentPurpose();
@@ -8767,8 +8962,10 @@ async function studioSend() {
       if (refImages.length) vOpts.referenceImages = refImages;
       const res = await generateVideoAI(enPrompt, vOpts);
       const el = document.getElementById(loadingId);
+      const voId='studioVo-'+Date.now();
       el.innerHTML = `<div style="font-size:.75rem;opacity:.7;margin-bottom:.3rem"><svg class="ico"><use href="#i-video"/></svg> ${escapeHtml(res.provider)} · ${escapeHtml(res.model||'')}${res.credits?` · ${res.credits} kredit`:''}</div>
-        <video src="${res.url}" controls playsinline style="max-width:100%;border-radius:10px"></video>${studioMediaActions('video', res.url, message)}`;
+        <video src="${res.url}" controls playsinline style="max-width:100%;border-radius:10px"></video>${studioMediaActions('video', res.url, message)}${studioState.vidDialog?`<div id="${voId}" style="margin-top:.65rem"></div>`:''}`;
+      if(studioState.vidDialog) studioGenerateCharacterVoiceover(studioState.vidDialog,voId);
       // Video URL (kie/pixazo) berlaku ~24 jam → tidak dipersist ke chatHistory; simpan ke Assets bila perlu
       pushRiwayat('Video', message, res.url);
       toast('Video jadi', `Via ${res.provider} — simpan segera (link ~24 jam)`,'success');
@@ -9328,7 +9525,7 @@ async function generateVideoAI(prompt, opts = {}) {
     const cfg = state.providers[provider.id] || {};
     // Pilih model video: pilihan langkah (hanya utk provider terpilih) → cocokkan I2V/T2V → default
     const vidModels = providerModelsByPurpose(provider, 'video');
-    let model = (opts.model && provider.id === opts.providerId && vidModels.some(m=>m.id===opts.model)) ? opts.model : null;
+    let model = (opts.model && vidModels.some(m=>m.id===opts.model)) ? opts.model : null;
     if (!model) {
       const wantI2V = needI2V;
       const pool = vidModels.filter(m => /image-to-video|i2v/i.test(m.id) === wantI2V);
@@ -9394,7 +9591,12 @@ async function _kieVideo(provider, apiKey, model, prompt, opts, onP) {
     duration: String(opts.duration || '5'),
     resolution: opts.resolution || '720p'
   };
-  if (isI2V) {
+  if (/seedance-2/i.test(model)) {
+    input.duration = Number(opts.duration || 5);
+    if (opts.imageUrl) input.first_frame_url = opts.imageUrl;
+    if (opts.lastFrameUrl) input.last_frame_url = opts.lastFrameUrl;
+    if (opts.referenceImages?.length) input.reference_image_urls = opts.referenceImages.slice(0,9);
+  } else if (isI2V) {
     if (!opts.imageUrl) throw new Error('Model Image→Video butuh gambar awal. Buat/pilih foto dulu.');
     input.image_url = opts.imageUrl;
   }
@@ -9645,6 +9847,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f43d588a2c81ef',t:'MTc5MDExMDgzMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4015d8de9c1f8d0',t:'MTc5MDI0ODQ2NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
