@@ -248,6 +248,21 @@ select option{background:var(--bg-card);color:var(--text-primary)}
 .schedule-item:hover{background:var(--bg-hover)}
 .schedule-item-time{color:var(--accent-light);font-weight:600;font-size:.68rem}
 .schedule-item-title{color:var(--text-primary);margin-top:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.schedule-list-item{display:flex;align-items:flex-start;gap:.75rem;padding:1rem;background:var(--bg-elevated);border-radius:var(--r-md);margin-bottom:.5rem;min-width:0}
+.schedule-list-main{flex:1;min-width:0}
+.schedule-list-when{display:flex;align-items:center;gap:.45rem;margin-bottom:.3rem;font-size:.75rem;color:var(--text-muted)}
+.schedule-list-when .time{font-weight:700;color:var(--accent-light)}
+.schedule-list-title{font-weight:600;margin-bottom:.2rem;overflow-wrap:anywhere}
+.schedule-list-meta{font-size:.78rem;color:var(--text-muted);overflow-wrap:anywhere}
+.schedule-list-item>.btn{flex:0 0 auto}
+@media(max-width:640px) and (orientation:portrait){
+  #view-schedule .card{min-width:0;overflow:hidden}
+  #view-schedule .schedule-grid{grid-template-columns:repeat(2,minmax(0,1fr));width:100%;min-width:0;gap:.4rem}
+  #view-schedule .schedule-day{min-width:0;padding:.55rem}
+  #view-schedule .schedule-item{min-width:0;max-width:100%;padding:.38rem .45rem;overflow:hidden}
+  #view-schedule .schedule-item-title{width:100%;min-width:0}
+  .schedule-list-item{padding:.8rem;gap:.45rem}
+}
 .analytics-grid{display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
 .perf-item{display:flex;align-items:center;gap:1rem;padding:.85rem;background:var(--bg-elevated);border-radius:var(--r-md);margin-bottom:.5rem}
 .perf-bar{flex:1;height:8px;background:var(--bg-hover);border-radius:var(--r-sm);overflow:hidden}
@@ -7942,16 +7957,17 @@ function renderSchedule() {
   } else {
     const sorted = [...state.schedules].sort((a,b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time));
     list.innerHTML = sorted.map(s => `
-      <div style="display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--bg-elevated);border-radius:10px;margin-bottom:.5rem">
-        <div style="min-width:80px">
-          <div style="font-size:.75rem;color:var(--text-muted)">${new Date(s.date + 'T00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</div>
-          <div style="font-size:.9rem;font-weight:600;color:var(--accent-light)">${s.time}</div>
+      <div class="schedule-list-item">
+        <div class="schedule-list-main">
+          <div class="schedule-list-when">
+            <span>${new Date(s.date + 'T00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</span>
+            <span>•</span>
+            <span class="time">${s.time}</span>
+          </div>
+          <div class="schedule-list-title">${escapeHtml(s.title)}</div>
+          <div class="schedule-list-meta">${escapeHtml(s.platform || 'Multi-platform')} ${s.theme ? '• ' + escapeHtml(s.theme) : ''}</div>
         </div>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:600;margin-bottom:.2rem">${escapeHtml(s.title)}</div>
-          <div style="font-size:.78rem;color:var(--text-muted)">${escapeHtml(s.platform || 'Multi-platform')} ${s.theme ? '• ' + escapeHtml(s.theme) : ''}</div>
-        </div>
-        <button class="btn btn-ghost btn-sm" onclick="deleteSchedule('${s.id}')">
+        <button class="btn btn-ghost btn-sm" onclick="deleteSchedule('${s.id}')" aria-label="Hapus jadwal">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
         </button>
       </div>
@@ -10127,6 +10143,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4091fd6cace5f6e',t:'MTc5MDMyOTgyMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-</body>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4092d6738c0c6f3',t:'MTc5MDMzMDM3OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
