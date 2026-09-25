@@ -1134,13 +1134,14 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 /* HP landscape: navigasi kembali satu baris seperti tablet */
 @media (max-width:1024px) and (max-height:600px) and (orientation:landscape){
   .main{padding:.55rem .8rem 2rem}
-  .topbar{align-items:flex-start;flex-wrap:wrap;gap:.65rem;margin-bottom:.55rem}
-  .topbar-left{flex:1 1 auto;flex-wrap:wrap;gap:.5rem;min-width:0}
-  .topbar-logo{height:26px;max-width:96px}
-  .topbar-left .page-title{flex:1 1 100%!important;margin:.45rem 0 0!important;min-width:0;width:100%!important;display:block}
+  .topbar{display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:center;column-gap:.5rem;row-gap:.45rem;margin-bottom:.55rem}
+  .topbar-left{display:contents}
+  .menu-toggle{grid-column:1;grid-row:1}
+  .topbar-logo{grid-column:2;grid-row:1;height:26px;max-width:96px}
+  .topbar-left .page-title{grid-column:1/-1;grid-row:2;margin:0!important;min-width:0;width:100%!important;display:block}
   .page-title h1{font-size:1.15rem;line-height:1.2;white-space:normal;overflow:visible;margin:0}
   .page-title p{display:block!important;font-size:.78rem;line-height:1.35;margin-top:.18rem;white-space:normal}
-  .topbar-actions{order:initial;flex:1 1 auto;width:auto;max-width:none;min-width:0;margin:0;justify-content:flex-end;gap:.5rem}
+  .topbar-actions{grid-column:3;grid-row:1;order:initial;display:flex;flex:1 1 auto;width:auto;max-width:none;min-width:0;margin:0;justify-content:flex-end;gap:.5rem}
   #topbarTabs{display:flex!important}
   .home-tabs{width:auto;max-width:100%;margin:0 0 0 auto;justify-content:flex-start;gap:.1rem;padding:.22rem;overflow-x:auto}
   .home-tab{padding:.4rem .6rem;font-size:.78rem}
@@ -9993,6 +9994,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4062feb5d656027',t:'MTc5MDI5OTAyNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4063749bf34833c',t:'MTc5MDI5OTMyNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
