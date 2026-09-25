@@ -8178,6 +8178,7 @@ function renderSchedule() {
           <div class="schedule-list-meta">${escapeHtml(s.platform || 'Multi-platform')} ${s.theme ? '• ' + escapeHtml(s.theme) : ''}</div>
         </div>
         <div class="schedule-list-actions">
+          <button class="btn btn-primary btn-sm" onclick="openScheduleStudioChoice('${s.id}')" title="Buat konten di AI Kreator Studio">Buat Konten</button>
           <button class="btn btn-ghost btn-sm" onclick="optimizeSchedule('${s.id}')" title="Optimalkan konten">Optimasi</button>
           <button class="schedule-check ${s.posted?'on':''}" onclick="toggleSchedulePosted('${s.id}')" title="${s.posted?'Sudah tayang':'Tandai sudah tayang'}" aria-label="${s.posted?'Sudah tayang':'Tandai sudah tayang'}">
             <svg class="ico"><use href="#i-check"/></svg>
@@ -8299,6 +8300,33 @@ function toggleSchedulePosted(id) {
   toast(schedule.posted ? 'Sudah tayang' : 'Status dibatalkan', schedule.posted ? 'Jadwal ditandai telah dipublikasikan.' : 'Konten kembali berstatus terjadwal.', 'success');
 }
 
+function openScheduleStudioChoice(id) {
+  const schedule=(state.schedules||[]).find(s=>s.id===id);
+  if(!schedule)return;
+  openModal(`<div class="modal-header"><div class="modal-title"><svg class="ico"><use href="#i-studio"/></svg> Buat dari Jadwal</div><button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <p style="color:var(--text-secondary);font-size:.88rem;margin-bottom:1rem">Pilih format produksi untuk <strong>${escapeHtml(schedule.title||'konten terjadwal')}</strong>. Isi jadwal akan dibawa sebagai brief.</p>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem">
+      <button class="btn btn-secondary" onclick="scheduleToStudio('${id}','image')"><svg class="ico"><use href="#i-camera"/></svg> Foto</button>
+      <button class="btn btn-secondary" onclick="scheduleToStudio('${id}','carousel')"><svg class="ico"><use href="#i-carousel"/></svg> Slide</button>
+      <button class="btn btn-secondary" onclick="scheduleToStudio('${id}','video')"><svg class="ico"><use href="#i-video"/></svg> Video</button>
+      <button class="btn btn-secondary" onclick="scheduleToStudio('${id}','storyboard')"><svg class="ico"><use href="#i-storyboard"/></svg> Storyboard</button>
+    </div>`);
+}
+function scheduleToStudio(id,mode) {
+  const schedule=(state.schedules||[]).find(s=>s.id===id); if(!schedule)return;
+  const content=schedule.content||schedule.notes||'';
+  const sections=optimizerBriefSections(content);
+  const hasOptimized=Object.values(sections).some(Boolean);
+  const labels={image:'foto',carousel:'carousel/slide',video:'video',storyboard:'storyboard'};
+  const brief=hasOptimized
+    ? optimizerProductionBrief(mode,content,schedule.title||'')
+    : `Buat ${labels[mode]||'konten'} utuh dari konten terjadwal berikut. Kembangkan visual, struktur, naskah, caption, dan CTA yang relevan tanpa mengarang fakta baru.\n\nJUDUL:\n${schedule.title||''}\n\nISI KONTEN:\n${content||schedule.title||''}\n\nPLATFORM TUJUAN: ${schedule.platform||'belum ditentukan'}\nTEMA: ${schedule.theme||'belum ditentukan'}`;
+  closeModal(); studioState.mode=mode;
+  switchView('aistudio');
+  setTimeout(()=>{const input=document.getElementById('aiInput');if(input){input.value=brief;input.dispatchEvent(new Event('input',{bubbles:true}));input.focus();}},80);
+  toast('Jadwal dibawa ke Studio',`Mode ${labels[mode]} siap diproduksi.`,'success');
+}
+
 function optimizeSchedule(id) {
   const schedule = (state.schedules||[]).find(s=>s.id===id);
   if (!schedule) return;
@@ -8369,7 +8397,9 @@ function viewSchedule(id) {
       <div><strong style="color:var(--text-muted);font-size:.78rem">TEMA</strong><div style="margin-top:.25rem">${escapeHtml(s.theme)}</div></div>
       ${(s.content||s.notes) ? `<div><strong style="color:var(--text-muted);font-size:.78rem">ISI KONTEN / BRIEF PRODUKSI</strong><div style="margin-top:.35rem;white-space:pre-wrap;line-height:1.55;max-height:320px;overflow:auto;padding:.7rem;background:var(--bg-elevated);border-radius:var(--r-md)">${escapeHtml(s.content||s.notes)}</div></div>` : ''}
     </div>
-    <div style="display:flex;gap:.5rem;margin-top:1.5rem">
+    <div style="display:flex;gap:.5rem;margin-top:1.5rem;flex-wrap:wrap">
+      <button class="btn btn-primary btn-sm" onclick="closeModal();openScheduleStudioChoice('${s.id}')"><svg class="ico"><use href="#i-studio"/></svg> Buat Konten</button>
+      <button class="btn btn-secondary btn-sm" onclick="closeModal();optimizeSchedule('${s.id}')">Optimasi</button>
       <button class="btn btn-danger btn-sm" onclick="deleteSchedule('${s.id}');closeModal()">Hapus</button>
       <button class="btn btn-ghost btn-sm" onclick="closeModal()">Tutup</button>
     </div>
@@ -10559,6 +10589,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40c04cd3a3b5f99',t:'MTc5MDM2MDE3Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40c18a56b8b5f99',t:'MTc5MDM2MDk4Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+</body>
 </html>
