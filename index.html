@@ -1620,6 +1620,23 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
               <option value="storytelling">Storytelling</option>
             </select>
           </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Format Konten</label>
+              <select class="form-select" id="optFormat" onchange="optimizerFormatChanged()">
+                <option value="auto">Otomatis</option><option value="image">Foto</option><option value="carousel">Carousel</option><option value="video">Video / Reels</option><option value="storyboard">Storyboard</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Referensi Karakter</label>
+              <select class="form-select" id="optCharacter"></select>
+            </div>
+          </div>
+          <div class="form-row" id="optTimingRow" style="display:none">
+            <div class="form-group"><label class="form-label">Durasi Total</label><div style="display:flex;align-items:center;gap:.4rem"><input class="form-input" id="optDuration" type="number" min="10" max="300" step="5" value="40"><span class="form-hint">detik</span></div></div>
+            <div class="form-group"><label class="form-label">Durasi Part</label><select class="form-select" id="optPart"><option value="5">5s/part</option><option value="8" selected>8s/part</option><option value="10">10s/part</option></select></div>
+          </div>
+          <label style="display:flex;align-items:flex-start;gap:.5rem;margin:-.1rem 0 .9rem;font-size:.78rem;color:var(--text-secondary);cursor:pointer"><input type="checkbox" id="optUseContext" checked style="margin-top:.15rem"> Gunakan niche, audiens, brand voice, dan identitas channel dari profil kreator</label>
           <button class="btn btn-primary" onclick="optimizeContent()" style="width:100%">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
             Optimalkan dengan AI
@@ -2633,7 +2650,7 @@ function switchView(viewId) {
     else if (viewId === 'toolbox') renderToolbox();
     else if (viewId === 'flow') renderFlow();
     else if (viewId === 'ideas') { populateThemeSelect(); populatePlatformSelect('ideaPlatform'); }
-    else if (viewId === 'optimizer') { populateOptimizerThemes(); populatePlatformSelect('optPlatform'); }
+    else if (viewId === 'optimizer') { populateOptimizerThemes(); populatePlatformSelect('optPlatform'); populateOptimizerCharacters(); optimizerFormatChanged(); }
   } catch (e) {
     console.error('Render error:', e);
     toast('Error','Gagal memuat view:' + e.message,'error');
@@ -6744,6 +6761,15 @@ function populateOptimizerThemes() {
     sel.appendChild(opt);
   });
 }
+function populateOptimizerCharacters() {
+  const sel=document.getElementById('optCharacter'); if(!sel)return;
+  sel.innerHTML='<option value="">Tanpa karakter khusus</option>'+(state.characters||[]).map(c=>`<option value="${c.id}">${escapeHtml(c.name||'Tanpa nama')}</option>`).join('');
+}
+function optimizerFormatChanged() {
+  const format=document.getElementById('optFormat')?.value||'auto';
+  const row=document.getElementById('optTimingRow');
+  if(row) row.style.display=(format==='video'||format==='storyboard')?'grid':'none';
+}
 
 // ============ SETTINGS ============
 function renderSettings() {
@@ -7928,37 +7954,73 @@ async function optimizeContent() {
   const theme = THEMES.find(t => t.id === document.getElementById('optTheme').value)?.name || '';
   const platform = document.getElementById('optPlatform').value;
   const style = document.getElementById('optStyle').value;
+  const format = document.getElementById('optFormat')?.value || 'auto';
+  const duration = Math.max(10,Math.min(300,Number(document.getElementById('optDuration')?.value||40)));
+  const partSec = Number(document.getElementById('optPart')?.value||8);
+  const partCount = Math.max(2,Math.round(duration/partSec));
+  const charId = document.getElementById('optCharacter')?.value || '';
+  const character = (state.characters||[]).find(c=>c.id===charId);
+  const useContext = document.getElementById('optUseContext')?.checked !== false;
+  const creatorCtx = _arahRingkas();
+  const profileCtx = useContext ? [
+    creatorCtx.niche ? `Niche channel: ${creatorCtx.niche}` : '',
+    (creatorCtx.usia||creatorCtx.bahasa||creatorCtx.masalah) ? `Audiens: usia ${creatorCtx.usia||'umum'}, bahasa ${creatorCtx.bahasa||'Indonesia'}, kebutuhan ${creatorCtx.masalah||'sesuai niche'}` : '',
+    creatorCtx.voice ? `Brand voice: ${creatorCtx.voice}` : '',
+    state.profile?.name ? `Nama kreator/channel: ${state.profile.name}` : ''
+  ].filter(Boolean).join('\n') : '';
+  const charCtx = character ? `Karakter utama: ${character.name}. Identitas: ${(character.identity||character.tagline||'').slice(0,500)}. Pertahankan wajah, rambut, pakaian, suara, dan persona karakter secara konsisten.` : 'Tidak ada karakter khusus yang dipilih.';
+  const formatLabel = {auto:'format paling sesuai',image:'foto tunggal',carousel:'carousel',video:'video/Reels',storyboard:'storyboard'}[format] || format;
   const result = document.getElementById('optimizerResult');
   
   result.innerHTML = `<div class="empty-state"><div class="loading-dots"><span></span><span></span><span></span></div><h3 style="margin-top:1rem">AI sedang mengoptimalkan...</h3><p>Ini bisa memakan waktu 10-30 detik</p></div>`;
   
-  const prompt = `Optimalkan ide konten berikut untuk platform ${platform}, niche ${theme}, gaya bahasa ${style}:
+  const structureInstruction = format==='storyboard' || format==='video'
+    ? `Buat ${partCount} part berurutan untuk durasi ${duration} detik (${partSec}s/part). Tiap part wajib meneruskan aksi part sebelumnya dengan lokasi, karakter, pakaian, properti, produk, dan arah visual yang konsisten. Tulis untuk tiap part: durasi, visual/angle, aksi, dialog/voiceover, dan transisi ke part berikutnya.`
+    : format==='carousel' ? 'Susun visual guide per slide secara berurutan: cover/hook, isi, bukti/contoh, rangkuman, lalu CTA.'
+    : format==='image' ? 'Buat satu visual utama yang spesifik: subjek, komposisi, latar, pencahayaan, ekspresi, properti, dan ruang aman untuk teks.'
+    : 'Pilih struktur visual paling sesuai dan jelaskan alurnya secara konkret.';
+  const prompt = `Kamu adalah content strategist, scriptwriter, dan creative director. Optimalkan ide berikut menjadi brief produksi yang utuh dan siap dibawa ke AI Kreator Studio.
 
+PLATFORM: ${platform}
+TEMA: ${theme}
+GAYA: ${style}
+FORMAT: ${formatLabel}
+${profileCtx ? `KONTEKS CHANNEL:\n${profileCtx}` : ''}
+REFERENSI KARAKTER: ${charCtx}
 IDE: ${idea}
 
-Berikan output dalam format markdown berikut:
+ATURAN WAJIB:
+- Hook 3 detik pertama harus spesifik terhadap isi, bukan clickbait generik.
+- Jangan mengarang klaim seperti “dibuat oleh AI”, nama merek, hasil, testimoni, fakta, atau fitur yang tidak disebut dalam ide.
+- Seluruh judul, hook, adegan, caption, dan CTA harus membicarakan pesan/produk yang sama.
+- ${structureInstruction}
+- Jika memakai karakter, jaga identitas dan persona yang sama pada seluruh bagian.
+- Sesuaikan bahasa, CTA, dan ritme dengan platform, audiens, serta brand voice.
+
+Berikan output markdown berikut:
 
 ## 🎣 HOOK (3 detik pertama)
-[Tulis hook yang sangat menarik perhatian dalam 1 kalimat]
+[Hook visual + kalimat pembuka yang langsung relevan]
 
 ## 📝 JUDUL
 1. [Judul alternatif 1]
 2. [Judul alternatif 2]
 3. [Judul alternatif 3]
 
-##  VISUAL GUIDE
-- Opening visual: [deskripsi]
-- Key shots: [deskripsi]
-- Closing visual: [deskripsi]
+## 🎬 ALUR VISUAL / STORYBOARD
+[Struktur lengkap sesuai format. Untuk video/storyboard, tulis Part 1 sampai Part ${partCount} dan korelasi/transisinya]
 
-##  CAPTION
-[Tulis caption lengkap dengan emoji & hashtags yang relevan]
+## 🗣️ NASKAH / VOICEOVER
+[Naskah berurutan yang sinkron dengan visual]
 
-## 🎯 CTA (Call to Action)
-[Tulis CTA yang kuat & spesifik]
+## ✍️ CAPTION
+[Caption yang tidak mengulang naskah mentah, lengkap dengan hashtag relevan]
+
+## 🎯 CTA
+[CTA spesifik dan natural]
 
 ## ⏰ WAKTU POSTING TERBAIK
-[Rekomendasi waktu upload berdasarkan platform ${platform}]`;
+[Rekomendasi waktu untuk ${platform} beserta alasan singkat]`;
   
   try {
     const response = await callAI(prompt);
@@ -7999,20 +8061,26 @@ function openOptimizerStudioChoice() {
   openModal(`
     <div class="modal-header"><div class="modal-title"><svg class="ico"><use href="#i-studio"/></svg> Buat di AI Kreator Studio</div><button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
     <p style="color:var(--text-secondary);font-size:.88rem;margin-bottom:1rem">Pilih format produksi. Hasil optimasi akan dibawa otomatis sebagai brief konten.</p>
-    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem">
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem">
       <button class="btn btn-secondary" onclick="optimizerToStudio('image')"><svg class="ico"><use href="#i-camera"/></svg> Foto</button>
       <button class="btn btn-secondary" onclick="optimizerToStudio('carousel')"><svg class="ico"><use href="#i-carousel"/></svg> Slide</button>
       <button class="btn btn-secondary" onclick="optimizerToStudio('video')"><svg class="ico"><use href="#i-video"/></svg> Video</button>
+      <button class="btn btn-secondary" onclick="optimizerToStudio('storyboard')"><svg class="ico"><use href="#i-storyboard"/></svg> Storyboard</button>
     </div>`);
 }
 
 function optimizerToStudio(mode) {
   const result = document.getElementById('optimizerResult')?.dataset.content || '';
   const idea = document.getElementById('optIdea')?.value.trim() || '';
-  const labels = { image:'foto', carousel:'carousel/slide', video:'video' };
+  const labels = { image:'foto', carousel:'carousel/slide', video:'video', storyboard:'storyboard' };
   const brief = `Buat ${labels[mode]||'konten'} berdasarkan brief yang sudah dioptimalkan berikut. Pertahankan hook, pesan utama, visual guide, dan CTA yang relevan.\n\nIDE AWAL:\n${idea}\n\nHASIL OPTIMASI:\n${result}`;
   closeModal();
   studioState.mode = mode;
+  studioState.refCharId = document.getElementById('optCharacter')?.value || studioState.refCharId || '';
+  if (mode==='storyboard') {
+    studioState.sbTotalSec = String(Math.max(10,Math.min(300,Number(document.getElementById('optDuration')?.value||40))));
+    studioState.sbSegment = document.getElementById('optPart')?.value || '8';
+  }
   switchView('aistudio');
   setTimeout(()=>{
     const input = document.getElementById('aiInput');
@@ -10394,6 +10462,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40b72850eebf876',t:'MTc5MDM1NDE4MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-</body>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40ba9f1b8277abd',t:'MTc5MDM1NjQ1Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
