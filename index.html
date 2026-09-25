@@ -8069,11 +8069,35 @@ function openOptimizerStudioChoice() {
     </div>`);
 }
 
+function optimizerBriefSections(result) {
+  const sections = {};
+  String(result||'').split(/^##\s+/m).filter(Boolean).forEach(block=>{
+    const lines=block.trim().split('\n');
+    const heading=(lines.shift()||'').replace(/[🎣📝🎬🗣️✍️🎯⏰]/g,'').trim().toUpperCase();
+    const body=lines.join('\n').trim();
+    if(/HOOK/.test(heading)) sections.hook=body;
+    else if(/ALUR|VISUAL|STORYBOARD/.test(heading)) sections.visual=body;
+    else if(/NASKAH|VOICEOVER/.test(heading)) sections.script=body;
+    else if(/CTA/.test(heading)) sections.cta=body;
+    else if(/CAPTION/.test(heading)) sections.caption=body;
+  });
+  return sections;
+}
+function optimizerProductionBrief(mode,result,idea) {
+  const s=optimizerBriefSections(result);
+  const labels={image:'foto',carousel:'carousel/slide',video:'video',storyboard:'storyboard'};
+  const selected = mode==='image'
+    ? [['HOOK',s.hook],['ARAH VISUAL',s.visual]]
+    : mode==='carousel'
+      ? [['HOOK/COVER',s.hook],['URUTAN SLIDE',s.visual],['CTA SLIDE AKHIR',s.cta]]
+      : [['HOOK 3 DETIK',s.hook],['ALUR PART BERURUTAN',s.visual],['NASKAH/VOICEOVER',s.script],['CTA',s.cta]];
+  return `Buat ${labels[mode]||'konten'} berdasarkan brief produksi berikut. Gunakan hanya informasi produksi yang relevan. Jangan memasukkan metadata seperti waktu posting, daftar judul alternatif, heading markdown, atau instruksi optimasi ke dalam visual.\n\nIDE UTAMA:\n${idea}\n\n${selected.filter(([,v])=>v).map(([h,v])=>`${h}:\n${v}`).join('\n\n')}`;
+}
 function optimizerToStudio(mode) {
   const result = document.getElementById('optimizerResult')?.dataset.content || '';
   const idea = document.getElementById('optIdea')?.value.trim() || '';
   const labels = { image:'foto', carousel:'carousel/slide', video:'video', storyboard:'storyboard' };
-  const brief = `Buat ${labels[mode]||'konten'} berdasarkan brief yang sudah dioptimalkan berikut. Pertahankan hook, pesan utama, visual guide, dan CTA yang relevan.\n\nIDE AWAL:\n${idea}\n\nHASIL OPTIMASI:\n${result}`;
+  const brief = optimizerProductionBrief(mode,result,idea);
   closeModal();
   studioState.mode = mode;
   studioState.refCharId = document.getElementById('optCharacter')?.value || studioState.refCharId || '';
@@ -8100,7 +8124,13 @@ function copyResult() {
 
 function saveAsSchedule() {
   const idea = document.getElementById('optIdea').value.split('\n')[0];
-  openScheduleModal(idea);
+  const content = document.getElementById('optimizerResult')?.dataset.content || '';
+  const platformId = document.getElementById('optPlatform')?.value || '';
+  const platform = PLATFORM_LIST.find(p=>p.id===platformId)?.nm || 'Multi-platform';
+  const themeId = document.getElementById('optTheme')?.value || '';
+  const theme = THEMES.find(t=>t.id===themeId)?.name || '';
+  if (!content) { toast('Belum ada hasil','Jalankan Optimasi terlebih dahulu.','warning'); return; }
+  openScheduleModal(idea,{content,platform,theme});
 }
 
 // ============ SCHEDULE ============
@@ -8138,7 +8168,7 @@ function renderSchedule() {
     const sorted = [...state.schedules].sort((a,b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time));
     list.innerHTML = sorted.map(s => `
       <div class="schedule-list-item ${s.posted?'schedule-posted':''}">
-        <div class="schedule-list-main">
+        <div class="schedule-list-main" onclick="viewSchedule('${s.id}')" style="cursor:pointer">
           <div class="schedule-list-when">
             <span>${new Date(s.date + 'T00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</span>
             <span>•</span>
@@ -8161,8 +8191,11 @@ function renderSchedule() {
   }
 }
 
-function openScheduleModal(prefillTitle = '') {
+function openScheduleModal(prefillTitle = '', prefill = {}) {
   const today = new Date().toISOString().split('T')[0];
+  const prefillContent = prefill.content || '';
+  const prefillPlatform = prefill.platform || '';
+  const prefillTheme = prefill.theme || '';
   openModal(`
     <div class="modal-header">
       <div class="modal-title"><svg class="ico"><use href="#i-calendar"/></svg> Tambah Jadwal Upload</div>
@@ -8194,22 +8227,23 @@ function openScheduleModal(prefillTitle = '') {
       <div class="form-group">
         <label class="form-label">Platform</label>
         <select class="form-select" id="schedPlatform">
-          <option value="TikTok">TikTok</option>
-          <option value="Instagram">Instagram</option>
-          <option value="YouTube">YouTube</option>
-          <option value="Multi-platform">Multi-platform</option>
+          <option value="TikTok" ${prefillPlatform==='TikTok'?'selected':''}>TikTok</option>
+          <option value="Instagram" ${prefillPlatform==='Instagram'?'selected':''}>Instagram</option>
+          <option value="YouTube" ${prefillPlatform==='YouTube'?'selected':''}>YouTube</option>
+          <option value="Multi-platform" ${prefillPlatform==='Multi-platform'?'selected':''}>Multi-platform</option>
         </select>
       </div>
       <div class="form-group">
         <label class="form-label">Tema</label>
         <select class="form-select" id="schedTheme">
-          ${THEMES.map(t => `<option value="${t.name}">${t.name}</option>`).join('')}
+          ${THEMES.map(t => `<option value="${t.name}" ${prefillTheme===t.name?'selected':''}>${t.name}</option>`).join('')}
         </select>
       </div>
     </div>
     <div class="form-group">
-      <label class="form-label">Catatan (opsional)</label>
-      <textarea class="form-textarea" id="schedNotes" rows="2" placeholder="Catatan tambahan..."></textarea>
+      <label class="form-label">Isi Konten / Brief Produksi</label>
+      <textarea class="form-textarea" id="schedNotes" rows="6" placeholder="Hook, alur visual, naskah, caption, CTA...">${escapeHtml(prefillContent)}</textarea>
+      <div class="form-hint">Isi penting dari Optimasi ikut tersimpan dan dapat dibuka kembali dari Jadwal.</div>
     </div>
     <button class="btn btn-primary" onclick="saveSchedule()" style="width:100%">Simpan Jadwal</button>
   `);
@@ -8333,7 +8367,7 @@ function viewSchedule(id) {
       <div><strong style="color:var(--text-muted);font-size:.78rem"><svg class="ico" style="width:13px;height:13px;vertical-align:-1px"><use href="#i-clock"/></svg> WAKTU</strong><div style="margin-top:.25rem">${s.time} WIB</div></div>
       <div><strong style="color:var(--text-muted);font-size:.78rem">PLATFORM</strong><div style="margin-top:.25rem">${escapeHtml(s.platform)}</div></div>
       <div><strong style="color:var(--text-muted);font-size:.78rem">TEMA</strong><div style="margin-top:.25rem">${escapeHtml(s.theme)}</div></div>
-      ${s.notes ? `<div><strong style="color:var(--text-muted);font-size:.78rem">CATATAN</strong><div style="margin-top:.25rem">${escapeHtml(s.notes)}</div></div>` : ''}
+      ${(s.content||s.notes) ? `<div><strong style="color:var(--text-muted);font-size:.78rem">ISI KONTEN / BRIEF PRODUKSI</strong><div style="margin-top:.35rem;white-space:pre-wrap;line-height:1.55;max-height:320px;overflow:auto;padding:.7rem;background:var(--bg-elevated);border-radius:var(--r-md)">${escapeHtml(s.content||s.notes)}</div></div>` : ''}
     </div>
     <div style="display:flex;gap:.5rem;margin-top:1.5rem">
       <button class="btn btn-danger btn-sm" onclick="deleteSchedule('${s.id}');closeModal()">Hapus</button>
@@ -10462,6 +10496,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40ba9f1b8277abd',t:'MTc5MDM1NjQ1Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40bd6c7ffa1b2df',t:'MTc5MDM1ODI4OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+</body>
 </html>
