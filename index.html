@@ -295,11 +295,13 @@ select option{background:var(--bg-card);color:var(--text-primary)}
 .studio-controls .form-label{font-size:.75rem;margin-bottom:.35rem}
 .studio-controls .form-textarea{font-size:.85rem;padding:.6rem .8rem}
 /* Toolbar pengaturan ringkas (ala Google Flow): pill dropdown berjajar */
-.sc-toolbar{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0}
-.sc-pill{position:relative;display:inline-flex;align-items:center;background:var(--bg-elevated);border:1px solid var(--border);border-radius:999px;padding:.3rem .3rem .3rem .7rem;font-size:.76rem;font-weight:600;color:var(--text-primary);cursor:pointer;transition:all .15s;gap:.25rem}
+.sc-toolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem;margin:.6rem 0}
+.sc-toolbar>.form-hint,.sc-toolbar>div:not(.sc-pill){grid-column:1/-1}
+.sc-pill{position:relative;display:flex;min-width:0;width:100%;align-items:center;background:var(--bg-elevated);border:1px solid var(--border);border-radius:999px;padding:.3rem .3rem .3rem .65rem;font-size:.76rem;font-weight:600;color:var(--text-primary);cursor:pointer;transition:all .15s;gap:.25rem}
 .sc-pill:hover{border-color:var(--accent-light)}
 .sc-pill .pill-emo{font-size:.85rem}
-.sc-pill select{appearance:none;-webkit-appearance:none;background:transparent;border:none;outline:none;font-family:inherit;font-size:.76rem;font-weight:700;color:var(--text-primary);cursor:pointer;padding:0 1.1rem 0 .1rem;max-width:150px;text-overflow:ellipsis}
+.sc-pill select{appearance:none;-webkit-appearance:none;min-width:0;width:100%;background:transparent;border:none;outline:none;font-family:inherit;font-size:.74rem;font-weight:700;color:var(--text-primary);cursor:pointer;padding:0 1.1rem 0 .1rem;overflow:hidden;text-overflow:ellipsis}
+.sc-duration::after{display:none}.sc-duration input{width:42px;min-width:0;border:0;outline:0;background:transparent;color:var(--text-primary);font:700 .74rem inherit;text-align:right}.sc-duration>span:last-child{font-size:.7rem;color:var(--text-secondary);padding-right:.25rem}
 .sc-pill::after{content:'▾';position:absolute;right:.6rem;pointer-events:none;color:var(--text-muted);font-size:.7rem}
 .sc-quick{margin-top:.9rem;border-top:1px solid var(--border);padding-top:.7rem}
 .sc-quick>summary{font-size:.8rem;font-weight:700;color:var(--text-secondary);cursor:pointer;list-style:none;display:flex;align-items:center;gap:.4rem}
@@ -347,6 +349,7 @@ select option{background:var(--bg-card);color:var(--text-primary)}
 .studio-mode .sm-emo{font-size:.9rem}
 .studio-mode .sm-nm{font-weight:700}
 .studio-mode .sm-d{display:none}
+.studio-mode-break{flex-basis:100%;height:0}
 .ai-provider-chip{padding:.4rem .8rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--r-lg);font-size:.75rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.35rem}
 .ai-provider-chip:hover{border-color:var(--accent)}
 .ai-provider-chip.active{background:var(--accent);border-color:var(--accent);color:white}
@@ -1493,7 +1496,7 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
             <select class="hc-select" id="homeComposeRatio" aria-label="Rasio"><option value="9:16">9:16</option><option value="1:1">1:1</option><option value="16:9">16:9</option></select>
             <select class="hc-select hc-video-only" id="homeComposeDuration" aria-label="Durasi"><option value="3">3s</option><option value="5">5s</option><option value="8" selected>8s</option><option value="10">10s</option><option value="15">15s</option></select>
             <label class="hc-story-only hc-duration-total"><input id="homeStoryDuration" type="number" value="1" min="0.2" max="180" step="0.5" aria-label="Durasi total storyboard"><span>menit</span></label>
-            <select class="hc-select hc-story-only" id="homeStorySegment" aria-label="Durasi per adegan"><option value="8">8s/adegan</option><option value="10">10s/adegan</option></select>
+            <select class="hc-select hc-story-only" id="homeStorySegment" aria-label="Durasi per part"><option value="5">5s/part</option><option value="8" selected>8s/part</option><option value="10">10s/part</option></select>
             <select class="hc-select" id="homeComposeProvider" aria-label="Provider" onchange="homeProviderChanged()"><option value="">Provider otomatis</option></select>
             <select class="hc-select hc-video-only" id="homeComposeModel" aria-label="Model video" onchange="homeVideoModelChanged()"></select>
             <button class="home-generate" id="homeGenerateBtn" onclick="kirimHomeCmd()"><span>Generate</span><svg class="ico"><use href="#i-arrow"/></svg></button>
@@ -8400,8 +8403,8 @@ const STUDIO_MODES = [
   { id:'smart', emo:'<svg class="ico"><use href="#i-sparkle"/></svg>', nm:'Smart', d:'Otomatis', purpose:null },
   { id:'chat',  emo:'<svg class="ico"><use href="#i-chat"/></svg>', nm:'Teks', d:'Naskah', purpose:'chat' },
   { id:'image', emo:'<svg class="ico"><use href="#i-camera"/></svg>', nm:'Foto', d:'Gambar', purpose:'image' },
-  { id:'carousel', emo:'<svg class="ico"><use href="#i-carousel"/></svg>', nm:'Carousel', d:'Slide', purpose:'chat' },
   { id:'video', emo:'<svg class="ico"><use href="#i-video"/></svg>', nm:'Video', d:'Klip', purpose:'video' },
+  { id:'carousel', emo:'<svg class="ico"><use href="#i-carousel"/></svg>', nm:'Carousel', d:'Slide', purpose:'chat' },
   { id:'storyboard', emo:'<svg class="ico"><use href="#i-storyboard"/></svg>', nm:'Storyboard', d:'Adegan', purpose:'image' },
 ];
 const studioState = {
@@ -8416,7 +8419,7 @@ const studioState = {
   vidEndFrame: null,    // frame akhir video (dataUrl)
   vidStoryboards: [],   // sheet/gambar storyboard acuan adegan (dataUrl) — ala Google Flow
   sbPanels: [],         // storyboard: [{desc, dialog, img, video, status}]
-  sbRatio: '1080x1920',
+  sbRatio: '1080x1920', sbTotalSec: '60', sbSegment: '8',
   carouselCount: '6',
   carouselRatio: '1080x1350',
   sbCharIds: [],        // karakter yang di-tag @nama untuk storyboard
@@ -8467,10 +8470,10 @@ function studioCurrentPurpose() {
 function renderAIStudio() {
   // Mode tabs
   const modesEl = document.getElementById('studioModes');
-  if (modesEl) modesEl.innerHTML = STUDIO_MODES.map(m =>
+  if (modesEl) modesEl.innerHTML = STUDIO_MODES.map((m,i) =>
     `<div class="studio-mode ${studioState.mode===m.id?'on':''}" onclick="studioSetMode('${m.id}')">
       <span class="sm-emo">${m.emo}</span><span class="sm-nm">${m.nm}</span><span class="sm-d">${m.d}</span>
-    </div>`).join('');
+    </div>${i===3?'<span class="studio-mode-break" aria-hidden="true"></span>':''}`).join('');
 
   const purpose = studioCurrentPurpose();
   const active = studioActiveByPurpose(studioState.mode==='smart' ? null : purpose);
@@ -8565,6 +8568,8 @@ async function studioAIStoryboard(concept) {
   const { resolved, mentioned } = studioResolveMentions(concept);
   const c = (state.characters||[]).find(x=>x.id===studioState.refCharId);
   const prod = (studioState.imgRefs||[]).length ? 'Ada gambar produk yang diunggah (tampilkan produk di beberapa panel).' : '';
+  const totalSeconds = Math.max(10, Math.min(300, Number(studioState.sbTotalSec||60)));
+  const targetPanels = Math.max(2, Math.min(40, Math.round(totalSeconds / Number(studioState.sbSegment||8))));
   // Daftar pemain: karakter yang di-tag @nama (utama) atau dropdown
   const cast = mentioned.length ? mentioned : (c ? [c] : []);
   const castTxt = cast.length
@@ -8576,7 +8581,7 @@ Konsep: ${resolved}
 ${castTxt}
 ${prod}
 
-Keluarkan 4-6 panel. Balas HANYA JSON array valid tanpa penjelasan, format:
+Keluarkan sekitar ${targetPanels} panel agar sesuai durasi total ${totalSeconds} detik dengan ${studioState.sbSegment} detik per part. Balas HANYA JSON array valid tanpa penjelasan, format:
 [{"desc":"deskripsi visual sinematik panel (angle, aksi, ekspresi, setting, pencahayaan) dalam Bahasa Inggris untuk generator gambar","dialog":"dialog/voiceover singkat panel dalam Bahasa Indonesia natural"}]`;
   const raw = await callAI(prompt);
   return studioExtractJsonPanels(raw);
@@ -9157,6 +9162,8 @@ function studioRenderOptions() {
   } else if (m === 'storyboard') {
     const styles = Object.keys(IMG_STYLE_MAP);
     pills += scPill('<svg class="ico"><use href="#i-target"/></svg>', RATIO_PRESETS.map(r=>`<option value="${r.id}" ${studioState.sbRatio===r.id?'selected':''}>${r.nm}</option>`).join(''), 'studioState.sbRatio=this.value;renderAIStudio()');
+    pills += `<label class="sc-pill sc-duration"><span class="pill-emo"><svg class="ico"><use href="#i-clock"/></svg></span><input type="number" min="10" max="300" step="5" value="${studioState.sbTotalSec}" aria-label="Durasi total dalam detik" onchange="studioSetStoryboardDuration(this.value)"><span>detik</span></label>`;
+    pills += scPill('<svg class="ico"><use href="#i-storyboard"/></svg>', ['5','8','10'].map(n=>`<option value="${n}" ${studioState.sbSegment===n?'selected':''}>${n}s/part</option>`).join(''), 'studioState.sbSegment=this.value;renderAIStudio()');
     pills += scPill('<svg class="ico"><use href="#i-palette"/></svg>', styles.map(s=>`<option value="${s}" ${studioState.imgStyle===s?'selected':''}>${s}</option>`).join(''), 'studioState.imgStyle=this.value;renderAIStudio()');
   }
 
@@ -9197,6 +9204,10 @@ function studioRenderQuick() {
 function studioQuickFill(tmpl) {
   const input = document.getElementById('aiInput');
   if (input) { input.value = tmpl; input.focus(); }
+}
+function studioSetStoryboardDuration(value) {
+  studioState.sbTotalSec = String(Math.max(10, Math.min(300, Number(value)||60)));
+  renderAIStudio();
 }
 function studioSetMode(id) {
   studioState.mode = id;
@@ -10341,6 +10352,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40ab66f6ef87549',t:'MTc5MDM0NjQ3Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40b37664cfe6bf3',t:'MTc5MDM1MTc2MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+</body>
 </html>
