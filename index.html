@@ -8973,9 +8973,49 @@ function studioMediaActions(kind, url, caption) {
   const base=kind==='video'?'video':kind==='audio'?'voiceover':'foto';
   const ext=kind==='video'?'mp4':kind==='audio'?'mp3':'png';
   return `<div class="ai-msg-actions">
-    <a href="${url}" download="${base}-studio.${ext}" target="_blank" rel="noopener"><svg class="ico"><use href="#i-download"/></svg> Download</a>
+    <button onclick="studioShareMedia('${id}')"><svg class="ico"><use href="#i-send"/></svg> Bagikan / Simpan</button>
+    <button onclick="studioDownloadMedia('${id}')"><svg class="ico"><use href="#i-download"/></svg> Download</button>
     <button onclick="studioSaveMedia('${id}')"><svg class="ico"><use href="#i-save"/></svg> Simpan ke Assets</button>
   </div>`;
+}
+function studioMediaFileInfo(m){
+  const base=m.kind==='video'?'video':m.kind==='audio'?'voiceover':'foto';
+  const ext=m.kind==='video'?'mp4':m.kind==='audio'?'mp3':'png';
+  const type=m.kind==='video'?'video/mp4':m.kind==='audio'?'audio/mpeg':'image/png';
+  return {name:`${base}-studio-${Date.now()}.${ext}`,type};
+}
+function studioDownloadMedia(id){
+  const m=(window._studioMedia||{})[id]; if(!m)return;
+  const info=studioMediaFileInfo(m),a=document.createElement('a');
+  a.href=m.url;a.download=info.name;a.target='_blank';a.rel='noopener';
+  document.body.appendChild(a);a.click();a.remove();
+}
+async function studioShareMedia(id){
+  const m=(window._studioMedia||{})[id]; if(!m)return;
+  const info=studioMediaFileInfo(m);
+  try{
+    const response=await fetch(m.url);
+    if(!response.ok)throw new Error('Media tidak dapat diambil');
+    const blob=await response.blob();
+    const file=new File([blob],info.name,{type:blob.type||info.type});
+    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:'Hasil AiKreator',text:m.caption||'Hasil dari AiKreator'});
+      return;
+    }
+    if(navigator.share){
+      await navigator.share({title:'Hasil AiKreator',text:m.caption||'Hasil dari AiKreator',url:m.url});
+      return;
+    }
+    studioDownloadMedia(id);
+    toast('Download dimulai','Browser ini belum mendukung berbagi file.','info');
+  }catch(e){
+    if(e?.name==='AbortError'||/abort/i.test(e?.message||''))return;
+    try{
+      if(navigator.share){await navigator.share({title:'Hasil AiKreator',text:m.caption||'Hasil dari AiKreator',url:m.url});return;}
+    }catch(shareErr){if(shareErr?.name==='AbortError')return;}
+    studioDownloadMedia(id);
+    toast('Gunakan menu browser','Jika Safari memblokir download, tekan lama media atau gunakan Bagikan.','warning');
+  }
 }
 function studioSaveMedia(id) {
   const m = (window._studioMedia||{})[id];
@@ -10036,6 +10076,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a406577d5b49fd1f',t:'MTc5MDMwMDY0NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a407baef38d8ddfc',t:'MTc5MDMxNTIwNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
