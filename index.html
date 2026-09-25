@@ -900,11 +900,12 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 /* ===== ALUR KONTEN wizard ===== */
 .flow-steps{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;overflow-x:auto;overflow-y:hidden;white-space:nowrap;scrollbar-width:none}
 .flow-steps::-webkit-scrollbar{display:none}
-.flow-step{display:inline-flex;align-items:center;gap:.28rem;flex:0 0 auto;padding:.18rem 0 .3rem;font-size:.78rem;font-weight:500;color:var(--text-muted);border-bottom:2px solid transparent;white-space:nowrap}
-.flow-step .num{display:inline;font-size:inherit;color:inherit}
+.flow-step{display:inline-flex;align-items:center;gap:.35rem;flex:0 0 auto;padding:.18rem 0 .3rem;font-size:.82rem;font-weight:500;color:var(--text-muted);border-bottom:2px solid transparent;white-space:nowrap}
+.flow-step .num{width:20px;height:20px;display:inline-grid;place-items:center;flex:0 0 20px;border:1px solid currentColor;border-radius:50%;font-size:.68rem;font-weight:700;color:inherit}
 .flow-step.on{color:var(--accent);font-weight:700;border-bottom-color:var(--accent)}
+.flow-step.on .num{background:var(--accent);border-color:var(--accent);color:#fff}
 .flow-step.done{color:var(--text-secondary)}
-@media(max-width:640px){.flow-steps{gap:.7rem;margin-bottom:.75rem}.flow-step{font-size:.7rem}}
+@media(max-width:640px){.flow-steps{gap:.75rem;margin-bottom:.75rem}.flow-step{font-size:.76rem}}
 .flow-arrow{color:var(--text-muted);font-size:.9rem}
 .flow-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.4rem;margin-bottom:1rem}
 .flow-h{font-size:1.15rem;font-weight:700;margin-bottom:.3rem}
@@ -3176,7 +3177,7 @@ function renderFlowSteps() {
   if (!box) return;
   box.innerHTML = FLOW_STEPS.map((s, i) => {
     const cls = i === flowState.step ? 'on' : (i < flowState.step ? 'done' : '');
-    return `<div class="flow-step ${cls}"><span class="num">[${i+1}]</span>${s}</div>`;
+    return `<div class="flow-step ${cls}"><span class="num">${i+1}</span>${s}</div>`;
   }).join('');
 }
 function flowGoto(step) { flowState.step = step; renderFlow(); }
@@ -10126,6 +10127,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40915f09ea9ad69',t:'MTc5MDMyOTQxOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4091fd6cace5f6e',t:'MTc5MDMyOTgyMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+</body>
 </html>
