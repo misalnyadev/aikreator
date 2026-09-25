@@ -2493,7 +2493,8 @@ function save(key, data) {
     return true;
   } catch (e) {
     console.error('Save error:', e);
-    toast('Error','Gagal menyimpan data','error');
+    const full = e?.name === 'QuotaExceededError' || e?.code === 22 || /quota|storage/i.test(e?.message||'');
+    toast(full?'Penyimpanan penuh':'Error', full?'Ruang penyimpanan browser tidak cukup. Hapus aset lama atau simpan media ke perangkat.':'Gagal menyimpan data','error');
     return false;
   }
 }
@@ -8581,6 +8582,13 @@ Konsep: ${resolved}
 ${castTxt}
 ${prod}
 
+ATURAN KONTINUITAS WAJIB:
+- Semua panel adalah rangkaian waktu yang sama, bukan foto terpisah.
+- Pertahankan orang yang sama: wajah, usia, rambut, bentuk tubuh, dan identitas tidak boleh berubah.
+- Pertahankan pakaian, aksesori, lokasi, tata ruang, pencahayaan, properti, dan produk yang sama kecuali konsep secara eksplisit meminta perubahan.
+- Jangan memperkenalkan makanan, produk, logo, tulisan, lokasi, atau karakter baru yang tidak ada dalam konsep.
+- Setiap desc harus mengulang detail kontinuitas penting (karakter, pakaian, lokasi, dan properti) agar generator gambar konsisten.
+
 Keluarkan sekitar ${targetPanels} panel agar sesuai durasi total ${totalSeconds} detik dengan ${studioState.sbSegment} detik per part. Balas HANYA JSON array valid tanpa penjelasan, format:
 [{"desc":"deskripsi visual sinematik panel (angle, aksi, ekspresi, setting, pencahayaan) dalam Bahasa Inggris untuk generator gambar","dialog":"dialog/voiceover singkat panel dalam Bahasa Indonesia natural"}]`;
   const raw = await callAI(prompt);
@@ -8673,15 +8681,15 @@ function _sbCollectRefs() {
   (studioState.imgRefs||[]).forEach(u=>refs.push(u));
   return refs.slice(0, 8);
 }
-function _sbPanelPrompt(desc) {
+function _sbPanelPrompt(desc, panelIndex=0) {
   const ids = studioState.sbCharIds || [];
   const refs = _sbCollectRefs();
-  let extra = '';
+  let extra = `. This is continuity panel ${panelIndex+1} of one continuous sequence. Preserve the exact same face, hairstyle, clothing, accessories, body proportions, location, room layout, lighting, props, and featured food/product from the preceding panels unless the written concept explicitly requests a change. Do not introduce unrelated objects, food, brands, logos, text, watermarks, wardrobe changes, or a new location`;
   if (ids.length >= 2) {
     const names = ids.map(id=>(state.characters||[]).find(x=>x.id===id)?.name).filter(Boolean).join(', ');
-    extra = `. Scene may feature these distinct people: ${names}. Keep EACH person's face consistent with their own reference photos, distinct identities, do not blend faces`;
+    extra += `. Scene may feature these distinct people: ${names}. Keep EACH person's face consistent with their own reference photos, distinct identities, do not blend faces`;
   } else if (refs.length) {
-    extra = ', keep the same person/face consistent with the reference image, same identity';
+    extra += ', keep the same person/face consistent with the reference image, same identity';
   }
   if ((studioState.imgRefs||[]).length) extra += ', feature the referenced product naturally';
   const styleTxt = IMG_STYLE_MAP[studioState.imgStyle] || '';
@@ -8693,8 +8701,11 @@ async function studioGenPanel(i) {
   p.status = 'gen'; studioRenderStoryboard();
   try {
     const ratio = RATIO_PRESETS.find(r=>r.id===studioState.sbRatio) || RATIO_PRESETS[2];
-    const refs = _sbCollectRefs();
-    const res = await generateImageAI(_sbPanelPrompt(p.desc), { width:ratio.w, height:ratio.h, inputImages: refs.length?refs:undefined });
+    const baseRefs = _sbCollectRefs();
+    const previousPanel = i > 0 ? studioState.sbPanels[i-1]?.img : null;
+    // Panel sebelumnya menjadi continuity frame; referensi karakter/produk tetap dipertahankan.
+    const refs = [previousPanel, ...baseRefs].filter(Boolean).slice(0,8);
+    const res = await generateImageAI(_sbPanelPrompt(p.desc, i), { width:ratio.w, height:ratio.h, inputImages: refs.length?refs:undefined });
     p.img = res.dataUrl; p.status = 'done';
   } catch (e) {
     p.status = 'idle';
@@ -8717,7 +8728,7 @@ async function studioVideoPanel(i) {
     const ratio = RATIO_PRESETS.find(r=>r.id===studioState.sbRatio) || RATIO_PRESETS[2];
     const aspect = (ratio.w>=ratio.h)?(ratio.w/ratio.h>=1.7?'16:9':'1:1'):'9:16';
     let enPrompt = p.desc;
-    const res = await generateVideoAI(enPrompt, { duration:'8', aspect_ratio:aspect, imageUrl:p.img, onProgress:setMsg });
+    const res = await generateVideoAI(enPrompt, { duration:String(studioState.sbSegment||8), aspect_ratio:aspect, imageUrl:p.img, onProgress:setMsg });
     p.video = res.url; p.status = 'done';
   } catch (e) {
     p.status = 'done';
@@ -8817,19 +8828,46 @@ async function studioComposeVideo() {
     toast('Gagal menggabung', (e.message||'')+' — coba unduh tiap klip & gabung di CapCut','error');
   }
 }
-function studioPanelToAsset(i) {
-  const p = studioState.sbPanels[i];
-  if (!p) return;
-  state.assets = state.assets || [];
-  if (p.video) state.assets.unshift({ id:'a'+Date.now(), ts:Date.now(), type:'video', name:`Storyboard panel ${p.n}`, url:p.video, content:'', project:'' });
-  if (p.img) state.assets.unshift({ id:'a'+(Date.now()+1), ts:Date.now(), type:'image', name:`Storyboard panel ${p.n}`, url:p.img, content:'', project:'' });
-  save('assets', state.assets);
-  toast('Tersimpan',`Panel ${p.n} → Assets`,'success');
+async function studioCompressAssetImage(url) {
+  if (!url || !url.startsWith('data:image/')) return url;
+  try {
+    const img = await _tbLoadImg(url);
+    const maxSide = 1280;
+    const scale = Math.min(1, maxSide/Math.max(img.width,img.height));
+    const cv = document.createElement('canvas');
+    cv.width = Math.max(1,Math.round(img.width*scale));
+    cv.height = Math.max(1,Math.round(img.height*scale));
+    cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+    return cv.toDataURL('image/jpeg',0.76);
+  } catch(_) { return url; }
 }
-function studioSaveAllPanels() {
-  let n=0;
-  studioState.sbPanels.forEach((p,i)=>{ if (p.img||p.video){ studioPanelToAsset(i); n++; } });
-  if (n) toast('Tersimpan',`${n} panel disimpan ke Assets`,'success');
+async function studioPanelToAsset(i, opts={}) {
+  const p = studioState.sbPanels[i];
+  if (!p) return false;
+  state.assets = state.assets || [];
+  const before = [...state.assets];
+  const now = Date.now();
+  if (p.video) state.assets.unshift({ id:'a'+now, ts:now, type:'video', name:`Storyboard panel ${p.n}`, url:p.video, content:p.dialog||p.desc||'', project:'' });
+  if (p.img) {
+    const compactImg = await studioCompressAssetImage(p.img);
+    state.assets.unshift({ id:'a'+(now+1), ts:now, type:'image', name:`Storyboard panel ${p.n}`, url:compactImg, content:p.dialog||p.desc||'', project:'' });
+  }
+  if (!save('assets', state.assets)) {
+    state.assets = before;
+    if (!opts.silent) toast('Penyimpanan penuh','Panel belum masuk Assets. Hapus aset lama atau unduh panel terlebih dahulu.','warning');
+    return false;
+  }
+  if (!opts.silent) toast('Tersimpan',`Panel ${p.n} → Assets`,'success');
+  return true;
+}
+async function studioSaveAllPanels() {
+  let saved=0, failed=0;
+  for (let i=0;i<studioState.sbPanels.length;i++) {
+    const p=studioState.sbPanels[i];
+    if (p.img||p.video) (await studioPanelToAsset(i,{silent:true})) ? saved++ : failed++;
+  }
+  if (saved) toast('Tersimpan',`${saved} panel disimpan ke Assets`,'success');
+  if (failed) toast('Sebagian gagal',`${failed} panel belum tersimpan karena ruang penyimpanan tidak cukup.`,'warning');
 }
 async function studioSaveStoryboardSheet() {
   const panels = studioState.sbPanels.filter(p=>p.img);
@@ -10352,6 +10390,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40b37664cfe6bf3',t:'MTc5MDM1MTc2MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40b6a0318defd78',t:'MTc5MDM1MzgzMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
