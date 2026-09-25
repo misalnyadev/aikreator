@@ -7367,22 +7367,22 @@ function _roadmapStages() {
   const hasMany = assetsCount >= 8;
   const hasSchedule = (state.schedules||[]).length > 0;
   return [
-    { id:'arah', lvl:'Pemula', ic:'i-compass', title:'Temukan Arah', desc:'Tentukan niche, audiens, platform & gaya brand-mu. Fondasi semua konten.',
+    { id:'arah', lvl:'Pemula', ic:'i-compass', title:'Temukan Arah', desc:'Tentukan niche, audiens, platform, dan gaya brand sebagai fondasi konten.',
       tasks:[{t:'Isi niche & audiens',ok:arahDone},{t:'Pilih platform utama',ok:arahDone},{t:'Tetapkan brand voice',ok:arahDone}],
       done:arahDone, cta:'Mulai Temukan Arah', go:()=>switchView('arah') },
-    { id:'akun', lvl:'Pemula', ic:'i-briefcase', title:'Bangun Akun Pro', desc:'Siapkan akun sosmed profesional: handle, bio, aset brand, keamanan.',
+    { id:'akun', lvl:'Pemula', ic:'i-briefcase', title:'Bangun Akun Pro', desc:'Siapkan handle, bio, aset brand, dan keamanan akun profesional.',
       tasks:[{t:'Aset brand & bio',ok:akunDone},{t:'Buat akun berurutan',ok:akunDone},{t:'Mode Creator + 2FA',ok:akunDone}],
       done:akunDone, cta:'Bangun Akun', go:()=>switchView('akun') },
-    { id:'char', lvl:'Menengah', ic:'i-users', title:'Ciptakan Karakter/Identitas', desc:'Bikin AI Influencer atau kunci identitas visual & suara agar konten selalu konsisten.',
+    { id:'char', lvl:'Menengah', ic:'i-users', title:'Ciptakan Karakter/Identitas', desc:'Kunci identitas visual dan suara agar karakter selalu konsisten.',
       tasks:[{t:'Buat 1 karakter',ok:hasChar},{t:'Foto referensi/sheet',ok:hasChar},{t:'Kunci suara',ok:(state.characters||[]).some(c=>c.voiceCfg?.locked)}],
       done:hasChar, cta:'Buka Karakter AI', go:()=>switchView('characters') },
-    { id:'produce', lvl:'Menengah', ic:'i-studio', title:'Produksi Konten Pertama', desc:'Pakai AI Studio: foto, video, atau storyboard. Hasilkan konten pertamamu yang konsisten.',
+    { id:'produce', lvl:'Menengah', ic:'i-studio', title:'Produksi Konten Pertama', desc:'Buat konten pertama berupa foto, video, atau storyboard.',
       tasks:[{t:'Generate konten pertama',ok:hasProduced},{t:'Simpan ke Assets',ok:hasProduced},{t:'Coba mode Storyboard',ok:hasMany}],
       done:hasProduced, cta:'Buka AI Studio', go:()=>switchView('aistudio') },
-    { id:'consistent', lvl:'Profesional', ic:'i-calendar', title:'Konsisten & Terjadwal', desc:'Bangun kebiasaan: jadwalkan upload, produksi rutin, jaga kualitas & kuantitas.',
+    { id:'consistent', lvl:'Profesional', ic:'i-calendar', title:'Konsisten & Terjadwal', desc:'Bangun rutinitas produksi dan jadwal upload yang konsisten.',
       tasks:[{t:'Kumpulkan 8+ aset konten',ok:hasMany},{t:'Atur jadwal upload',ok:hasSchedule},{t:'Pakai kalender konten',ok:hasSchedule}],
       done:hasMany && hasSchedule, cta:'Atur Jadwal', go:()=>switchView('schedule') },
-    { id:'monet', lvl:'Profesional', ic:'i-briefcase', title:'Monetisasi', desc:'Ubah audiens jadi penghasilan: affiliate, endorse/UGC brand, produk digital, program kreator.',
+    { id:'monet', lvl:'Profesional', ic:'i-briefcase', title:'Monetisasi', desc:'Ubah audiens menjadi penghasilan lewat berbagai jalur monetisasi.',
       tasks:[{t:'Audiens & konten stabil',ok:hasMany && hasSchedule},{t:'Buat konten affiliate/UGC',ok:false},{t:'Tawarkan jasa/produk',ok:false}],
       done:false, cta:'Pelajari monetisasi', go:()=>openMonetGuide() },
   ];
@@ -10112,6 +10112,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a408acf2eb40a24f',t:'MTc5MDMyNTExNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a408bde9a8b2f87d',t:'MTc5MDMyNTgxMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
