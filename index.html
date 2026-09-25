@@ -7807,7 +7807,7 @@ function renderIdeas(ideas, themeName) {
       ${idea.hook ? `<div style="font-size:.78rem;color:var(--accent-light);font-style:italic"> ${escapeHtml(idea.hook)}</div>` : ''}
       <div class="idea-footer">${(idea.tags || []).map(t => `<span class="idea-tag">${escapeHtml(t)}</span>`).join('')}</div>
       <div class="idea-actions">
-        <button class="btn btn-primary btn-sm" onclick="useIdea(${idx})">Gunakan</button>
+        <button class="btn btn-primary btn-sm" onclick="openIdeaProduction(${idx})"><svg class="ico"><use href="#i-studio"/></svg> Buat Konten</button>
         <button class="btn btn-ghost btn-sm" onclick="optimizeIdea(${idx})">Optimalkan</button>
       </div>
     </div>
@@ -7822,18 +7822,68 @@ function loadSavedIdeas() {
   renderIdeas(state.ideas, 'Tersimpan');
 }
 
+function ideaBrief(idea) {
+  return [
+    idea.title || '',
+    idea.desc || '',
+    idea.hook ? `Hook: ${idea.hook}` : '',
+    (idea.tags||[]).length ? `Tag: ${(idea.tags||[]).join(' ')}` : ''
+  ].filter(Boolean).join('\n\n');
+}
+
 function useIdea(idx) {
   const idea = state.ideas[idx];
   if (!idea) return;
   switchView('optimizer');
   setTimeout(() => {
-    document.getElementById('optIdea').value = (idea.title || '') + '\n\n' + (idea.desc || '');
+    document.getElementById('optIdea').value = ideaBrief(idea);
   }, 100);
-  toast('Ide digunakan','Silakan optimalkan di menu Optimasi','info');
+  toast('Ide digunakan','Ide siap dioptimalkan sebelum diproduksi.','info');
 }
 
 function optimizeIdea(idx) {
   useIdea(idx);
+}
+
+function openIdeaProduction(idx) {
+  const idea = state.ideas[idx];
+  if (!idea) return;
+  openModal(`
+    <div class="modal-header"><div class="modal-title"><svg class="ico"><use href="#i-studio"/></svg> Jadikan Konten Utuh</div><button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <p style="color:var(--text-secondary);font-size:.88rem;margin-bottom:1rem">Pilih jalur produksi untuk <strong>${escapeHtml(idea.title||'ide ini')}</strong>.</p>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem">
+      <button class="btn btn-primary" onclick="closeModal();useIdea(${idx})"><svg class="ico"><use href="#i-pen"/></svg> Optimalkan Dulu</button>
+      <button class="btn btn-secondary" onclick="ideaToFlow(${idx})"><svg class="ico"><use href="#i-arrow"/></svg> Alur Konten</button>
+      <button class="btn btn-secondary" onclick="ideaToStudio(${idx},'image')"><svg class="ico"><use href="#i-camera"/></svg> Foto</button>
+      <button class="btn btn-secondary" onclick="ideaToStudio(${idx},'carousel')"><svg class="ico"><use href="#i-carousel"/></svg> Slide</button>
+      <button class="btn btn-secondary" onclick="ideaToStudio(${idx},'video')"><svg class="ico"><use href="#i-video"/></svg> Video</button>
+    </div>`);
+}
+
+function ideaToFlow(idx) {
+  const idea = state.ideas[idx];
+  if (!idea) return;
+  closeModal();
+  flowState.idea = ideaBrief(idea);
+  flowState.step = 2;
+  flowState.jenis = '';
+  switchView('flow');
+  toast('Ide masuk Alur Konten','Pilih jenis konten untuk melanjutkan produksi.','success');
+}
+
+function ideaToStudio(idx, mode) {
+  const idea = state.ideas[idx];
+  if (!idea) return;
+  const labels = {image:'foto',carousel:'carousel/slide',video:'video'};
+  const brief = `Buat ${labels[mode]||'konten'} utuh berdasarkan ide berikut. Kembangkan hook, struktur, visual, caption, dan CTA yang sesuai.\n\n${ideaBrief(idea)}`;
+  closeModal();
+  studioState.mode = mode;
+  switchView('aistudio');
+  setTimeout(()=>{
+    const input = document.getElementById('aiInput');
+    if (input) { input.value=brief; input.dispatchEvent(new Event('input',{bubbles:true})); input.focus(); }
+  },80);
+  toast('Ide dibawa ke Studio',`Mode ${labels[mode]} siap diproduksi.`,'success');
 }
 
 // ============ OPTIMIZER ============
@@ -7890,7 +7940,8 @@ Berikan output dalam format markdown berikut:
     const response = await callAI(prompt);
     result.innerHTML = `<div class="markdown-content">${formatMarkdown(response)}</div>
       <div style="display:flex;gap:.5rem;margin-top:1.5rem;flex-wrap:wrap">
-        <button class="btn btn-primary btn-sm" onclick="copyResult()"> Copy Semua</button>
+        <button class="btn btn-primary btn-sm" onclick="openOptimizerStudioChoice()"><svg class="ico"><use href="#i-studio"/></svg> Buat Konten</button>
+        <button class="btn btn-secondary btn-sm" onclick="copyResult()">Copy Semua</button>
         <button class="btn btn-secondary btn-sm" onclick="saveAsSchedule()"><svg class="ico"><use href="#i-calendar"/></svg> Jadwalkan</button>
         <button class="btn btn-ghost btn-sm" onclick="optimizeContent()"><svg class="ico"><use href="#i-refresh"/></svg> Regenerate</button>
       </div>`;
@@ -7916,6 +7967,34 @@ function formatMarkdown(text) {
     .replace(/^\d+\. (.*$)/gim, '<li>$1</li>')
     .replace(/\n\n/g, '</p><p>')
     .replace(/\n/g, '<br>');
+}
+
+function openOptimizerStudioChoice() {
+  const content = document.getElementById('optimizerResult')?.dataset.content;
+  if (!content) { toast('Belum ada hasil','Jalankan optimasi terlebih dahulu.','warning'); return; }
+  openModal(`
+    <div class="modal-header"><div class="modal-title"><svg class="ico"><use href="#i-studio"/></svg> Buat di AI Kreator Studio</div><button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+    <p style="color:var(--text-secondary);font-size:.88rem;margin-bottom:1rem">Pilih format produksi. Hasil optimasi akan dibawa otomatis sebagai brief konten.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem">
+      <button class="btn btn-secondary" onclick="optimizerToStudio('image')"><svg class="ico"><use href="#i-camera"/></svg> Foto</button>
+      <button class="btn btn-secondary" onclick="optimizerToStudio('carousel')"><svg class="ico"><use href="#i-carousel"/></svg> Slide</button>
+      <button class="btn btn-secondary" onclick="optimizerToStudio('video')"><svg class="ico"><use href="#i-video"/></svg> Video</button>
+    </div>`);
+}
+
+function optimizerToStudio(mode) {
+  const result = document.getElementById('optimizerResult')?.dataset.content || '';
+  const idea = document.getElementById('optIdea')?.value.trim() || '';
+  const labels = { image:'foto', carousel:'carousel/slide', video:'video' };
+  const brief = `Buat ${labels[mode]||'konten'} berdasarkan brief yang sudah dioptimalkan berikut. Pertahankan hook, pesan utama, visual guide, dan CTA yang relevan.\n\nIDE AWAL:\n${idea}\n\nHASIL OPTIMASI:\n${result}`;
+  closeModal();
+  studioState.mode = mode;
+  switchView('aistudio');
+  setTimeout(()=>{
+    const input = document.getElementById('aiInput');
+    if (input) { input.value = brief; input.dispatchEvent(new Event('input',{bubbles:true})); input.focus(); }
+  },80);
+  toast('Brief dibawa ke Studio',`Mode ${labels[mode]||'konten'} siap diproduksi.`,'success');
 }
 
 function copyResult() {
@@ -10246,5 +10325,5 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40946187d086bff',t:'MTc5MDMzMTM5MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a409896dfdb35fab',t:'MTc5MDMzNDE0OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
