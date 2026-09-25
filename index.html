@@ -7725,6 +7725,7 @@ function useTrend(title) {
 }
 
 // ============ IDEAS GENERATION ============
+let currentGeneratedIdeas = [];
 async function generateIdeas() {
   const theme = document.getElementById('ideaTheme').value;
   const platform = document.getElementById('ideaPlatform').value;
@@ -7766,9 +7767,8 @@ Pastikan ide-ide tersebut fresh, engaging, dan sesuai trend saat ini.`;
       throw new Error('AI tidak mengembalikan ide yang valid. Coba lagi.');
     }
     
-    state.ideas = [...ideas, ...state.ideas].slice(0, 50);
-    save('ideas', state.ideas);
-    renderIdeas(ideas, themeName);
+    currentGeneratedIdeas = ideas.map((idea,i)=>({...idea,_tempId:`tmp-${Date.now()}-${i}`}));
+    renderIdeas(currentGeneratedIdeas, themeName, 'generated');
     toast('Ide berhasil digenerate', `${ideas.length} ide konten baru tersedia`,'success');
   } catch (err) {
     console.error('Generate error:', err);
@@ -7794,21 +7794,24 @@ function parseIdeasFromText(text, theme) {
   return ideas.length > 0 ? ideas : [{title:'Contoh Ide Konten',desc:'AI mengembalikan format tidak valid. Coba lagi dengan prompt berbeda.',tags:['#contoh'],hook:'Hook contoh'}];
 }
 
-function renderIdeas(ideas, themeName) {
+function renderIdeas(ideas, themeName, source='saved') {
   const container = document.getElementById('ideasContainer');
-  container.innerHTML = `<div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem"><h3 style="font-size:1.1rem"> ${ideas.length} Ide untuk ${themeName}</h3></div><div class="idea-grid">${ideas.map((idea, idx) => `
-    <div class="idea-card">
+  const sourceLabel = source === 'generated' ? 'Hasil baru — pilih ide yang ingin disimpan' : 'Koleksi ide tersimpan';
+  container.innerHTML = `<div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem"><div><h3 style="font-size:1.1rem">${ideas.length} Ide untuk ${themeName}</h3><div style="font-size:.76rem;color:var(--text-muted);margin-top:.2rem">${sourceLabel}</div></div></div><div class="idea-grid">${ideas.map((idea, idx) => `
+    <div class="idea-card" style="${idea.used?'opacity:.68':''}">
       <div class="idea-header">
         <span class="idea-category">${themeName}</span>
-        <span class="idea-trend"><svg class="ico"><use href="#i-fire"/></svg> Trending</span>
+        <span class="idea-trend">${idea.used?'<svg class="ico"><use href="#i-check"/></svg> Sudah digunakan':'<svg class="ico"><use href="#i-fire"/></svg> Trending'}</span>
       </div>
-      <div class="idea-title">${escapeHtml(idea.title || '')}</div>
+      <div class="idea-title" style="${idea.used?'text-decoration:line-through':''}">${escapeHtml(idea.title || '')}</div>
       <div class="idea-desc">${escapeHtml(idea.desc || '')}</div>
-      ${idea.hook ? `<div style="font-size:.78rem;color:var(--accent-light);font-style:italic"> ${escapeHtml(idea.hook)}</div>` : ''}
+      ${idea.hook ? `<div style="font-size:.78rem;color:var(--accent-light);font-style:italic">${escapeHtml(idea.hook)}</div>` : ''}
       <div class="idea-footer">${(idea.tags || []).map(t => `<span class="idea-tag">${escapeHtml(t)}</span>`).join('')}</div>
       <div class="idea-actions">
-        <button class="btn btn-primary btn-sm" onclick="openIdeaProduction(${idx})"><svg class="ico"><use href="#i-studio"/></svg> Buat Konten</button>
-        <button class="btn btn-ghost btn-sm" onclick="optimizeIdea(${idx})">Optimalkan</button>
+        ${source==='generated'?`<button class="btn btn-secondary btn-sm" onclick="saveGeneratedIdea(${idx})"><svg class="ico"><use href="#i-save"/></svg> Simpan</button>`:''}
+        <button class="btn btn-primary btn-sm" onclick="openIdeaProduction('${source}',${idx})"><svg class="ico"><use href="#i-studio"/></svg> Buat Konten</button>
+        ${source==='saved'?`<button class="btn btn-ghost btn-sm" onclick="toggleIdeaUsed(${idx})">${idea.used?'Gunakan Lagi':'Sudah Digunakan'}</button>`:''}
+        <button class="btn btn-ghost btn-sm" onclick="deleteIdea('${source}',${idx})" aria-label="Hapus ide"><svg class="ico"><use href="#i-trash"/></svg></button>
       </div>
     </div>
   `).join('')}</div>`;
@@ -7831,58 +7834,72 @@ function ideaBrief(idea) {
   ].filter(Boolean).join('\n\n');
 }
 
-function useIdea(idx) {
+function getIdea(source, idx) {
+  return source === 'generated' ? currentGeneratedIdeas[idx] : state.ideas[idx];
+}
+function saveGeneratedIdea(idx) {
+  const idea = currentGeneratedIdeas[idx];
+  if (!idea) return;
+  const saved = {...idea, id:idea.id||`idea-${Date.now()}`, savedAt:Date.now(), used:false};
+  delete saved._tempId;
+  state.ideas.unshift(saved);
+  state.ideas = state.ideas.slice(0,50);
+  save('ideas', state.ideas);
+  currentGeneratedIdeas.splice(idx,1);
+  renderIdeas(currentGeneratedIdeas, 'Hasil Baru', 'generated');
+  toast('Ide disimpan','Ide masuk ke koleksi tersimpan.','success');
+}
+function deleteIdea(source, idx) {
+  const list = source === 'generated' ? currentGeneratedIdeas : state.ideas;
+  if (!list[idx] || !confirm('Hapus ide ini?')) return;
+  list.splice(idx,1);
+  if (source === 'saved') save('ideas', state.ideas);
+  renderIdeas(list, source === 'generated' ? 'Hasil Baru' : 'Tersimpan', source);
+  toast('Ide dihapus','Ide tidak lagi ditampilkan.','info');
+}
+function toggleIdeaUsed(idx) {
   const idea = state.ideas[idx];
   if (!idea) return;
+  idea.used = !idea.used;
+  idea.usedAt = idea.used ? Date.now() : null;
+  save('ideas', state.ideas);
+  renderIdeas(state.ideas, 'Tersimpan', 'saved');
+}
+function useIdea(source, idx) {
+  const idea = getIdea(source,idx);
+  if (!idea) return;
   switchView('optimizer');
-  setTimeout(() => {
-    document.getElementById('optIdea').value = ideaBrief(idea);
-  }, 100);
+  setTimeout(() => { document.getElementById('optIdea').value = ideaBrief(idea); }, 100);
   toast('Ide digunakan','Ide siap dioptimalkan sebelum diproduksi.','info');
 }
-
-function optimizeIdea(idx) {
-  useIdea(idx);
-}
-
-function openIdeaProduction(idx) {
-  const idea = state.ideas[idx];
+function optimizeIdea(idx) { useIdea('saved',idx); }
+function openIdeaProduction(source, idx) {
+  const idea = getIdea(source,idx);
   if (!idea) return;
   openModal(`
     <div class="modal-header"><div class="modal-title"><svg class="ico"><use href="#i-studio"/></svg> Jadikan Konten Utuh</div><button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
     <p style="color:var(--text-secondary);font-size:.88rem;margin-bottom:1rem">Pilih jalur produksi untuk <strong>${escapeHtml(idea.title||'ide ini')}</strong>.</p>
     <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem">
-      <button class="btn btn-primary" onclick="closeModal();useIdea(${idx})"><svg class="ico"><use href="#i-pen"/></svg> Optimalkan Dulu</button>
-      <button class="btn btn-secondary" onclick="ideaToFlow(${idx})"><svg class="ico"><use href="#i-arrow"/></svg> Alur Konten</button>
-      <button class="btn btn-secondary" onclick="ideaToStudio(${idx},'image')"><svg class="ico"><use href="#i-camera"/></svg> Foto</button>
-      <button class="btn btn-secondary" onclick="ideaToStudio(${idx},'carousel')"><svg class="ico"><use href="#i-carousel"/></svg> Slide</button>
-      <button class="btn btn-secondary" onclick="ideaToStudio(${idx},'video')"><svg class="ico"><use href="#i-video"/></svg> Video</button>
+      <button class="btn btn-primary" onclick="closeModal();useIdea('${source}',${idx})"><svg class="ico"><use href="#i-pen"/></svg> Optimalkan Dulu</button>
+      <button class="btn btn-secondary" onclick="ideaToFlow('${source}',${idx})"><svg class="ico"><use href="#i-arrow"/></svg> Alur Konten</button>
+      <button class="btn btn-secondary" onclick="ideaToStudio('${source}',${idx},'image')"><svg class="ico"><use href="#i-camera"/></svg> Foto</button>
+      <button class="btn btn-secondary" onclick="ideaToStudio('${source}',${idx},'carousel')"><svg class="ico"><use href="#i-carousel"/></svg> Slide</button>
+      <button class="btn btn-secondary" onclick="ideaToStudio('${source}',${idx},'video')"><svg class="ico"><use href="#i-video"/></svg> Video</button>
     </div>`);
 }
-
-function ideaToFlow(idx) {
-  const idea = state.ideas[idx];
+function ideaToFlow(source, idx) {
+  const idea = getIdea(source,idx);
   if (!idea) return;
-  closeModal();
-  flowState.idea = ideaBrief(idea);
-  flowState.step = 2;
-  flowState.jenis = '';
-  switchView('flow');
+  closeModal(); flowState.idea=ideaBrief(idea); flowState.step=2; flowState.jenis=''; switchView('flow');
   toast('Ide masuk Alur Konten','Pilih jenis konten untuk melanjutkan produksi.','success');
 }
-
-function ideaToStudio(idx, mode) {
-  const idea = state.ideas[idx];
+function ideaToStudio(source, idx, mode) {
+  const idea = getIdea(source,idx);
   if (!idea) return;
-  const labels = {image:'foto',carousel:'carousel/slide',video:'video'};
-  const brief = `Buat ${labels[mode]||'konten'} utuh berdasarkan ide berikut. Kembangkan hook, struktur, visual, caption, dan CTA yang sesuai.\n\n${ideaBrief(idea)}`;
-  closeModal();
-  studioState.mode = mode;
-  switchView('aistudio');
-  setTimeout(()=>{
-    const input = document.getElementById('aiInput');
-    if (input) { input.value=brief; input.dispatchEvent(new Event('input',{bubbles:true})); input.focus(); }
-  },80);
+  const labels={image:'foto',carousel:'carousel/slide',video:'video'};
+  const brief=`Buat ${labels[mode]||'konten'} utuh berdasarkan ide berikut. Kembangkan hook, struktur, visual, caption, dan CTA yang sesuai.\n\n${ideaBrief(idea)}`;
+  closeModal(); studioState.mode=mode; switchView('aistudio');
+  setTimeout(()=>{ const input=document.getElementById('aiInput'); if(input){input.value=brief;input.dispatchEvent(new Event('input',{bubbles:true}));input.focus();}},80);
   toast('Ide dibawa ke Studio',`Mode ${labels[mode]} siap diproduksi.`,'success');
 }
 
@@ -10325,5 +10342,5 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a409896dfdb35fab',t:'MTc5MDMzNDE0OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40ab66f6ef87549',t:'MTc5MDM0NjQ3Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
