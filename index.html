@@ -7393,6 +7393,9 @@ function _roadmapStages() {
   const assetsCount = (state.assets||[]).length;
   const hasProduced = assetsCount >= 1;
   const hasMany = assetsCount >= 8;
+  const hasStoryboard = localStorage.getItem('kh_storyboard_used') === '1' ||
+    (state.assets||[]).some(a=>/^Storyboard panel/i.test(a.name||'')) ||
+    (typeof studioState !== 'undefined' && (studioState.sbPanels||[]).length > 0);
   const hasSchedule = (state.schedules||[]).length > 0;
   return [
     { id:'arah', lvl:'Pemula', ic:'i-compass', title:'Temukan Arah', desc:'Tentukan niche, audiens, platform, dan gaya brand sebagai fondasi konten.',
@@ -7405,8 +7408,8 @@ function _roadmapStages() {
       tasks:[{t:'Buat 1 karakter',ok:hasChar},{t:'Foto referensi/sheet',ok:hasChar},{t:'Kunci suara',ok:(state.characters||[]).some(c=>c.voiceCfg?.locked)}],
       done:hasChar, cta:'Buka Karakter AI', go:()=>switchView('characters') },
     { id:'produce', lvl:'Menengah', ic:'i-studio', title:'Produksi Konten Pertama', desc:'Buat konten pertama berupa foto, video, atau storyboard.',
-      tasks:[{t:'Generate konten pertama',ok:hasProduced},{t:'Simpan ke Assets',ok:hasProduced},{t:'Coba mode Storyboard',ok:hasMany}],
-      done:hasProduced, cta:'Buka AI Studio', go:()=>switchView('aistudio') },
+      tasks:[{t:'Generate konten pertama',ok:hasProduced},{t:'Simpan ke Assets',ok:hasProduced},{t:'Coba mode Storyboard',ok:hasStoryboard}],
+      done:hasProduced && hasStoryboard, cta:'Buka AI Studio', go:()=>switchView('aistudio') },
     { id:'consistent', lvl:'Profesional', ic:'i-calendar', title:'Konsisten & Terjadwal', desc:'Bangun rutinitas produksi dan jadwal upload yang konsisten.',
       tasks:[{t:'Kumpulkan 8+ aset konten',ok:hasMany},{t:'Atur jadwal upload',ok:hasSchedule},{t:'Pakai kalender konten',ok:hasSchedule}],
       done:hasMany && hasSchedule, cta:'Atur Jadwal', go:()=>switchView('schedule') },
@@ -8560,6 +8563,7 @@ async function studioBuildStoryboard(message) {
     sendBtn.disabled = false; return;
   }
   studioState.sbPanels = panels.map((p,i)=>({ n:i+1, desc:p.desc||'', dialog:p.dialog||'', img:null, video:null, status:'idle' }));
+  localStorage.setItem('kh_storyboard_used','1');
   sendBtn.disabled = false;
   studioRenderStoryboard();
   toast('Papan cerita siap', `${panels.length} panel — generate foto tiap panel`,'success');
@@ -10390,6 +10394,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40b6a0318defd78',t:'MTc5MDM1MzgzMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40b72850eebf876',t:'MTc5MDM1NDE4MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
