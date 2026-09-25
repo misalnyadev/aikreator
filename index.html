@@ -3202,7 +3202,7 @@ const BEST_TIME = {
   x:         { time:'12:00', hint:'Jam kerja pagi–siang' },
   blog:      { time:'09:00', hint:'Pagi hari kerja untuk pembaca' },
 };
-let flowState = { step: 0, idea: '', jenis: '', detail: null, result: '', imgUrl: '' };
+let flowState = { step: 0, idea: '', jenis: '', detail: null, result: '', imgUrl: '', refCharId:'', refs:[] };
 
 function renderFlow() {
   // reset ide list tiap masuk supaya fresh, tapi pertahankan progress bila sedang jalan
@@ -3376,8 +3376,39 @@ function flowDetailHtml() {
       ${styles.map(s => `<span class="ws-chip ${(d.style||'Realistis')===s?'on':''}" onclick="flowSetDetail('style','${s}')">${s}</span>`).join('')}
       </div></div>`;
   }
+  const chars=state.characters||[];
+  html += `<div class="form-group"><label class="form-label">Referensi Karakter <span style="font-weight:400;color:var(--text-muted)">(opsional)</span></label>
+    <select class="form-select" onchange="flowSetRefCharacter(this.value)"><option value="">Tanpa karakter khusus</option>${chars.map(c=>`<option value="${c.id}" ${flowState.refCharId===c.id?'selected':''}>${escapeHtml(c.name||'Tanpa nama')}</option>`).join('')}</select>
+    <div class="form-hint">Foto master dan identitas karakter dipakai agar wajah/persona tidak random.</div></div>`;
+  html += `<div class="form-group"><label class="form-label">Gambar Referensi <span style="font-weight:400;color:var(--text-muted)">(produk, pakaian, lokasi, atau gaya)</span></label>
+    <div style="display:flex;gap:.5rem;overflow-x:auto;padding:.15rem 0;scrollbar-width:none">
+      ${(flowState.refs||[]).map((u,i)=>`<div class="sr-thumb" style="flex:0 0 58px;width:58px;height:58px"><img src="${u}"><button onclick="flowRemoveRef(${i})"><svg class="ico"><use href="#i-x"/></svg></button></div>`).join('')}
+      ${(flowState.refs||[]).length<4?`<label class="sr-add" style="flex:0 0 58px;width:58px;height:58px"><svg class="ico"><use href="#i-plus"/></svg><input type="file" accept="image/*" multiple style="display:none" onchange="flowAddRefs(event)"></label>`:''}
+    </div><div class="form-hint">Maksimal 4 gambar. Referensi diteruskan ke generator foto/video yang mendukung image reference.</div></div>`;
   html += `</div>`;
   return html;
+}
+function flowSetRefCharacter(id) { flowState.refCharId=id; renderFlowStep2(); }
+async function flowAddRefs(ev) {
+  flowState.refs=flowState.refs||[];
+  for(const f of [...ev.target.files]) {
+    if(flowState.refs.length>=4)break;
+    if(f.size>8*1024*1024){toast('Gambar terlalu besar',`${f.name} melebihi 8MB`,'warning');continue;}
+    flowState.refs.push(await _tbReadFile(f));
+  }
+  ev.target.value=''; renderFlowStep2();
+}
+function flowRemoveRef(i){(flowState.refs||[]).splice(i,1);renderFlowStep2();}
+function flowReferenceImages(){
+  const refs=[];
+  const c=(state.characters||[]).find(x=>x.id===flowState.refCharId);
+  if(c)_charTopRefs(c,2).forEach(u=>refs.push(u));
+  (flowState.refs||[]).forEach(u=>refs.push(u));
+  return refs.slice(0,8);
+}
+function flowReferenceText(){
+  const c=(state.characters||[]).find(x=>x.id===flowState.refCharId);
+  return c ? ` Karakter utama: ${c.name}. Identitas/persona: ${(c.identity||c.tagline||'').slice(0,350)}. Pertahankan wajah, rambut, pakaian, dan persona sesuai referensi.` : '';
 }
 function flowSetDetail(key, val) {
   flowState.detail = flowState.detail || {};
@@ -3421,6 +3452,7 @@ async function flowDoGenerate() {
   if (out) out.innerHTML = `<div class="flow-loading"><div class="loading-dots"><span></span><span></span><span></span></div> Membuat konten...</div>`;
   const ctx = flowState._ctx || {};
   const voice = ctx.voice ? `, gaya ${ctx.voice}` : '';
+  const refText = flowReferenceText();
   const det = flowState.detail || {};
   const ratio = RATIO_PRESETS.find(r => r.id === det.ratio) || RATIO_PRESETS[0];
   // Provider+model teks pilihan user di langkah ini (auto-pindah bila limit)
@@ -3428,7 +3460,7 @@ async function flowDoGenerate() {
   try {
     if (flowState.jenis === 'video') {
       const dur = (det.dur || '5') + ' detik';
-      const prompt = `Buat konsep video pendek durasi ${dur} (rasio ${ratio.nm}) untuk ide: "${flowState.idea}"${voice}. Karena ini KLIP SINGKAT (${dur}), fokus pada 1 adegan kuat. Sertakan: (1) HOOK visual di detik awal, (2) DESKRIPSI ADEGAN (subjek, aksi, setting, mood), (3) GERAKAN KAMERA, (4) SHOTLIST singkat per detik, (5) saran caption + 8 hashtag. Bahasa Indonesia, rapi dengan sub-judul.`;
+      const prompt = `Buat konsep video pendek durasi ${dur} (rasio ${ratio.nm}) untuk ide: "${flowState.idea}"${voice}.${refText} Karena ini KLIP SINGKAT (${dur}), fokus pada 1 adegan kuat. Sertakan: (1) HOOK visual di detik awal, (2) DESKRIPSI ADEGAN (subjek, aksi, setting, mood), (3) GERAKAN KAMERA, (4) SHOTLIST singkat per detik, (5) saran caption + 8 hashtag. Bahasa Indonesia, rapi dengan sub-judul.`;
       const res = await callAI(prompt, aiOpts);
       flowState.result = res;
       pushRiwayat('Script', flowState.idea, res);
@@ -3441,7 +3473,7 @@ async function flowDoGenerate() {
         <div id="flowKontenOut"></div>`;
     } else if (flowState.jenis === 'slide') {
       const n = det.slideCount || 6;
-      const prompt = `Buat konten carousel Instagram (${n} slide) untuk ide: "${flowState.idea}"${voice}. Format WAJIB per slide seperti ini (tanpa markdown tebal):\nSLIDE 1 | Judul: ... | Isi: kalimat singkat\nSLIDE 2 | Judul: ... | Isi: ...\n(lanjut sampai SLIDE ${n}, slide terakhir = ajakan/CTA). Buat judul singkat & isi padat maksimal 20 kata. Setelah semua slide, tulis baris "CAPTION:" diikuti caption + 8 hashtag. Bahasa Indonesia.`;
+      const prompt = `Buat konten carousel Instagram (${n} slide) untuk ide: "${flowState.idea}"${voice}.${refText} Format WAJIB per slide seperti ini (tanpa markdown tebal):\nSLIDE 1 | Judul: ... | Isi: kalimat singkat\nSLIDE 2 | Judul: ... | Isi: ...\n(lanjut sampai SLIDE ${n}, slide terakhir = ajakan/CTA). Buat judul singkat & isi padat maksimal 20 kata. Setelah semua slide, tulis baris "CAPTION:" diikuti caption + 8 hashtag. Bahasa Indonesia.`;
       const res = await callAI(prompt, aiOpts);
       flowState.result = res;
       pushRiwayat('Slide', flowState.idea, res);
@@ -3453,12 +3485,12 @@ async function flowDoGenerate() {
       // 1) Caption via AI teks (opsional)
       let caption = '';
       try {
-        caption = await callAI(`Buat caption Instagram menarik + 8 hashtag untuk foto konten: "${flowState.idea}"${voice}. Singkat, Bahasa Indonesia.`, aiOpts);
+        caption = await callAI(`Buat caption Instagram menarik + 8 hashtag untuk foto konten: "${flowState.idea}"${voice}.${refText} Singkat, Bahasa Indonesia.`, aiOpts);
       } catch (e) { caption = ''; }
       flowState.result = caption;
       // 2) Susun prompt gambar (gaya ID → deskriptor Inggris)
       const styleTxt = IMG_STYLE_MAP[det.style] || (det.style ? det.style + ' style' : '');
-      const imgPrompt = `${styleTxt ? styleTxt + ', ' : ''}high quality social media photo, ${flowState.idea}, ${ctx.niche||''}, professional, detailed`;
+      const imgPrompt = `${styleTxt ? styleTxt + ', ' : ''}high quality social media photo, ${flowState.idea}, ${ctx.niche||''}.${refText} Use uploaded references for the exact character, product, clothing, or location; do not invent replacements, professional, detailed`;
       flowState._imgPrompt = imgPrompt;
       // 3) Render kerangka + generate via provider foto user → Pollinations cadangan
       out.innerHTML = `
@@ -3513,7 +3545,8 @@ async function flowRenderPhoto(ratio) {
   if (wrap) wrap.innerHTML = `<div class="flow-loading" id="imgLoad"><div class="loading-dots"><span></span><span></span><span></span></div> Membuat gambar...</div>`;
   if (resBox) resBox.innerHTML = '';
   try {
-    const opts = { width: ratio.w, height: ratio.h };
+    const refs=flowReferenceImages();
+    const opts = { width: ratio.w, height: ratio.h, inputImages:refs.length?refs:undefined };
     if (flowState._imgProv) opts.providerId = flowState._imgProv;
     const { dataUrl, provider } = await generateImageAI(flowState._imgPrompt || flowState.idea, opts);
     flowState.imgUrl = dataUrl;
@@ -3694,6 +3727,7 @@ function flowRenderVideo() {
   const refs = [];
   if (flowState.coverImg) refs.push({ id:'cover', label:'<svg class="ico"><use href="#i-image"/></svg> Cover/Thumbnail', url:flowState.coverImg });
   if (flowState.imgUrl)  refs.push({ id:'foto',  label:'Foto hasil generate', url:flowState.imgUrl });
+  flowReferenceImages().forEach((url,i)=>refs.push({id:'flowref:'+i,label:i===0&&flowState.refCharId?'Karakter referensi':`Referensi ${i+1}`,url}));
   (state.assets||[]).filter(a=>a.type==='image').slice(0,4).forEach(a =>
     refs.push({ id:'asset:'+a.id, label:'<svg class="ico"><use href="#i-folder"/></svg> '+(a.name||'Aset').slice(0,18), url:a.url }));
   if (flowState._vidRef == null) flowState._vidRef = refs.length ? refs[0].id : 'none';
@@ -4024,7 +4058,7 @@ function flowAddSchedule() {
   setTimeout(() => switchView('schedule'), 900);
 }
 function flowReset() {
-  flowState = { step: 0, idea:'', jenis:'', detail:null, result:'', imgUrl:'', videoUrl:'', coverImg:'', slideImgs:null };
+  flowState = { step: 0, idea:'', jenis:'', detail:null, result:'', imgUrl:'', videoUrl:'', coverImg:'', slideImgs:null, refCharId:'', refs:[] };
   renderFlow();
 }
 // Pintasan: langsung ke alur produksi untuk generate FOTO
@@ -10589,6 +10623,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40c18a56b8b5f99',t:'MTc5MDM2MDk4Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40c50fd7bb8ce3f',t:'MTc5MDM2MzI5NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
