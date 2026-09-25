@@ -915,7 +915,7 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .sb-acts{display:flex;gap:.25rem;padding:.4rem;justify-content:flex-end}
 .sb-acts button{background:var(--bg-card);border:1px solid var(--border);border-radius:6px;width:30px;height:28px;cursor:pointer;color:var(--text-secondary);display:flex;align-items:center;justify-content:center;padding:0}
 .sb-acts button:hover{border-color:var(--accent);color:var(--accent)}
-.sb-acts button .ico{width:14px;height:14px}
+.sb-acts button .ico{width:14px;height:14px}.sb-acts button.sb-regen{width:auto;padding:0 .5rem;gap:.25rem;font-size:.68rem;font-weight:700}
 .color-pick{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.3rem}
 .color-dot{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s}
 .color-dot.on{border-color:var(--text-primary);transform:scale(1.15)}
@@ -8525,6 +8525,7 @@ const studioState = {
   vidEndFrame: null,    // frame akhir video (dataUrl)
   vidStoryboards: [],   // sheet/gambar storyboard acuan adegan (dataUrl) — ala Google Flow
   sbPanels: [],         // storyboard: [{desc, dialog, img, video, status}]
+  sbDraftId: '',
   sbRatio: '1080x1920', sbTotalSec: '60', sbSegment: '8',
   carouselCount: '6',
   carouselRatio: '1080x1350',
@@ -8638,7 +8639,55 @@ function scPill(emo, options, onchange) {
 
 // ============================================================
 // STORYBOARD STUDIO — konsep/tempelan → panel → foto konsisten → video → iklan utuh
+// Draft disimpan di IndexedDB agar gambar besar tidak memenuhi localStorage.
 // ============================================================
+function studioDraftDb() {
+  return new Promise((resolve,reject)=>{
+    const req=indexedDB.open('kh_studio_projects',1);
+    req.onupgradeneeded=()=>{ const db=req.result; if(!db.objectStoreNames.contains('storyboards')) db.createObjectStore('storyboards',{keyPath:'id'}); };
+    req.onsuccess=()=>resolve(req.result); req.onerror=()=>reject(req.error);
+  });
+}
+async function studioDraftPut(draft) {
+  const db=await studioDraftDb();
+  return new Promise((resolve,reject)=>{ const tx=db.transaction('storyboards','readwrite'); tx.objectStore('storyboards').put(draft); tx.oncomplete=()=>{db.close();resolve(true)}; tx.onerror=()=>{db.close();reject(tx.error)}; });
+}
+async function studioDraftGet(id) {
+  const db=await studioDraftDb();
+  return new Promise((resolve,reject)=>{ const req=db.transaction('storyboards').objectStore('storyboards').get(id); req.onsuccess=()=>{db.close();resolve(req.result)}; req.onerror=()=>{db.close();reject(req.error)}; });
+}
+async function studioDraftList() {
+  const db=await studioDraftDb();
+  return new Promise((resolve,reject)=>{ const req=db.transaction('storyboards').objectStore('storyboards').getAll(); req.onsuccess=()=>{db.close();resolve((req.result||[]).sort((a,b)=>b.updatedAt-a.updatedAt))}; req.onerror=()=>{db.close();reject(req.error)}; });
+}
+async function studioDraftDelete(id) {
+  const db=await studioDraftDb();
+  return new Promise((resolve,reject)=>{ const tx=db.transaction('storyboards','readwrite'); tx.objectStore('storyboards').delete(id); tx.oncomplete=()=>{db.close();resolve(true)}; tx.onerror=()=>{db.close();reject(tx.error)}; });
+}
+async function studioSaveDraft(silent=false) {
+  if (!(studioState.sbPanels||[]).length) { if(!silent) toast('Belum ada storyboard','Susun storyboard terlebih dahulu.','info'); return false; }
+  try {
+    if(!studioState.sbDraftId) studioState.sbDraftId='sb-'+Date.now();
+    const prompt=document.getElementById('aiInput')?.value||'';
+    const old=await studioDraftGet(studioState.sbDraftId).catch(()=>null);
+    const draft={id:studioState.sbDraftId,name:old?.name||prompt.split('\n')[0].slice(0,64)||`Storyboard ${new Date().toLocaleString('id-ID')}`,prompt,updatedAt:Date.now(),panels:studioState.sbPanels,ratio:studioState.sbRatio,totalSec:studioState.sbTotalSec,segment:studioState.sbSegment,refCharId:studioState.refCharId,sbCharIds:studioState.sbCharIds,providerId:studioState.provByPurpose.image||'',model:studioState.modelByPurpose.image||''};
+    await studioDraftPut(draft);
+    if(!silent) toast('Proyek tersimpan','Storyboard dapat dilanjutkan kapan saja.','success');
+    return true;
+  } catch(e) { if(!silent) toast('Gagal menyimpan proyek',e.message||'IndexedDB tidak tersedia','error'); return false; }
+}
+async function studioOpenDrafts() {
+  try {
+    const drafts=await studioDraftList();
+    openModal(`<div class="modal-header"><div class="modal-title"><svg class="ico"><use href="#i-storyboard"/></svg> Proyek Storyboard</div><button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>${drafts.length?drafts.map(d=>`<div class="schedule-list-item"><div class="schedule-list-main" onclick="studioLoadDraft('${d.id}')" style="cursor:pointer"><div class="schedule-list-title">${escapeHtml(d.name)}</div><div class="schedule-list-meta">${d.panels?.length||0} part · ${d.totalSec||'-'} detik · diperbarui ${new Date(d.updatedAt).toLocaleString('id-ID')}</div></div><button class="btn btn-ghost btn-sm" onclick="studioRemoveDraft('${d.id}')"><svg class="ico"><use href="#i-trash"/></svg></button></div>`).join(''):'<div class="empty-state"><h3>Belum ada proyek tersimpan</h3><p>Storyboard yang dibuat akan muncul di sini.</p></div>'}`);
+  } catch(e) { toast('Gagal membuka proyek',e.message||'','error'); }
+}
+async function studioLoadDraft(id) {
+  const d=await studioDraftGet(id); if(!d)return;
+  studioState.sbDraftId=d.id; studioState.sbPanels=d.panels||[]; studioState.sbRatio=d.ratio||'1080x1920'; studioState.sbTotalSec=d.totalSec||'60'; studioState.sbSegment=d.segment||'8'; studioState.refCharId=d.refCharId||''; studioState.sbCharIds=d.sbCharIds||[]; studioState.provByPurpose.image=d.providerId||studioState.provByPurpose.image; studioState.modelByPurpose.image=d.model||''; studioState.mode='storyboard';
+  closeModal(); switchView('aistudio'); setTimeout(()=>{const input=document.getElementById('aiInput');if(input)input.value=d.prompt||'';studioRenderStoryboard();},60); toast('Proyek dibuka','Lanjutkan panel yang belum selesai.','success');
+}
+async function studioRemoveDraft(id) { if(!confirm('Hapus proyek storyboard ini?'))return; await studioDraftDelete(id); if(studioState.sbDraftId===id)studioState.sbDraftId=''; studioOpenDrafts(); }
 // Bangun daftar panel: deteksi apakah user menempel storyboard, atau minta AI menyusun.
 async function studioBuildStoryboard(message) {
   const messages = document.getElementById('aiMessages');
@@ -8664,10 +8713,12 @@ async function studioBuildStoryboard(message) {
     document.getElementById('sbLoad').innerHTML = `<svg class="ico"><use href="#i-warn"/></svg> Tidak ada panel terdeteksi. Coba jelaskan konsep, atau tempel storyboard (1 adegan per baris).`;
     sendBtn.disabled = false; return;
   }
+  studioState.sbDraftId = 'sb-'+Date.now();
   studioState.sbPanels = panels.map((p,i)=>({ n:i+1, desc:p.desc||'', dialog:p.dialog||'', img:null, video:null, status:'idle' }));
   localStorage.setItem('kh_storyboard_used','1');
   sendBtn.disabled = false;
   studioRenderStoryboard();
+  studioSaveDraft(true);
   toast('Papan cerita siap', `${panels.length} panel — generate foto tiap panel`,'success');
 }
 // Minta AI menyusun storyboard dari konsep
@@ -8731,19 +8782,22 @@ function studioRenderStoryboard() {
   if (!messages) return;
   const panels = studioState.sbPanels || [];
   if (!panels.length) {
-    // Kosongkan — placeholder minimal seragam ('Hasil tampil di sini') via CSS :empty.
-    messages.innerHTML = '';
+    messages.innerHTML = `<div class="empty-state"><h3>Hasil tampil di sini</h3><p>Susun storyboard baru atau lanjutkan proyek yang tersimpan.</p><button class="btn btn-secondary btn-sm" onclick="studioOpenDrafts()"><svg class="ico"><use href="#i-folder"/></svg> Proyek Tersimpan</button></div>`;
     return;
   }
   const anyImg = panels.some(p=>p.img);
   const anyVid = panels.some(p=>p.video);
+  const pendingImg = panels.filter(p=>!p.img).length;
   const vidCount = panels.filter(p=>p.video).length;
+  const photoAction = pendingImg===panels.length ? 'Generate semua foto' : pendingImg ? `Lanjutkan ${pendingImg} foto tersisa` : 'Semua foto selesai';
   let html = `<div class="sb-bar">
-    <button class="btn btn-primary btn-sm" onclick="studioGenAllPanels()"><svg class="ico"><use href="#i-image"/></svg> Generate semua foto</button>
+    <button class="btn btn-primary btn-sm" onclick="studioGenAllPanels()" ${pendingImg?'':'disabled'}><svg class="ico"><use href="#i-image"/></svg> ${photoAction}</button>
     ${anyImg?`<button class="btn btn-secondary btn-sm" onclick="studioVideoAllPanels()"><svg class="ico"><use href="#i-video"/></svg> Jadikan video semua</button>`:''}
     ${vidCount>=2?`<button class="btn btn-primary btn-sm" onclick="studioComposeVideo()" title="Gabungkan ${vidCount} klip jadi 1 video utuh"><svg class="ico"><use href="#i-video"/></svg> Gabung jadi 1 video (${vidCount})</button>`:''}
     ${anyImg?`<button class="btn btn-ghost btn-sm" onclick="studioSaveStoryboardSheet()"><svg class="ico"><use href="#i-download"/></svg> Unduh papan</button>`:''}
     ${(anyImg||anyVid)?`<button class="btn btn-ghost btn-sm" onclick="studioSaveAllPanels()"><svg class="ico"><use href="#i-save"/></svg> Simpan ke Assets</button>`:''}
+    <button class="btn btn-ghost btn-sm" onclick="studioSaveDraft()"><svg class="ico"><use href="#i-save"/></svg> Simpan Proyek</button>
+    <button class="btn btn-ghost btn-sm" onclick="studioOpenDrafts()"><svg class="ico"><use href="#i-folder"/></svg> Proyek Tersimpan</button>
     <button class="btn btn-ghost btn-sm" onclick="studioClearStoryboard()"><svg class="ico"><use href="#i-x"/></svg> Reset</button>
   </div>
   ${vidCount>=2?`<div class="sb-compose-status" id="sbComposeStatus"></div>`:''}
@@ -8758,8 +8812,9 @@ function studioRenderStoryboard() {
       </div>
       <textarea class="sb-desc" rows="2" oninput="studioState.sbPanels[${i}].desc=this.value" placeholder="Deskripsi visual...">${escapeHtml(p.desc)}</textarea>
       ${p.dialog?`<div class="sb-dialog">💬 ${escapeHtml(p.dialog)}</div>`:''}
+      ${p.provider?`<div style="padding:.25rem .55rem 0;font-size:.66rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Provider: ${escapeHtml(p.provider)}${p.model?' • '+escapeHtml(p.model):''}</div>`:''}
       <div class="sb-acts">
-        <button onclick="studioGenPanel(${i})" title="Generate/regenerate foto"><svg class="ico"><use href="#i-image"/></svg></button>
+        <button class="sb-regen" onclick="studioGenPanel(${i})" title="Generate ulang panel ini saja"><svg class="ico"><use href="#i-refresh"/></svg> ${p.img?'Generate ulang':'Generate'}</button>
         ${p.img?`<button onclick="studioVideoPanel(${i})" title="Jadikan video"><svg class="ico"><use href="#i-video"/></svg></button>`:''}
         ${p.img?`<button onclick="studioPanelToAsset(${i})" title="Simpan ke Assets"><svg class="ico"><use href="#i-save"/></svg></button>`:''}
       </div>
@@ -8768,7 +8823,7 @@ function studioRenderStoryboard() {
   html += `</div>`;
   messages.innerHTML = html;
 }
-function studioClearStoryboard() { studioState.sbPanels = []; studioRenderStoryboard(); }
+function studioClearStoryboard() { studioState.sbPanels = []; studioState.sbDraftId=''; studioRenderStoryboard(); }
 // Bangun prompt gambar panel dgn instruksi konsistensi
 // Kumpulkan referensi untuk panel storyboard: karakter yang ditag @nama + galeri
 function _sbCollectRefs() {
@@ -8811,19 +8866,24 @@ async function studioGenPanel(i) {
     const previousPanel = i > 0 ? studioState.sbPanels[i-1]?.img : null;
     // Panel sebelumnya menjadi continuity frame; referensi karakter/produk tetap dipertahankan.
     const refs = [previousPanel, ...baseRefs].filter(Boolean).slice(0,8);
-    const res = await generateImageAI(_sbPanelPrompt(p.desc, i), { width:ratio.w, height:ratio.h, inputImages: refs.length?refs:undefined });
-    p.img = res.dataUrl; p.status = 'done';
+    const providerId = studioState.provByPurpose.image || '';
+    const model = studioState.modelByPurpose.image || '';
+    const res = await generateImageAI(_sbPanelPrompt(p.desc, i), { width:ratio.w, height:ratio.h, inputImages: refs.length?refs:undefined, providerId, model, strictProvider:true });
+    p.img = res.dataUrl; p.provider = res.provider; p.providerId=res.providerId; p.model=res.model||''; p.status = 'done';
   } catch (e) {
     p.status = 'idle';
-    toast('Gagal panel '+p.n, e.message||'coba lagi','error');
+    toast('Panel '+p.n+' belum selesai', (e.message||'Provider gagal')+' — panel yang sudah jadi tetap aman. Ganti provider/isi saldo lalu klik Lanjutkan.','error');
   }
   studioRenderStoryboard();
+  if (studioState.sbDraftId) studioSaveDraft(true);
 }
 async function studioGenAllPanels() {
   for (let i=0;i<studioState.sbPanels.length;i++) {
     if (!studioState.sbPanels[i].img) await studioGenPanel(i);
   }
-  toast('Selesai','Semua foto panel dibuat. Cek & regenerate bila perlu.','success');
+  const pending=(studioState.sbPanels||[]).filter(p=>!p.img).length;
+  if (pending) toast('Belum selesai',`${pending} panel belum dibuat. Panel yang sudah jadi tidak akan diulang saat dilanjutkan.`,'warning');
+  else toast('Selesai','Semua foto panel dibuat. Cek & regenerate bila perlu.','success');
 }
 async function studioVideoPanel(i) {
   const p = studioState.sbPanels[i];
@@ -8841,6 +8901,7 @@ async function studioVideoPanel(i) {
     toast('Video panel '+p.n+' gagal', e.message||'coba lagi','error');
   }
   studioRenderStoryboard();
+  if (studioState.sbDraftId) studioSaveDraft(true);
 }
 async function studioVideoAllPanels() {
   const withImg = studioState.sbPanels.filter(p=>p.img && !p.video);
@@ -9823,16 +9884,18 @@ async function generateImageAI(prompt, opts = {}) {
   // (3) Pollinations/cadangan tanpa-kunci SELALU paling akhir sebagai cadangan pamungkas.
   const keyed = imgProviders.filter(p => !p.noKey && !p.optionalKey);
   const noKeyed = imgProviders.filter(p => p.noKey || p.optionalKey);
-  const chosen = opts.providerId ? keyed.find(p => p.id === opts.providerId) : null;
+  const chosen = opts.providerId ? imgProviders.find(p => p.id === opts.providerId) : null;
   const restKeyed = keyed.filter(p => p !== chosen)
     .sort((a, b) => (isCoolingDown(a.id) ? 1 : 0) - (isCoolingDown(b.id) ? 1 : 0));
   const order = [];
   if (chosen) order.push(chosen);
-  restKeyed.forEach(p => order.push(p));
-  noKeyed.forEach(p => order.push(p)); // Pollinations selalu terakhir
-  // Bila ada gambar referensi (image-to-image), utamakan provider yang mendukungnya (Puter/Gemini).
+  if (!opts.strictProvider) {
+    restKeyed.forEach(p => order.push(p));
+    noKeyed.forEach(p => order.push(p)); // Pollinations selalu terakhir
+  }
+  // Bila ada gambar referensi, utamakan provider image-to-image hanya saat fallback diizinkan.
   const hasRefs = (opts.inputImages && opts.inputImages.length) || opts.inputImage;
-  if (hasRefs) {
+  if (hasRefs && !opts.strictProvider) {
     const i2iFormats = ['puter','gemini','openai'];
     order.sort((a, b) => (i2iFormats.includes(b.format)?1:0) - (i2iFormats.includes(a.format)?1:0));
   }
@@ -9865,7 +9928,7 @@ async function generateImageAI(prompt, opts = {}) {
           const dataUrl = await callImageProvider(provider, {...cfg, apiKey: keys[ki]}, imgModel, styled, {width, height, engine: opts.engine, inputImages: opts.inputImages, inputImage: opts.inputImage});
           if (dataUrl) {
             notifyProviderUsed('image', provider.name + (keys.length > 1 ? ` (key ${ki+1})` : ''), imgModel);
-            return { dataUrl, provider: provider.name, model: imgModel, fallback: skipped };
+            return { dataUrl, provider: provider.name, providerId:provider.id, model: imgModel, fallback: skipped };
           }
         } catch (err) {
           lastError = err; provErr = err;
@@ -10496,6 +10559,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40bd6c7ffa1b2df',t:'MTc5MDM1ODI4OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-</body>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a40c04cd3a3b5f99',t:'MTc5MDM2MDE3Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
