@@ -2347,13 +2347,13 @@ const AI_PROVIDERS = [
     url:'https://developers.cloudflare.com/workers-ai/',
     getKey:'https://dash.cloudflare.com/profile/api-tokens',
     caps:['chat','image'],
-    note:'Mode langsung menyimpan API token di browser. Gunakan token khusus Workers AI dengan izin minimum; jangan gunakan Global API Key. Jika Cloudflare memblokir CORS dari browser, gunakan Worker proxy atau 9Router.',
+    note:'Free pool 10K Neurons/hari, reset 00:00 UTC (07:00 WIB). FLUX.2 Dev terukur ~15K Neurons sekali generate, jadi melampaui seluruh jatah gratis harian. Mode langsung menyimpan token di browser; lebih aman gunakan Worker proxy atau 9Router.',
     models:[
       {id:'@cf/meta/llama-3.3-70b-instruct-fp8-fast',name:'Llama 3.3 70B Fast',recommended:true,free:true,purpose:'chat'},
       {id:'@cf/meta/llama-3.1-8b-instruct',name:'Llama 3.1 8B',free:true,purpose:'chat'},
       {id:'@cf/black-forest-labs/flux-1-schnell',name:'FLUX.1 Schnell — cepat',recommended:true,free:true,purpose:'image'},
       {id:'@cf/black-forest-labs/flux-2-klein-4b',name:'FLUX.2 Klein 4B',free:true,purpose:'image'},
-      {id:'@cf/black-forest-labs/flux-2-dev',name:'FLUX.2 Dev — referensi gambar',free:true,purpose:'image'},
+      {id:'@cf/black-forest-labs/flux-2-dev',name:'FLUX.2 Dev — referensi ⚠ ~15K Neurons/generate',purpose:'image'},
       {id:'@cf/leonardo/lucid-origin',name:'Leonardo Lucid Origin',free:true,purpose:'image'}
     ],
     apiBase:'https://api.cloudflare.com/client/v4/accounts/{accountId}/ai/v1/chat/completions',
@@ -2440,6 +2440,23 @@ const AI_PROVIDERS = [
     format:'kie'
   },
   {
+    id:'arena-manual',
+    name:'Arena Manual',
+    color:'#111827',
+    short:'AR',
+    desc:'Tanpa API — salin prompt, generate di Arena, lalu unggah hasil kembali',
+    url:'https://arena.ai/',
+    getKey:'https://arena.ai/',
+    caps:['image','video'],
+    noKey:true,
+    note:'Handoff manual: AiKreator menyiapkan prompt dan menerima hasil. Generate tetap dilakukan di tab Arena.',
+    models:[
+      {id:'arena-image',name:'Arena — Gambar Manual',recommended:true,purpose:'image'},
+      {id:'arena-video',name:'Arena — Video Manual',recommended:true,purpose:'video'}
+    ],
+    format:'arena-manual'
+  },
+  {
     id:'ninerouter',
     name:'9Router Local',
     color:'#f26b45',
@@ -2453,7 +2470,7 @@ const AI_PROVIDERS = [
     note:'9Router harus tetap berjalan di komputer ini. API key tersimpan hanya di browser. AiKreator memanggil endpoint OpenAI-compatible /images/generations. Jika aplikasi dibuka dari HTTPS, browser dapat memblokir koneksi HTTP localhost (mixed content).',
     models:[
       {id:'cf/@cf/black-forest-labs/flux-2-klein-4b',name:'Cloudflare FLUX.2 Klein 4B',recommended:true,purpose:'image'},
-      {id:'cf/@cf/black-forest-labs/flux-2-dev',name:'Cloudflare FLUX.2 Dev — Multi-reference',purpose:'image'},
+      {id:'cf/@cf/black-forest-labs/flux-2-dev',name:'Cloudflare FLUX.2 Dev — Multi-reference ⚠ ~15K Neurons/generate',purpose:'image'},
       {id:'cf/@cf/leonardo/lucid-origin',name:'Cloudflare Leonardo Lucid Origin',purpose:'image'},
       {id:'cf/@cf/black-forest-labs/flux-1-schnell',name:'Cloudflare FLUX.1 Schnell',purpose:'image'}
     ],
@@ -2465,16 +2482,16 @@ const AI_PROVIDERS = [
     name:'Pixazo',
     color:'#d946ef',
     short:'PX',
-    desc:'API alternatif: Flux Schnell, SD 3.5, SDXL, dan LTX pada katalog free Pixazo',
+    desc:'API gambar/video berbasis saldo; klaim katalog gratis tidak berlaku pada key yang diuji',
     url:'https://www.pixazo.ai/',
     getKey:'https://www.pixazo.ai/api',
     caps:['image','video'],
-    note:'Daftar tanpa kartu lalu ambil API key. Pixazo mengiklankan model ini gratis dengan fair-use preview; status kuota dan CORS tetap diverifikasi saat Tes Koneksi/generasi nyata. Referensi gambar SD 3.5 memerlukan URL publik, bukan unggahan lokal langsung.',
+    note:'Uji nyata mengembalikan HTTP 403: balance is insufficient, termasuk Flux Schnell. Artinya key tetap memerlukan saldo/kredit meski halaman pemasaran menyebut katalog free. Gunakan hanya setelah saldo tersedia. Referensi SD 3.5 memerlukan URL publik.',
     models:[
-      {id:'flux-1-schnell',name:'Flux Schnell — Foto cepat (Free)',recommended:true,purpose:'image'},
-      {id:'sd3-5',name:'Stable Diffusion 3.5 — Foto/Image→Image (Free)',purpose:'image'},
-      {id:'sdxl',name:'SDXL 1.0 — Foto 1024px (Free)',purpose:'image'},
-      {id:'ltx-video',name:'LTX — Text/Image→Video (Free)',recommended:true,purpose:'video'}
+      {id:'flux-1-schnell',name:'Flux Schnell — Foto cepat (butuh saldo)',recommended:true,purpose:'image'},
+      {id:'sd3-5',name:'Stable Diffusion 3.5 — Foto/Image→Image (butuh saldo)',purpose:'image'},
+      {id:'sdxl',name:'SDXL 1.0 — Foto 1024px (butuh saldo)',purpose:'image'},
+      {id:'ltx-video',name:'LTX — Text/Image→Video (butuh saldo)',recommended:true,purpose:'video'}
     ],
     apiBase:'https://gateway.pixazo.ai',
     format:'pixazo'
@@ -9719,6 +9736,45 @@ function studioSaveCarouselText() {
   save('assets',state.assets); toast('Tersimpan','Naskah carousel masuk ke Assets','success');
 }
 
+// Handoff manual ke Arena: prompt disalin, hasil diunggah kembali ke slot yang sama.
+window._arenaHandoffs = window._arenaHandoffs || {};
+function arenaCopyAndOpen(id){
+  const h=window._arenaHandoffs[id]; if(!h)return;
+  const done=()=>{ toast('Prompt disalin','Arena dibuka di tab baru. Tempel prompt lalu unggah hasilnya kembali ke AiKreator.','success'); window.open('https://arena.ai/','_blank','noopener'); };
+  if(navigator.clipboard?.writeText) navigator.clipboard.writeText(h.prompt).then(done).catch(()=>fallbackCopy(h.prompt,done));
+  else fallbackCopy(h.prompt,done);
+}
+function arenaUploadResult(id,input){
+  const h=window._arenaHandoffs[id], file=input.files?.[0]; if(!h||!file)return;
+  const expected=h.kind==='video'?'video/':'image/';
+  if(!file.type.startsWith(expected)){toast('File tidak sesuai',`Unggah file ${h.kind==='video'?'video':'gambar'} hasil Arena.`,`warning`);input.value='';return;}
+  const finish=(url)=>{
+    const el=document.getElementById(h.outputId); if(!el)return;
+    const media=h.kind==='video'?`<video src="${url}" controls playsinline style="max-width:100%;border-radius:10px"></video>`:`<img src="${url}" style="max-width:100%;border-radius:10px">`;
+    el.innerHTML=`<div style="font-size:.75rem;opacity:.7;margin-bottom:.5rem">Arena Manual · hasil diunggah</div>${media}${studioMediaActions(h.kind,url,h.originalPrompt)}`;
+    pushRiwayat(h.kind==='video'?'Video':'Foto',h.originalPrompt,'(hasil Arena manual)');
+    toast('Hasil diterima','Media Arena sudah masuk ke workspace AiKreator.','success');
+  };
+  if(h.kind==='image'){const r=new FileReader();r.onload=()=>finish(r.result);r.readAsDataURL(file);}
+  else finish(URL.createObjectURL(file));
+}
+function arenaHandoffHtml(kind,prompt,originalPrompt,outputId,refs=[]){
+  const id='arena-'+Date.now()+'-'+Math.random().toString(36).slice(2,6);
+  window._arenaHandoffs[id]={kind,prompt,originalPrompt,outputId,refs};
+  const accept=kind==='video'?'video/*':'image/*';
+  return `<div class="idea-card" style="padding:1rem;text-align:left">
+    <div style="display:flex;justify-content:space-between;gap:.5rem;align-items:center"><b>Arena Manual</b><span class="status-chip ok"><span class="dot"></span>Tanpa API</span></div>
+    <div style="font-size:.78rem;color:var(--text-muted);line-height:1.45;margin:.55rem 0">1. Salin prompt dan buka Arena. 2. Generate di sana. 3. Unduh hasil terbaik. 4. Unggah kembali ke slot ini.</div>
+    ${refs.length?`<div style="font-size:.75rem;color:var(--warning);margin-bottom:.55rem">Referensi tersedia (${refs.length}). Unduh/unggah manual ke Arena; kontrol identitas mengikuti kemampuan model Arena.</div>`:''}
+    <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:.7rem;font-size:.76rem;white-space:pre-wrap;max-height:150px;overflow:auto">${escapeHtml(prompt)}</div>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem">
+      <button class="btn btn-primary btn-sm" onclick="arenaCopyAndOpen('${id}')">Salin Prompt & Buka Arena</button>
+      <button class="btn btn-secondary btn-sm" onclick="document.getElementById('arena-file-${id}').click()">Unggah Hasil Arena</button>
+      <input id="arena-file-${id}" type="file" accept="${accept}" hidden onchange="arenaUploadResult('${id}',this)">
+    </div>
+  </div>`;
+}
+
 // Router utama AI Studio: tentukan fungsi (chat/image/video) lalu jalankan
 async function studioSend() {
   const input = document.getElementById('aiInput');
@@ -9784,7 +9840,13 @@ async function studioSend() {
         consistencyTxt = ', keep the person and their face exactly consistent with the reference image(s), same identity';
       }
       if (studioState.imgRefs.length) consistencyTxt += ', integrate the referenced product/clothing/location naturally';
-      const imgPrompt = `${styleTxt?styleTxt+', ':''}${resolved}${consistencyTxt}, high quality, detailed`;
+      const imgPrompt = `${styleTxt?styleTxt+', ':''}${resolved}${consistencyTxt}, high quality, detailed. Output aspect ratio ${ratio.w}:${ratio.h}`;
+      if(provId==='arena-manual'){
+        const el=document.getElementById(loadingId);
+        el.innerHTML=arenaHandoffHtml('image',imgPrompt,message,loadingId,refImgs);
+        toast('Handoff Arena siap','Prompt siap disalin; unggah hasil Arena kembali ke slot ini.','success');
+        return;
+      }
       const res = await generateImageAI(imgPrompt, { width:ratio.w, height:ratio.h, providerId:provId, model:modelId, inputImages: refImgs.length?refImgs:undefined, strictProvider:true });
       const el = document.getElementById(loadingId);
       const fbWarn = (res.fallback && res.fallback.length)
@@ -9805,7 +9867,7 @@ async function studioSend() {
       // @mention: ganti @nama → Nama asli sebelum diterjemahkan
       const { resolved: resolvedVid, mentioned: vidMentioned } = studioResolveMentions(message);
       let enPrompt = resolvedVid;
-      if (/\b(dan|yang|dengan|di|ke|dari|sebuah|seorang|gerakan|kamera|adegan)\b/i.test(resolvedVid)) {
+      if (provId !== 'arena-manual' && /\b(dan|yang|dengan|di|ke|dari|sebuah|seorang|gerakan|kamera|adegan)\b/i.test(resolvedVid)) {
         try { setMsg('Menerjemahkan deskripsi...'); const t = await callAI(`Terjemahkan ke Bahasa Inggris sinematik untuk AI video, jawab HANYA terjemahannya: """${resolvedVid.slice(0,500)}"""`); const tc=(t||'').trim().replace(/^["']|["']$/g,'').split('\n')[0]; if (tc) enPrompt = tc; } catch(_){}
       }
       // Referensi: sheet storyboard (adegan) + foto karakter (subjek konsisten). @tag > dropdown.
@@ -9824,6 +9886,14 @@ async function studioSend() {
         enPrompt += ', follow the scene composition and sequence shown in the reference storyboard sheet';
       }
       refImages = refImages.slice(0,3);
+      if(provId==='arena-manual'){
+        const arenaPrompt=`${resolvedVid}\n\nVideo specifications: ${aspect} aspect ratio, duration ${studioState.vidDur} seconds, cinematic natural motion, stable subject and background, no identity changes.${studioState.vidDialog?` Spoken dialogue: ${studioState.vidDialog}`:''}`;
+        const manualRefs=[...refImages,studioState.vidStartFrame,studioState.vidEndFrame].filter(Boolean);
+        const el=document.getElementById(loadingId);
+        el.innerHTML=arenaHandoffHtml('video',arenaPrompt,message,loadingId,manualRefs);
+        toast('Handoff Arena siap','Prompt video siap; unggah hasil Arena kembali ke slot ini.','success');
+        return;
+      }
       const vOpts = { providerId:provId, model:modelId, duration:studioState.vidDur, aspect_ratio:aspect, resolution:'720p', onProgress:setMsg };
       if (studioState.vidStartFrame) vOpts.imageUrl = studioState.vidStartFrame;
       if (studioState.vidEndFrame) vOpts.lastFrameUrl = studioState.vidEndFrame;
@@ -10793,6 +10863,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41c57f3df94f8ff',t:'MTc5MDUzMTM1MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41cdbf65fd781a4',t:'MTc5MDUzNjc1OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+</body>
 </html>
