@@ -8687,6 +8687,7 @@ const STUDIO_MODES = [
   { id:'smart', emo:'<svg class="ico"><use href="#i-sparkle"/></svg>', nm:'Smart', d:'Otomatis', purpose:null },
   { id:'chat',  emo:'<svg class="ico"><use href="#i-chat"/></svg>', nm:'Teks', d:'Naskah', purpose:'chat' },
   { id:'image', emo:'<svg class="ico"><use href="#i-camera"/></svg>', nm:'Foto', d:'Gambar', purpose:'image' },
+  { id:'cover', emo:'<svg class="ico"><use href="#i-image"/></svg>', nm:'Cover', d:'Thumbnail', purpose:'image' },
   { id:'video', emo:'<svg class="ico"><use href="#i-video"/></svg>', nm:'Video', d:'Klip', purpose:'video' },
   { id:'carousel', emo:'<svg class="ico"><use href="#i-carousel"/></svg>', nm:'Carousel', d:'Slide', purpose:'chat' },
   { id:'storyboard', emo:'<svg class="ico"><use href="#i-storyboard"/></svg>', nm:'Storyboard', d:'Adegan', purpose:'image' },
@@ -8696,6 +8697,7 @@ const studioState = {
   provByPurpose: { chat:'', image:'', video:'' }, // provider terpilih per fungsi
   modelByPurpose: { chat:'', image:'', video:'' },
   imgRatio: '1080x1080', imgStyle: 'Realistis',
+  coverFormat: 'youtube', coverText: true,
   vidDur: '5', vidAspect: '1080x1920', vidDialog: '',
   refCharId: '',        // karakter terpilih (foto master + bible jadi referensi)
   imgRefs: [],          // gambar referensi tambahan utk mode Foto (pakaian/produk/lokasi/galeri)
@@ -8731,6 +8733,13 @@ const STUDIO_QUICK = {
     ['Potret','potret orang muda percaya diri, latar studio minimalis'],
     ['Flat lay','flat lay perlengkapan kerja rapi di atas meja putih'],
   ],
+  cover: [
+    ['Tutorial','5 Rahasia Konten Viral'],
+    ['Review','JUJUR! Produk Ini Layak?'],
+    ['Podcast','Obrolan yang Mengubah Hidup'],
+    ['E-book','Panduan Lengkap Personal Branding'],
+    ['Promo','DISKON TERBESAR HARI INI'],
+  ],
   video: [
     ['B-roll sunrise','matahari terbit perlahan menyinari kota, gerakan kamera lembut'],
     ['Tuang kopi','close-up kopi dituang ke gelas, uap mengepul, sinematik'],
@@ -8764,20 +8773,21 @@ function renderAIStudio() {
   const active = studioActiveByPurpose(studioState.mode==='smart' ? null : purpose);
 
   // Judul panel hasil + placeholder + label input + label tombol, sesuai mode
-  const titleMap = { smart:'Hasil', chat:'Konten Teks', image:'Foto', carousel:'Carousel', video:'Video', storyboard:'Papan Cerita' };
-  const labelMap = { smart:'Ketik apa saja', chat:'Brief konten', image:'Deskripsi foto', carousel:'Topik carousel', video:'Deskripsi adegan', storyboard:'Konsep iklan / tempel storyboard' };
-  const btnMap = { smart:'Kirim', chat:'Buat Teks', image:'Generate Foto', carousel:'Susun Carousel', video:'Generate Video', storyboard:'Susun Storyboard' };
+  const titleMap = { smart:'Hasil', chat:'Konten Teks', image:'Foto', cover:'Cover', carousel:'Carousel', video:'Video', storyboard:'Papan Cerita' };
+  const labelMap = { smart:'Ketik apa saja', chat:'Brief konten', image:'Deskripsi foto', cover:'Judul utama cover', carousel:'Topik carousel', video:'Deskripsi adegan', storyboard:'Konsep iklan / tempel storyboard' };
+  const btnMap = { smart:'Kirim', chat:'Buat Teks', image:'Generate Foto', cover:'Buat Cover', carousel:'Susun Carousel', video:'Generate Video', storyboard:'Susun Storyboard' };
   const pt = document.getElementById('studioPanelTitle');
   if (pt) { const t = pt.querySelector('.ptxt'); if (t) t.textContent = titleMap[studioState.mode] || 'Hasil'; }
   const il = document.getElementById('studioInputLabel'); if (il) il.textContent = labelMap[studioState.mode] || 'Prompt';
   const bl = document.getElementById('aiSendLabel'); if (bl) bl.textContent = btnMap[studioState.mode] || 'Kirim';
-  const outBox = document.querySelector('.studio-output'); if (outBox) outBox.classList.toggle('is-media', studioState.mode==='image'||studioState.mode==='video');
+  const outBox = document.querySelector('.studio-output'); if (outBox) outBox.classList.toggle('is-media', studioState.mode==='image'||studioState.mode==='cover'||studioState.mode==='video');
   const inp = document.getElementById('aiInput');
   if (inp) {
     const phMap = {
       smart:"Ketik apa saja...",
       chat:"Tulis pesanmu...",
       image:"Deskripsikan foto...  (coba tag @karakter)",
+      cover:"Tulis judul cover...  (bisa tag @karakter)",
       carousel:"Topik, tujuan, dan audiens carousel...",
       video:"Deskripsikan adegan...  (coba tag @karakter)",
       storyboard:"Konsep atau tempel storyboard...  (coba @karakter1 @karakter2)"
@@ -9247,7 +9257,7 @@ function studioRenderMessages() {
   // Mode Storyboard: papan panel (foto→video per adegan)
   if (studioState.mode === 'storyboard') { studioRenderStoryboard(); return; }
   // Mode Foto/Video: jangan timpa panel hasil dengan riwayat chat.
-  if (studioState.mode === 'image' || studioState.mode === 'video') {
+  if (studioState.mode === 'image' || studioState.mode === 'cover' || studioState.mode === 'video') {
     // Bila sudah ada hasil media yang tampil, biarkan (jangan render ulang saat ganti dropdown)
     if (messages.querySelector('.media-result')) return;
     // Kosongkan — placeholder minimal seragam ('Hasil tampil di sini') via CSS :empty.
@@ -9313,7 +9323,7 @@ function studioRenderRefs() {
   const el = document.getElementById('studioRefs');
   if (!el) return;
   const m = studioState.mode;
-  if (m !== 'image' && m !== 'video' && m !== 'storyboard') { el.innerHTML = ''; el.style.display='none'; return; }
+  if (m !== 'image' && m !== 'cover' && m !== 'video' && m !== 'storyboard') { el.innerHTML = ''; el.style.display='none'; return; }
   el.style.display = 'block';
   const chars = state.characters || [];
   const selChar = chars.find(c => c.id === studioState.refCharId);
@@ -9337,7 +9347,7 @@ function studioRenderRefs() {
     </div>`;
   }
 
-  if (m === 'image' || m === 'storyboard') {
+  if (m === 'image' || m === 'cover' || m === 'storyboard') {
     // Gambar referensi tambahan (pakaian/produk/lokasi/galeri)
     const lbl = m === 'storyboard' ? 'Gambar untuk iklan' : 'Gambar pendukung';
     html += `<div class="sr-label">${lbl} <span class="sr-sub">(opsional)</span></div>`;
@@ -9536,6 +9546,12 @@ function studioRenderOptions() {
     const styles = Object.keys(IMG_STYLE_MAP);
     pills += scPill('<svg class="ico"><use href="#i-target"/></svg>', RATIO_PRESETS.map(r=>`<option value="${r.id}" ${studioState.imgRatio===r.id?'selected':''}>${r.nm}</option>`).join(''), 'studioState.imgRatio=this.value;renderAIStudio()');
     pills += scPill('<svg class="ico"><use href="#i-palette"/></svg>', styles.map(s=>`<option value="${s}" ${studioState.imgStyle===s?'selected':''}>${s}</option>`).join(''), 'studioState.imgStyle=this.value;renderAIStudio()');
+  } else if (m === 'cover') {
+    const coverFormats=[['youtube','YouTube 16:9'],['reels','Reels/Shorts 9:16'],['instagram','Instagram 4:5'],['square','Podcast 1:1']];
+    const styles=Object.keys(IMG_STYLE_MAP);
+    pills += scPill('<svg class="ico"><use href="#i-image"/></svg>',coverFormats.map(([v,n])=>`<option value="${v}" ${studioState.coverFormat===v?'selected':''}>${n}</option>`).join(''),'studioState.coverFormat=this.value;renderAIStudio()');
+    pills += scPill('<svg class="ico"><use href="#i-palette"/></svg>',styles.map(s=>`<option value="${s}" ${studioState.imgStyle===s?'selected':''}>${s}</option>`).join(''),'studioState.imgStyle=this.value;renderAIStudio()');
+    pills += scPill('<svg class="ico"><use href="#i-doc"/></svg>',`<option value="yes" ${studioState.coverText?'selected':''}>Teks judul aktif</option><option value="no" ${!studioState.coverText?'selected':''}>Tanpa teks</option>`,'studioState.coverText=this.value===\'yes\';renderAIStudio()');
   } else if (m === 'carousel') {
     pills += scPill('<svg class="ico"><use href="#i-carousel"/></svg>', [3,4,5,6,7,8,9,10].map(n=>`<option value="${n}" ${String(studioState.carouselCount)===String(n)?'selected':''}>${n} slide</option>`).join(''), 'studioState.carouselCount=this.value;renderAIStudio()');
     pills += scPill('<svg class="ico"><use href="#i-target"/></svg>', RATIO_PRESETS.filter(r=>r.id==='1080x1080'||r.id==='1080x1350').map(r=>`<option value="${r.id}" ${studioState.carouselRatio===r.id?'selected':''}>${r.nm}</option>`).join(''), 'studioState.carouselRatio=this.value;renderAIStudio()');
@@ -9826,7 +9842,9 @@ async function studioSend() {
     const modelId = studioState.modelByPurpose[provKey] || '';
 
     if (purpose === 'image') {
-      const ratio = RATIO_PRESETS.find(r => r.id === studioState.imgRatio) || RATIO_PRESETS[0];
+      const isCover=studioState.mode==='cover';
+      const coverRatioId={youtube:'1280x720',reels:'1080x1920',instagram:'1080x1350',square:'1080x1080'}[studioState.coverFormat];
+      const ratio = RATIO_PRESETS.find(r => r.id === (isCover?coverRatioId:studioState.imgRatio)) || RATIO_PRESETS[0];
       const styleTxt = IMG_STYLE_MAP[studioState.imgStyle] || '';
       // @mention: ganti @nama → Nama asli + kumpulkan karakter yang ditag
       const { resolved, mentioned } = studioResolveMentions(message);
@@ -9840,7 +9858,11 @@ async function studioSend() {
         consistencyTxt = ', keep the person and their face exactly consistent with the reference image(s), same identity';
       }
       if (studioState.imgRefs.length) consistencyTxt += ', integrate the referenced product/clothing/location naturally';
-      const imgPrompt = `${styleTxt?styleTxt+', ':''}${resolved}${consistencyTxt}, high quality, detailed. Output aspect ratio ${ratio.w}:${ratio.h}`;
+      const coverNames={youtube:'YouTube thumbnail',reels:'Reels/Shorts cover',instagram:'Instagram cover',square:'podcast cover'};
+      const coverPrompt=isCover
+        ? `${styleTxt?styleTxt+', ':''}Create a high-impact ${coverNames[studioState.coverFormat]||'social media cover'} about "${resolved}"${consistencyTxt}. Strong focal subject, bold clean composition, high contrast, mobile-readable hierarchy, professional creator design, safe margins.${studioState.coverText?` Render the exact main headline: "${resolved}". Keep it large, short, correctly spelled and highly readable.`:' Do not render any text; leave clean negative space for a headline.'} No watermark, no duplicate subject, no clutter, high quality, detailed. Output aspect ratio ${ratio.w}:${ratio.h}`
+        : `${styleTxt?styleTxt+', ':''}${resolved}${consistencyTxt}, high quality, detailed. Output aspect ratio ${ratio.w}:${ratio.h}`;
+      const imgPrompt=coverPrompt;
       if(provId==='arena-manual'){
         const el=document.getElementById(loadingId);
         el.innerHTML=arenaHandoffHtml('image',imgPrompt,message,loadingId,refImgs);
@@ -10863,6 +10885,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41cdbf65fd781a4',t:'MTc5MDUzNjc1OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41d94b638d7ce5b',t:'MTc5MDU0NDMyNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
