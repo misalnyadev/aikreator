@@ -7079,12 +7079,8 @@ async function testProvider(id, specificModel = null) {
   if (provider.format === 'ninerouter') {
     try {
       const base=(config.baseUrl||provider.defaultBaseUrl||provider.apiBase).replace(/\/$/,'');
-      let r;
-      for (const path of ['/models/image','/models']) {
-        r=await fetch(`${base}${path}`,{headers:{'Authorization':`Bearer ${providerKeys(config)[0]||config.apiKey}`}});
-        if(r.ok) break;
-      }
-      if(!r?.ok) throw new Error(`HTTP ${r?.status||'?'} - ${r ? (await r.text()).slice(0,160) : 'tidak ada respons'}`);
+      const r=await fetch(`${base}/models/image`,{headers:{'Authorization':`Bearer ${providerKeys(config)[0]||config.apiKey}`}});
+      if(!r.ok) throw new Error(`HTTP ${r.status} - ${(await r.text()).slice(0,160)}`);
       const d=await r.json().catch(()=>({}));
       if (!state.verifiedModels[id]) state.verifiedModels[id]={models:{}};
       state.verifiedModels[id].working=true; state.verifiedModels[id].lastTested=new Date().toISOString();
@@ -7094,9 +7090,7 @@ async function testProvider(id, specificModel = null) {
       if(statusEl){statusEl.className='provider-status connected';statusEl.textContent='✓ Terhubung';}
       return true;
     } catch(err) {
-      const fileMode=location.protocol==='file:';
-      const help=fileMode ? 'AiKreator sedang dibuka sebagai file lokal (file://), sehingga Chrome dapat memblokir permintaan ke localhost. Jalankan AiKreator melalui server lokal atau aktifkan Tunnel HTTPS di 9Router lalu gunakan URL tunnel /v1.' : 'Pastikan 9Router berjalan, API key aktif, dan izin CORS mengizinkan origin aplikasi ini.';
-      if(resultEl) resultEl.innerHTML=`<div class="test-result error"><svg class="ico"><use href="#i-warn"/></svg> 9Router belum dapat diakses: ${escapeHtml(err.message)}.<br><span style="font-size:.76rem">${escapeHtml(help)}</span></div>`;
+      if(resultEl) resultEl.innerHTML=`<div class="test-result error"><svg class="ico"><use href="#i-warn"/></svg> 9Router belum dapat diakses: ${escapeHtml(err.message)}. Pastikan aplikasinya berjalan dan izin CORS aktif.</div>`;
       return false;
     }
   }
@@ -10776,5 +10770,5 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41b9ad6fdf8fddf',t:'MTc5MDUyMzYwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41b66b4bc91fc0c',t:'MTc5MDUyMTQ3MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
