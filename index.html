@@ -2343,14 +2343,18 @@ const AI_PROVIDERS = [
     name:'Cloudflare Workers AI',
     color:'#f59e0b',
     short:'CF',
-    desc:'Workers AI — chat + generate foto (Flux/SD), 10K neuron/hari free',
+    desc:'Workers AI langsung — chat + foto, alokasi gratis 10K Neurons/hari',
     url:'https://developers.cloudflare.com/workers-ai/',
     getKey:'https://dash.cloudflare.com/profile/api-tokens',
     caps:['chat','image'],
+    note:'Mode langsung menyimpan API token di browser. Gunakan token khusus Workers AI dengan izin minimum; jangan gunakan Global API Key. Jika Cloudflare memblokir CORS dari browser, gunakan Worker proxy atau 9Router.',
     models:[
       {id:'@cf/meta/llama-3.3-70b-instruct-fp8-fast',name:'Llama 3.3 70B Fast',recommended:true,free:true,purpose:'chat'},
       {id:'@cf/meta/llama-3.1-8b-instruct',name:'Llama 3.1 8B',free:true,purpose:'chat'},
-      {id:'@cf/black-forest-labs/flux-1-schnell',name:'FLUX.1 Schnell (Generate Foto)',free:true,purpose:'image'}
+      {id:'@cf/black-forest-labs/flux-1-schnell',name:'FLUX.1 Schnell — cepat',recommended:true,free:true,purpose:'image'},
+      {id:'@cf/black-forest-labs/flux-2-klein-4b',name:'FLUX.2 Klein 4B',free:true,purpose:'image'},
+      {id:'@cf/black-forest-labs/flux-2-dev',name:'FLUX.2 Dev — referensi gambar',free:true,purpose:'image'},
+      {id:'@cf/leonardo/lucid-origin',name:'Leonardo Lucid Origin',free:true,purpose:'image'}
     ],
     apiBase:'https://api.cloudflare.com/client/v4/accounts/{accountId}/ai/v1/chat/completions',
     imageApiBase:'https://api.cloudflare.com/client/v4/accounts/{accountId}/ai/run/',
@@ -6865,7 +6869,7 @@ function renderSettings() {
   const list = document.getElementById('providersList');
   // Hanya provider yang layak dipakai langsung dari browser ditampilkan.
   // Integrasi lama tetap dikenali untuk kompatibilitas data, tetapi tidak merusak UI.
-  const settingsProviderIds = ['openrouter','groq','mistral','cerebras','chutes','gemini','puter','kie','pixazo','ninerouter'];
+  const settingsProviderIds = ['openrouter','groq','mistral','cerebras','chutes','gemini','puter','kie','pixazo','ninerouter','cloudflare'];
   const settingsProviders = AI_PROVIDERS.filter(p => settingsProviderIds.includes(p.id));
   list.innerHTML = settingsProviders.map(p => {
     const hasKey = state.providers[p.id]?.apiKey;
@@ -6953,7 +6957,7 @@ function renderSettings() {
   const settingsGroups = [
     {id:'text', icon:'✦', title:'Teks & Penalaran', desc:'Ide, chat, optimasi dan storyboard', ids:['openrouter','groq','mistral','cerebras','chutes']},
     {id:'vision', icon:'◉', title:'Vision', desc:'Membaca gambar dan konteks visual', ids:['gemini']},
-    {id:'media', icon:'▣', title:'Gambar & Video', desc:'Membuat foto, adegan dan klip', ids:['puter','kie','pixazo','ninerouter']}
+    {id:'media', icon:'▣', title:'Gambar & Video', desc:'Membuat foto, adegan dan klip', ids:['puter','kie','pixazo','ninerouter','cloudflare']}
   ];
   const cardHtml = {};
   list.querySelectorAll('.provider-card').forEach(card => { cardHtml[card.id.replace('provider-card-','')] = card.outerHTML; });
@@ -7079,8 +7083,13 @@ async function testProvider(id, specificModel = null) {
   if (provider.format === 'ninerouter') {
     try {
       const base=(config.baseUrl||provider.defaultBaseUrl||provider.apiBase).replace(/\/$/,'');
-      const r=await fetch(`${base}/models/image`,{headers:{'Authorization':`Bearer ${providerKeys(config)[0]||config.apiKey}`}});
-      if(!r.ok) throw new Error(`HTTP ${r.status} - ${(await r.text()).slice(0,160)}`);
+      if(location.protocol==='https:' && /^http:\/\//i.test(base)) throw new Error('Mixed content: aplikasi HTTPS tidak boleh memanggil endpoint HTTP localhost. Gunakan Tunnel HTTPS 9Router dengan akhiran /v1');
+      let r;
+      for (const path of ['/models/image','/models']) {
+        r=await fetch(`${base}${path}`,{headers:{'Authorization':`Bearer ${providerKeys(config)[0]||config.apiKey}`}});
+        if(r.ok) break;
+      }
+      if(!r?.ok) throw new Error(`HTTP ${r?.status||'?'} - ${r ? (await r.text()).slice(0,160) : 'tidak ada respons'}`);
       const d=await r.json().catch(()=>({}));
       if (!state.verifiedModels[id]) state.verifiedModels[id]={models:{}};
       state.verifiedModels[id].working=true; state.verifiedModels[id].lastTested=new Date().toISOString();
@@ -7090,7 +7099,9 @@ async function testProvider(id, specificModel = null) {
       if(statusEl){statusEl.className='provider-status connected';statusEl.textContent='✓ Terhubung';}
       return true;
     } catch(err) {
-      if(resultEl) resultEl.innerHTML=`<div class="test-result error"><svg class="ico"><use href="#i-warn"/></svg> 9Router belum dapat diakses: ${escapeHtml(err.message)}. Pastikan aplikasinya berjalan dan izin CORS aktif.</div>`;
+      const fileMode=location.protocol==='file:';
+      const help=fileMode ? 'AiKreator sedang dibuka sebagai file lokal (file://), sehingga Chrome dapat memblokir permintaan ke localhost. Jalankan AiKreator melalui server lokal atau aktifkan Tunnel HTTPS di 9Router lalu gunakan URL tunnel /v1.' : 'Pastikan 9Router berjalan, API key aktif, dan izin CORS mengizinkan origin aplikasi ini.';
+      if(resultEl) resultEl.innerHTML=`<div class="test-result error"><svg class="ico"><use href="#i-warn"/></svg> 9Router belum dapat diakses: ${escapeHtml(err.message)}.<br><span style="font-size:.76rem">${escapeHtml(help)}</span></div>`;
       return false;
     }
   }
@@ -9774,7 +9785,7 @@ async function studioSend() {
       }
       if (studioState.imgRefs.length) consistencyTxt += ', integrate the referenced product/clothing/location naturally';
       const imgPrompt = `${styleTxt?styleTxt+', ':''}${resolved}${consistencyTxt}, high quality, detailed`;
-      const res = await generateImageAI(imgPrompt, { width:ratio.w, height:ratio.h, providerId:provId, model:modelId, inputImages: refImgs.length?refImgs:undefined });
+      const res = await generateImageAI(imgPrompt, { width:ratio.w, height:ratio.h, providerId:provId, model:modelId, inputImages: refImgs.length?refImgs:undefined, strictProvider:true });
       const el = document.getElementById(loadingId);
       const fbWarn = (res.fallback && res.fallback.length)
         ? `<div style="font-size:.72rem;color:var(--warning,#e0a800);margin-bottom:.3rem"><svg class="ico"><use href="#i-warn"/></svg> Provider pilihan gagal → dialihkan: ${res.fallback.map(f=>escapeHtml(f.name)+' ('+escapeHtml((f.reason||'').slice(0,70))+')').join('; ')}</div>`
@@ -10125,7 +10136,7 @@ async function generateImageAI(prompt, opts = {}) {
 async function callImageProvider(provider, config, model, prompt, o = {}) {
   const width = o.width || 1024, height = o.height || 1024;
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), provider.format === 'ninerouter' ? 180000 : 60000);
+  const timeoutId = setTimeout(() => controller.abort(), (provider.format === 'ninerouter' || provider.id === 'cloudflare') ? 180000 : 60000);
   try {
     if (provider.format === 'puter') {
       // Puter.js: generate langsung dari browser (User-Pays).
@@ -10262,11 +10273,21 @@ async function callImageProvider(provider, config, model, prompt, o = {}) {
     if (provider.id === 'cloudflare') {
       if (!config.accountId) throw new Error('Cloudflare butuh Account ID');
       const url = provider.imageApiBase.replace('{accountId}', config.accountId) + model;
-      const res = await fetch(url, {
-        method:'POST', headers:{'Content-Type':'application/json','Authorization':`Bearer ${config.apiKey}`},
-        signal: controller.signal, body: JSON.stringify({ prompt, width, height })
-      });
-      if (!res.ok) throw new Error(`${provider.name} HTTP ${res.status}`);
+      const refs=(o.inputImages||[]).filter(Boolean);
+      const isFlux2=/flux-2/i.test(model);
+      let headers={'Authorization':`Bearer ${config.apiKey}`}, body;
+      if(isFlux2){
+        const form=new FormData(); form.append('prompt',prompt); form.append('width',String(width)); form.append('height',String(height));
+        for(let i=0;i<Math.min(refs.length,3);i++){
+          const blob=await (await fetch(refs[i])).blob();
+          form.append(`input_image_${i}`,blob,`reference-${i}.png`);
+        }
+        body=form;
+      }else{
+        headers['Content-Type']='application/json'; body=JSON.stringify({prompt,width,height});
+      }
+      const res = await fetch(url, {method:'POST',headers,signal:controller.signal,body});
+      if (!res.ok) throw new Error(`${provider.name} HTTP ${res.status} - ${(await res.text()).slice(0,220)}`);
       const ct = res.headers.get('content-type') || '';
       if (ct.includes('application/json')) {
         const data = await res.json();
@@ -10289,6 +10310,9 @@ async function callImageProvider(provider, config, model, prompt, o = {}) {
     }
     if (provider.format === 'ninerouter') {
       const base = (config.baseUrl || provider.defaultBaseUrl || provider.apiBase).replace(/\/$/,'');
+      if (location.protocol === 'https:' && /^http:\/\//i.test(base)) {
+        throw new Error('9Router memakai HTTP localhost, sedangkan AiKreator dibuka lewat HTTPS. Browser memblokir mixed content. Aktifkan Tunnel HTTPS di 9Router lalu simpan URL tunnel dengan akhiran /v1.');
+      }
       const payload={model, prompt, n:1, size:`${width}x${height}`, response_format:'b64_json'};
       const refs=(o.inputImages||[]).filter(Boolean);
       if(refs.length) payload.image=refs[0]; // 9Router FLUX/BFL reference-image field
@@ -10770,5 +10794,5 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41b66b4bc91fc0c',t:'MTc5MDUyMTQ3MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41c57f3df94f8ff',t:'MTc5MDUzMTM1MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
