@@ -9791,6 +9791,19 @@ function arenaHandoffHtml(kind,prompt,originalPrompt,outputId,refs=[]){
   </div>`;
 }
 
+function studioVideoProductionPrompt(scene,{aspect='9:16',duration='10',dialog='',hasRefs=false}={}){
+  const c=(state.characters||[]).find(x=>x.id===studioState.refCharId);
+  const voiceStyle=(c?.voiceCfg?.style||c?.voice||'').trim();
+  const charText=`${c?.identity||''} ${c?.bible||''} ${c?.role||''}`.toLowerCase();
+  const speaker=/\b(pria|laki-laki|male|man)\b/.test(charText)?'young adult Indonesian man':/\b(wanita|perempuan|female|woman|hijab)\b/.test(charText)?'young adult Indonesian woman':'young adult Indonesian creator';
+  const identity=c?`The subject is ${c.name||'the selected character'}. Preserve the exact face, eye shape, nose, lips, jawline, skin tone, apparent age, hairstyle or hijab, clothing identity and body proportions from the reference.`:'Preserve the exact identity, face, apparent age and body proportions from the reference.';
+  const framing=aspect==='9:16'
+    ? `Compose natively for true vertical 9:16. Use references for identity and appearance only—not their original framing. Do not center-crop a landscape reference. Recompose the scene and move the virtual camera farther back. Use a stable medium waist-up shot with natural headroom; keep the full head, shoulders, upper torso, complete hands and complete featured product visible. The subject occupies about 55–65 percent of the frame.`
+    : `Compose natively for ${aspect}. Use references for identity and appearance only—not their original framing. Recompose the scene instead of cropping the source image.`;
+  const voice=dialog?`\nVOICE AND DIALOGUE:\nVoice of a ${speaker}: soft, warm, bright and friendly; authentic casual vlog style, as if talking naturally to a close friend. A gentle smile is audible without sounding exaggerated. Relaxed natural pacing, short breathing pauses, light cheerful energy, clear native Bahasa Indonesia pronunciation and conversational intonation. ${voiceStyle?`Character voice note: ${voiceStyle}. `:''}Avoid announcer delivery, robotic rhythm, foreign accent, rushed speech, exaggerated excitement and loud laughter. If she laughs, use only a soft elegant subtle chuckle. Accurate Indonesian lip sync.\nSpeak this dialogue exactly, without translating or turning spoken words into visible text:\n“${dialog}”`:'';
+  return `${scene}\n\nPRODUCTION SPECIFICATIONS:\nUltra-realistic ${duration}-second video, ${aspect}, authentic smartphone UGC realism, natural skin texture with visible pores and subtle imperfections, soft realistic light, natural blinking, micro-expressions, gentle head movement and small elegant hand gestures. Stable identity and temporal consistency in every frame.\n\nREFERENCE AND IDENTITY:\n${identity}\n${hasRefs?'Strictly follow the uploaded character/product references. ':''}Do not redesign, beautify, replace or morph the person. No facial flicker, identity drift, sudden hairstyle/hijab/clothing changes.\n\nFRAMING:\n${framing}${voice}\n\nAVOID:\nNo subtitles, on-screen text, watermark, duplicate person, duplicate product, readable hallucinated labels, spoken words printed on packaging, face morphing, plastic skin, beauty-filter look, deformed hands, extra fingers, abrupt camera movement or exaggerated expression.`;
+}
+
 // Router utama AI Studio: tentukan fungsi (chat/image/video) lalu jalankan
 async function studioSend() {
   const input = document.getElementById('aiInput');
@@ -9908,11 +9921,11 @@ async function studioSend() {
         enPrompt += ', follow the scene composition and sequence shown in the reference storyboard sheet';
       }
       refImages = refImages.slice(0,3);
+      const manualRefs=[...refImages,studioState.vidStartFrame,studioState.vidEndFrame].filter(Boolean);
+      const productionPrompt=studioVideoProductionPrompt(provId==='arena-manual'?resolvedVid:enPrompt,{aspect,duration:studioState.vidDur,dialog:studioState.vidDialog,hasRefs:manualRefs.length>0});
       if(provId==='arena-manual'){
-        const arenaPrompt=`${resolvedVid}\n\nVideo specifications: ${aspect} aspect ratio, duration ${studioState.vidDur} seconds, cinematic natural motion, stable subject and background, no identity changes.${studioState.vidDialog?` Spoken dialogue: ${studioState.vidDialog}`:''}`;
-        const manualRefs=[...refImages,studioState.vidStartFrame,studioState.vidEndFrame].filter(Boolean);
         const el=document.getElementById(loadingId);
-        el.innerHTML=arenaHandoffHtml('video',arenaPrompt,message,loadingId,manualRefs);
+        el.innerHTML=arenaHandoffHtml('video',productionPrompt,message,loadingId,manualRefs);
         toast('Handoff Arena siap','Prompt video siap; unggah hasil Arena kembali ke slot ini.','success');
         return;
       }
@@ -9921,7 +9934,7 @@ async function studioSend() {
       if (studioState.vidEndFrame) vOpts.lastFrameUrl = studioState.vidEndFrame;
       // Kirim referensi subjek/storyboard (Veo reference_images) meski ada frame awal
       if (refImages.length) vOpts.referenceImages = refImages;
-      const res = await generateVideoAI(enPrompt, vOpts);
+      const res = await generateVideoAI(productionPrompt, vOpts);
       const el = document.getElementById(loadingId);
       const voId='studioVo-'+Date.now();
       el.innerHTML = `<div style="font-size:.75rem;opacity:.7;margin-bottom:.3rem"><svg class="ico"><use href="#i-video"/></svg> ${escapeHtml(res.provider)} · ${escapeHtml(res.model||'')}${res.credits?` · ${res.credits} kredit`:''}</div>
@@ -10885,6 +10898,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41d94b638d7ce5b',t:'MTc5MDU0NDMyNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41e1debdf3f18f8',t:'MTc5MDU0OTk0Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
