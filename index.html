@@ -1836,6 +1836,15 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
         <div id="providersList" class="settings-groups"></div>
       </div>
 
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-header">
+          <div><div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-chart"/></svg> Quota Tracker Lokal</div>
+          <div class="card-subtitle">Mencatat generate yang berhasil di perangkat ini. Bukan saldo resmi provider.</div></div>
+          <button class="btn btn-ghost btn-sm" onclick="resetProviderUsage()">Reset</button>
+        </div>
+        <div id="providerUsageTracker"></div>
+      </div>
+
       <div class="card">
         <div class="card-header"><div class="card-title"><svg class="ico" style="color:var(--accent)"><use href="#i-settings"/></svg> Pengaturan Umum</div></div>
         <div class="form-group">
@@ -2427,6 +2436,27 @@ const AI_PROVIDERS = [
     format:'kie'
   },
   {
+    id:'ninerouter',
+    name:'9Router Local',
+    color:'#f26b45',
+    short:'9R',
+    desc:'Proxy AI lokal — gunakan model gambar yang sudah terhubung di dashboard 9Router',
+    url:'http://localhost:20128/dashboard',
+    getKey:'http://localhost:20128/dashboard/endpoint',
+    caps:['image'],
+    needsBaseUrl:true,
+    defaultBaseUrl:'http://localhost:20128/v1',
+    note:'9Router harus tetap berjalan di komputer ini. API key tersimpan hanya di browser. AiKreator memanggil endpoint OpenAI-compatible /images/generations. Jika aplikasi dibuka dari HTTPS, browser dapat memblokir koneksi HTTP localhost (mixed content).',
+    models:[
+      {id:'cf/@cf/black-forest-labs/flux-2-klein-4b',name:'Cloudflare FLUX.2 Klein 4B',recommended:true,purpose:'image'},
+      {id:'cf/@cf/black-forest-labs/flux-2-dev',name:'Cloudflare FLUX.2 Dev — Multi-reference',purpose:'image'},
+      {id:'cf/@cf/leonardo/lucid-origin',name:'Cloudflare Leonardo Lucid Origin',purpose:'image'},
+      {id:'cf/@cf/black-forest-labs/flux-1-schnell',name:'Cloudflare FLUX.1 Schnell',purpose:'image'}
+    ],
+    apiBase:'http://localhost:20128/v1',
+    format:'ninerouter'
+  },
+  {
     id:'pixazo',
     name:'Pixazo',
     color:'#d946ef',
@@ -2834,22 +2864,50 @@ async function aiBantuNiche(){
   try{ const res=await callAI(prompt); box.innerHTML=`<div class="idea-card" style="white-space:pre-wrap">${escapeHtml(res)}</div>`; }
   catch(e){ box.innerHTML=`<div style="color:var(--danger,#ef4444);font-size:.85rem">${escapeHtml(e.message)}</div>`; }
 }
+async function freeSerpSearch(query, size=5){
+  const url = `https://freeserp.ai/api.php?index=web&q=${encodeURIComponent(query)}&size=${Math.max(1,Math.min(10,size))}`;
+  const controller = new AbortController();
+  const timer = setTimeout(()=>controller.abort(), 15000);
+  try {
+    const res = await fetch(url, {signal:controller.signal, headers:{'Accept':'application/json'}});
+    if(!res.ok) throw new Error(`FreeSerp HTTP ${res.status}`);
+    const data = await res.json();
+    if(!data.ok || !Array.isArray(data.results)) throw new Error('Respons FreeSerp tidak dikenali');
+    return data.results;
+  } finally { clearTimeout(timer); }
+}
+function _freeSerpCards(results){
+  if(!results.length) return '<div style="color:var(--text-muted);font-size:.82rem">Belum ada hasil yang relevan.</div>';
+  return results.map((x,i)=>`<a href="${escapeHtml(/^https?:\/\//i.test(x.url||'')?x.url:'#')}" target="_blank" rel="noopener" class="idea-card" style="display:block;text-decoration:none;color:inherit;margin:.5rem 0;padding:.75rem">
+    <div style="font-weight:650;font-size:.86rem;line-height:1.35">${i+1}. ${escapeHtml(x.title||x.domain||'Sumber web')}</div>
+    <div style="font-size:.72rem;color:var(--accent);margin:.2rem 0">${escapeHtml(x.domain||'')}${x.published_at?` · ${escapeHtml(String(x.published_at).slice(0,10))}`:''}</div>
+    <div style="font-size:.78rem;color:var(--text-muted);line-height:1.4">${escapeHtml((x.snippet||'').slice(0,260))}</div>
+  </a>`).join('');
+}
 async function aiNicheTrend(){
   const minat = document.getElementById('arahNiche').value.trim();
   const alt = document.getElementById('arahNicheAlt').value.trim();
   const box = document.getElementById('arahNicheAI');
-  box.innerHTML = '<div style="color:var(--text-muted);font-size:.85rem;display:flex;align-items:center;gap:.5rem"><div class="loading-dots"><span></span><span></span><span></span></div> Mencari niche yang sedang tren...</div>';
+  box.innerHTML = '<div style="color:var(--text-muted);font-size:.85rem;display:flex;align-items:center;gap:.5rem"><div class="loading-dots"><span></span><span></span><span></span></div> FreeSerp sedang mencari bukti tren web tanpa memakai kredit AI...</div>';
   const r=_arahRingkas();
   const tahun = new Date().getFullYear();
-  const prompt = `Bertindaklah sebagai analis tren konten media sosial Indonesia tahun ${tahun}.${r.tipe?` Jenis kreator: ${r.tipe}.`:''}${r.plat?` Platform: ${r.plat}.`:''}${minat?` Niche utama saya: "${minat}".`:''}${alt?` Niche pendukung: "${alt}".`:''}
-
-Berikan output dalam 2 bagian:
-BAGIAN A — "Tren di dalam niche kamu": 3-4 sub-topik/angle yang sedang naik daun DI DALAM niche utama saya${minat?'':' (jika niche belum diisi, lewati bagian ini)'}. Jika menurutmu niche utama saya sedang SEPI tren, katakan terus terang.
-BAGIAN B — "Niche yang benar-benar sedang tren sekarang": 5 niche/topik yang lagi ramai secara umum di Indonesia (lintas kategori) sebagai INSPIRASI, walau di luar niche utama saya. Untuk tiap item beri: nama niche, kenapa sedang naik, dan tingkat persaingan (rendah/sedang/tinggi).
-
-Ringkas, jujur, pakai daftar bernomor, Bahasa Indonesia. Ingatkan singkat di akhir bahwa tren berubah cepat — validasi ulang sebelum komit.`;
-  try{ const res=await callAI(prompt); box.innerHTML=`<div class="idea-card" style="white-space:pre-wrap">${escapeHtml(res)}</div>`; }
-  catch(e){ box.innerHTML=`<div style="color:var(--danger,#ef4444);font-size:.85rem">${escapeHtml(e.message)}</div>`; }
+  const niche = [minat,alt].filter(Boolean).join(' dan ') || 'kreator konten';
+  const platform = r.plat || 'media sosial';
+  try{
+    const [inside,general] = await Promise.all([
+      freeSerpSearch(`tren ${niche} ${platform} Indonesia ${tahun}`,5),
+      freeSerpSearch(`tren konten media sosial Indonesia ${tahun}`,5)
+    ]);
+    box.innerHTML=`<div class="idea-card" style="padding:.85rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap;margin-bottom:.55rem"><b>Riset tren dari web</b><span class="status-chip ok"><span class="dot"></span>FreeSerp · 0 kredit AI</span></div>
+      <div style="font-size:.75rem;color:var(--text-muted);line-height:1.45;margin-bottom:.7rem">Hasil berikut adalah sumber pencarian, bukan kesimpulan AI. Buka sumber untuk memvalidasi tanggal, konteks, dan kualitasnya.</div>
+      <div style="font-size:.82rem;font-weight:700;margin-top:.5rem">A. Tren terkait ${escapeHtml(niche)}</div>${_freeSerpCards(inside)}
+      <div style="font-size:.82rem;font-weight:700;margin-top:1rem">B. Tren konten Indonesia secara umum</div>${_freeSerpCards(general)}
+    </div>`;
+  } catch(e){
+    const msg = e?.name==='AbortError' ? 'FreeSerp terlalu lama merespons.' : (e.message||'FreeSerp gagal diakses.');
+    box.innerHTML=`<div class="idea-card" style="border-color:var(--danger,#ef4444)"><b>Riset web belum berhasil</b><div style="font-size:.8rem;color:var(--text-muted);margin-top:.35rem">${escapeHtml(msg)} Tidak dialihkan diam-diam ke provider AI, sehingga kredit Anda tetap aman. Silakan coba lagi.</div></div>`;
+  }
 }
 async function aiBantuBrand(){
   const box=document.getElementById('arahBrandAI');
@@ -6807,7 +6865,7 @@ function renderSettings() {
   const list = document.getElementById('providersList');
   // Hanya provider yang layak dipakai langsung dari browser ditampilkan.
   // Integrasi lama tetap dikenali untuk kompatibilitas data, tetapi tidak merusak UI.
-  const settingsProviderIds = ['openrouter','groq','mistral','cerebras','chutes','gemini','puter','kie','pixazo'];
+  const settingsProviderIds = ['openrouter','groq','mistral','cerebras','chutes','gemini','puter','kie','pixazo','ninerouter'];
   const settingsProviders = AI_PROVIDERS.filter(p => settingsProviderIds.includes(p.id));
   list.innerHTML = settingsProviders.map(p => {
     const hasKey = state.providers[p.id]?.apiKey;
@@ -6860,6 +6918,12 @@ function renderSettings() {
           <label class="form-label">Account ID (Wajib untuk Cloudflare)</label>
           <input type="text" class="form-input" id="acc-${p.id}" value="${state.providers[p.id]?.accountId || ''}" placeholder="Account ID dari Cloudflare dashboard...">
         </div>` : ''}
+        ${p.needsBaseUrl ? `
+        <div class="form-group" style="margin-bottom:.75rem">
+          <label class="form-label">Endpoint 9Router</label>
+          <input type="url" class="form-input" id="base-${p.id}" value="${escapeHtml(state.providers[p.id]?.baseUrl || p.defaultBaseUrl || '')}" placeholder="http://localhost:20128/v1">
+          <div class="form-hint">Biarkan 9Router tetap berjalan selama generate.</div>
+        </div>` : ''}
         <div class="provider-actions">
           ${p.noKey ? '' : `<a href="${p.getKey}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -6889,7 +6953,7 @@ function renderSettings() {
   const settingsGroups = [
     {id:'text', icon:'✦', title:'Teks & Penalaran', desc:'Ide, chat, optimasi dan storyboard', ids:['openrouter','groq','mistral','cerebras','chutes']},
     {id:'vision', icon:'◉', title:'Vision', desc:'Membaca gambar dan konteks visual', ids:['gemini']},
-    {id:'media', icon:'▣', title:'Gambar & Video', desc:'Membuat foto, adegan dan klip', ids:['puter','kie','pixazo']}
+    {id:'media', icon:'▣', title:'Gambar & Video', desc:'Membuat foto, adegan dan klip', ids:['puter','kie','pixazo','ninerouter']}
   ];
   const cardHtml = {};
   list.querySelectorAll('.provider-card').forEach(card => { cardHtml[card.id.replace('provider-card-','')] = card.outerHTML; });
@@ -6917,6 +6981,7 @@ function renderSettings() {
   });
   defSel.value = state.defaultProvider;
   document.getElementById('outputLanguage').value = state.outputLanguage || 'id';
+  renderProviderUsage();
 }
 
 function settingsAccordion(event, summary) {
@@ -6948,6 +7013,10 @@ async function saveAndTestProvider(id) {
   if (provider?.needsAccountId) {
     const accId = document.getElementById(`acc-${id}`)?.value.trim();
     state.providers[id].accountId = accId;
+  }
+  if (provider?.needsBaseUrl) {
+    const baseUrl = document.getElementById(`base-${id}`)?.value.trim().replace(/\/$/,'');
+    state.providers[id].baseUrl = baseUrl || provider.defaultBaseUrl;
   }
   save('providers', state.providers);
   toast('API Key disimpan', `Menguji ${provider.name}...`,'info');
@@ -7005,6 +7074,32 @@ async function testProvider(id, specificModel = null) {
   // Model foto/video tidak bisa dites lewat chat — verifikasi via chat model saja.
   const chatModels = (provider.models || []).filter(m => (m.purpose || 'chat') === 'chat');
   const mediaModels = (provider.models || []).filter(m => m.purpose === 'image' || m.purpose === 'video');
+
+  // 9Router: cek endpoint/model secara nyata tanpa membakar kuota gambar.
+  if (provider.format === 'ninerouter') {
+    try {
+      const base=(config.baseUrl||provider.defaultBaseUrl||provider.apiBase).replace(/\/$/,'');
+      let r;
+      for (const path of ['/models/image','/models']) {
+        r=await fetch(`${base}${path}`,{headers:{'Authorization':`Bearer ${providerKeys(config)[0]||config.apiKey}`}});
+        if(r.ok) break;
+      }
+      if(!r?.ok) throw new Error(`HTTP ${r?.status||'?'} - ${r ? (await r.text()).slice(0,160) : 'tidak ada respons'}`);
+      const d=await r.json().catch(()=>({}));
+      if (!state.verifiedModels[id]) state.verifiedModels[id]={models:{}};
+      state.verifiedModels[id].working=true; state.verifiedModels[id].lastTested=new Date().toISOString();
+      mediaModels.forEach(m=>state.verifiedModels[id].models[m.id]='ok');
+      save('verifiedModels',state.verifiedModels);
+      if(resultEl) resultEl.innerHTML=`<div class="test-result success"><svg class="ico"><use href="#i-check"/></svg> 9Router tersambung. Katalog model dapat diakses tanpa melakukan generate.</div>`;
+      if(statusEl){statusEl.className='provider-status connected';statusEl.textContent='✓ Terhubung';}
+      return true;
+    } catch(err) {
+      const fileMode=location.protocol==='file:';
+      const help=fileMode ? 'AiKreator sedang dibuka sebagai file lokal (file://), sehingga Chrome dapat memblokir permintaan ke localhost. Jalankan AiKreator melalui server lokal atau aktifkan Tunnel HTTPS di 9Router lalu gunakan URL tunnel /v1.' : 'Pastikan 9Router berjalan, API key aktif, dan izin CORS mengizinkan origin aplikasi ini.';
+      if(resultEl) resultEl.innerHTML=`<div class="test-result error"><svg class="ico"><use href="#i-warn"/></svg> 9Router belum dapat diakses: ${escapeHtml(err.message)}.<br><span style="font-size:.76rem">${escapeHtml(help)}</span></div>`;
+      return false;
+    }
+  }
 
   // Provider khusus foto/video (tanpa model chat): tandai working bila ada API key.
   if (!chatModels.length && mediaModels.length) {
@@ -9837,11 +9932,32 @@ function isCoolingDown(id) { return _providerCooldown[id] && Date.now() < _provi
 function setCooldown(id, ms = 60000) { _providerCooldown[id] = Date.now() + ms; }
 // Info provider terakhir yang berhasil dipakai (untuk notifikasi ke user)
 let _lastAIUsed = null;
-function notifyProviderUsed(kind, name, model) {
-  _lastAIUsed = { kind, name, model, ts: Date.now() };
+function _usageDay(ts=Date.now()){ return new Date(ts).toISOString().slice(0,10); }
+function getProviderUsage(){ try{return JSON.parse(localStorage.getItem('providerUsage')||'[]')}catch(_){return []} }
+function notifyProviderUsed(kind, name, model, providerId='') {
+  const ts=Date.now();
+  _lastAIUsed = { kind, name, model, ts };
+  const usage=getProviderUsage();
+  usage.push({providerId:providerId||String(name).toLowerCase().replace(/[^a-z0-9]+/g,'-'),name,kind,model:model||'',ts});
+  localStorage.setItem('providerUsage',JSON.stringify(usage.slice(-2000)));
   const el = document.getElementById('flowProvUsed');
   if (el) el.textContent = `Diproses oleh: ${name}${model ? ' · ' + model : ''}`;
+  renderProviderUsage();
 }
+function renderProviderUsage(){
+  const box=document.getElementById('providerUsageTracker'); if(!box)return;
+  const rows=getProviderUsage(), today=_usageDay();
+  const grouped={};
+  rows.forEach(x=>{ const k=x.providerId||x.name; grouped[k]??={name:x.name,total:0,today:0,image:0,video:0,chat:0,last:0,models:{}}; const g=grouped[k]; g.total++; if(_usageDay(x.ts)===today)g.today++; g[x.kind]=(g[x.kind]||0)+1; g.last=Math.max(g.last,x.ts||0); if(x.model)g.models[x.model]=(g.models[x.model]||0)+1; });
+  const list=Object.values(grouped).sort((a,b)=>b.last-a.last);
+  if(!list.length){box.innerHTML='<div style="padding:.25rem 0;color:var(--text-muted);font-size:.82rem">Belum ada generate berhasil yang tercatat.</div>';return;}
+  box.innerHTML=`<div style="display:grid;gap:.65rem">${list.map(g=>`<div class="idea-card" style="padding:.75rem">
+    <div style="display:flex;justify-content:space-between;gap:.5rem;align-items:center"><b>${escapeHtml(g.name)}</b><span class="status-chip ok"><span class="dot"></span>${g.today} hari ini</span></div>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;font-size:.75rem;color:var(--text-muted);margin-top:.4rem"><span>Total ${g.total}</span><span>Teks ${g.chat||0}</span><span>Gambar ${g.image||0}</span><span>Video ${g.video||0}</span></div>
+    <div style="font-size:.72rem;color:var(--text-muted);margin-top:.35rem">${Object.entries(g.models).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([m,n])=>`${escapeHtml(m)} ×${n}`).join(' · ')||'Model tidak tercatat'}</div>
+  </div>`).join('')}</div>`;
+}
+function resetProviderUsage(){ if(!confirm('Hapus seluruh catatan penggunaan lokal provider?'))return; localStorage.removeItem('providerUsage'); renderProviderUsage(); toast('Direset','Catatan penggunaan provider di perangkat ini telah dihapus.','success'); }
 
 async function callAI(prompt, opts = {}) {
   // Prioritize verified working providers
@@ -9908,7 +10024,7 @@ async function callAI(prompt, opts = {}) {
       try {
         const response = await callProviderAI(provider, {...config, apiKey: keys[ki], model: chatModel}, prompt);
         if (response && response.trim()) {
-          notifyProviderUsed('chat', provider.name + (keys.length > 1 ? ` (key ${ki+1})` : ''), chatModel);
+          notifyProviderUsed('chat', provider.name + (keys.length > 1 ? ` (key ${ki+1})` : ''), chatModel, provider.id);
           return response;
         }
         throw new Error('Response kosong');
@@ -9988,7 +10104,7 @@ async function generateImageAI(prompt, opts = {}) {
         try {
           const dataUrl = await callImageProvider(provider, {...cfg, apiKey: keys[ki]}, imgModel, styled, {width, height, engine: opts.engine, inputImages: opts.inputImages, inputImage: opts.inputImage});
           if (dataUrl) {
-            notifyProviderUsed('image', provider.name + (keys.length > 1 ? ` (key ${ki+1})` : ''), imgModel);
+            notifyProviderUsed('image', provider.name + (keys.length > 1 ? ` (key ${ki+1})` : ''), imgModel, provider.id);
             return { dataUrl, provider: provider.name, providerId:provider.id, model: imgModel, fallback: skipped };
           }
         } catch (err) {
@@ -10015,7 +10131,7 @@ async function generateImageAI(prompt, opts = {}) {
 async function callImageProvider(provider, config, model, prompt, o = {}) {
   const width = o.width || 1024, height = o.height || 1024;
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 60000);
+  const timeoutId = setTimeout(() => controller.abort(), provider.format === 'ninerouter' ? 180000 : 60000);
   try {
     if (provider.format === 'puter') {
       // Puter.js: generate langsung dari browser (User-Pays).
@@ -10177,6 +10293,31 @@ async function callImageProvider(provider, config, model, prompt, o = {}) {
       if (b64) return b64.startsWith('data:') ? b64 : `data:image/png;base64,${b64}`;
       throw new Error(`${provider.name}: tidak ada gambar`);
     }
+    if (provider.format === 'ninerouter') {
+      const base = (config.baseUrl || provider.defaultBaseUrl || provider.apiBase).replace(/\/$/,'');
+      const payload={model, prompt, n:1, size:`${width}x${height}`, response_format:'b64_json'};
+      const refs=(o.inputImages||[]).filter(Boolean);
+      if(refs.length) payload.image=refs[0]; // 9Router FLUX/BFL reference-image field
+      const res = await fetch(`${base}/images/generations`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':`Bearer ${config.apiKey}`},
+        signal:controller.signal,
+        body:JSON.stringify(payload)
+      });
+      if(!res.ok) throw new Error(`9Router HTTP ${res.status} - ${(await res.text()).substring(0,220)}`);
+      const data=await res.json().catch(()=>({}));
+      const item=data.data?.[0] || data.output?.[0] || data;
+      const b64=item.b64_json || item.base64 || item.image;
+      const imageUrl=item.url || item.image_url;
+      if(b64) return String(b64).startsWith('data:') ? b64 : `data:image/png;base64,${b64}`;
+      if(imageUrl){
+        if(String(imageUrl).startsWith('data:')) return imageUrl;
+        const ir=await fetch(imageUrl,{signal:controller.signal});
+        if(!ir.ok) throw new Error(`9Router: gambar hasil tidak dapat diunduh (HTTP ${ir.status})`);
+        return await blobToDataURL(await ir.blob());
+      }
+      throw new Error('9Router: respons tidak berisi URL atau base64 gambar.');
+    }
     if (provider.format === 'pixazo') {
       // Pixazo free catalog uses different official endpoint shapes per model.
       const slug = model || 'flux-1-schnell';
@@ -10331,7 +10472,7 @@ async function generateVideoAI(prompt, opts = {}) {
         else if (provider.format === 'pixazo') res = await _pixazoVideo(provider, keys[ki], model, prompt, opts, onP);
         else throw new Error(`${provider.name}: format video belum didukung`);
         if (res && res.url) {
-          notifyProviderUsed('video', provider.name + (keys.length>1?` (key ${ki+1})`:''), model);
+          notifyProviderUsed('video', provider.name + (keys.length>1?` (key ${ki+1})`:''), model, provider.id);
           return res;
         }
         throw new Error(`${provider.name}: URL video kosong`);
@@ -10634,6 +10775,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41b047fedcbfd1e',t:'MTc5MDUxNzQ0Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-</body>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41b9ad6fdf8fddf',t:'MTc5MDUyMzYwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
