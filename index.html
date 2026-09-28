@@ -2440,6 +2440,23 @@ const AI_PROVIDERS = [
     format:'kie'
   },
   {
+    id:'flow-manual',
+    name:'Google Flow Manual',
+    color:'#4285f4',
+    short:'GF',
+    desc:'Produksi final via Flow — Nano Banana Pro untuk gambar, Omni 1.1 Flash untuk video',
+    url:'https://flow.google.com/',
+    getKey:'https://flow.google.com/',
+    caps:['image','video'],
+    noKey:true,
+    note:'Handoff manual. Unggah karakter/produk sebagai Bahan di Flow. Kredit mengikuti tampilan Flow; gambar Nano Banana Pro saat diuji menunjukkan 0 kredit.',
+    models:[
+      {id:'flow-nano-banana-pro',name:'Nano Banana Pro — Gambar',recommended:true,purpose:'image'},
+      {id:'flow-omni-1.1-flash',name:'Omni 1.1 Flash — Video + audio',recommended:true,purpose:'video'}
+    ],
+    format:'flow-manual'
+  },
+  {
     id:'arena-manual',
     name:'Arena Manual',
     color:'#111827',
@@ -9756,7 +9773,7 @@ function studioSaveCarouselText() {
 window._arenaHandoffs = window._arenaHandoffs || {};
 function arenaCopyAndOpen(id){
   const h=window._arenaHandoffs[id]; if(!h)return;
-  const done=()=>{ toast('Prompt disalin','Arena dibuka di tab baru. Tempel prompt lalu unggah hasilnya kembali ke AiKreator.','success'); window.open('https://arena.ai/','_blank','noopener'); };
+  const done=()=>{ toast('Prompt disalin',`${h.platform} dibuka di tab baru. Tempel prompt lalu unggah hasilnya kembali ke AiKreator.`,'success'); window.open(h.url,'_blank','noopener'); };
   if(navigator.clipboard?.writeText) navigator.clipboard.writeText(h.prompt).then(done).catch(()=>fallbackCopy(h.prompt,done));
   else fallbackCopy(h.prompt,done);
 }
@@ -9774,18 +9791,22 @@ function arenaUploadResult(id,input){
   if(h.kind==='image'){const r=new FileReader();r.onload=()=>finish(r.result);r.readAsDataURL(file);}
   else finish(URL.createObjectURL(file));
 }
-function arenaHandoffHtml(kind,prompt,originalPrompt,outputId,refs=[]){
-  const id='arena-'+Date.now()+'-'+Math.random().toString(36).slice(2,6);
-  window._arenaHandoffs[id]={kind,prompt,originalPrompt,outputId,refs};
+function arenaHandoffHtml(kind,prompt,originalPrompt,outputId,refs=[],platformId='arena-manual'){
+  const isFlow=platformId==='flow-manual';
+  const platform=isFlow?'Google Flow':'Arena';
+  const url=isFlow?'https://flow.google.com/':'https://arena.ai/';
+  const id=(isFlow?'flow-':'arena-')+Date.now()+'-'+Math.random().toString(36).slice(2,6);
+  window._arenaHandoffs[id]={kind,prompt,originalPrompt,outputId,refs,platform,url};
   const accept=kind==='video'?'video/*':'image/*';
+  const flowCost=isFlow&&kind==='video'?`<div style="font-size:.74rem;color:var(--warning);margin-bottom:.55rem">Estimasi Flow: ${studioState.vidDur==='10'?'15':studioState.vidDur==='8'?'12':'cek panel kredit Flow'} kredit/klip. Unggah karakter dan produk melalui <b>Bahan</b>.</div>`:'';
   return `<div class="idea-card" style="padding:1rem;text-align:left">
-    <div style="display:flex;justify-content:space-between;gap:.5rem;align-items:center"><b>Arena Manual</b><span class="status-chip ok"><span class="dot"></span>Tanpa API</span></div>
-    <div style="font-size:.78rem;color:var(--text-muted);line-height:1.45;margin:.55rem 0">1. Salin prompt dan buka Arena. 2. Generate di sana. 3. Unduh hasil terbaik. 4. Unggah kembali ke slot ini.</div>
+    <div style="display:flex;justify-content:space-between;gap:.5rem;align-items:center"><b>${platform} Manual</b><span class="status-chip ok"><span class="dot"></span>Tanpa API</span></div>
+    <div style="font-size:.78rem;color:var(--text-muted);line-height:1.45;margin:.55rem 0">1. Salin prompt dan buka ${platform}. 2. Generate di sana. 3. Unduh hasil terbaik. 4. Unggah kembali ke slot ini.</div>${flowCost}
     ${refs.length?`<div style="font-size:.75rem;color:var(--warning);margin-bottom:.55rem">Referensi tersedia (${refs.length}). Unduh/unggah manual ke Arena; kontrol identitas mengikuti kemampuan model Arena.</div>`:''}
     <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:.7rem;font-size:.76rem;white-space:pre-wrap;max-height:150px;overflow:auto">${escapeHtml(prompt)}</div>
     <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem">
-      <button class="btn btn-primary btn-sm" onclick="arenaCopyAndOpen('${id}')">Salin Prompt & Buka Arena</button>
-      <button class="btn btn-secondary btn-sm" onclick="document.getElementById('arena-file-${id}').click()">Unggah Hasil Arena</button>
+      <button class="btn btn-primary btn-sm" onclick="arenaCopyAndOpen('${id}')">Salin Prompt & Buka ${platform}</button>
+      <button class="btn btn-secondary btn-sm" onclick="document.getElementById('arena-file-${id}').click()">Unggah Hasil ${platform}</button>
       <input id="arena-file-${id}" type="file" accept="${accept}" hidden onchange="arenaUploadResult('${id}',this)">
     </div>
   </div>`;
@@ -9800,7 +9821,7 @@ function studioVideoProductionPrompt(scene,{aspect='9:16',duration='10',dialog='
   const framing=aspect==='9:16'?'Create a native vertical 9:16 composition; use references for identity only, not framing. Do not crop a landscape source. Recompose with the camera farther back in a medium waist-up shot, natural headroom, complete hands and complete product visible; subject fills 55–65% of frame.':`Compose natively for ${aspect}; recompose instead of cropping the reference.`;
   const defaultVoice=`soft, warm, bright and friendly; casual natural vlog style like talking to a close friend; gentle audible smile; relaxed pacing with short breathing pauses; native Bahasa Indonesia pronunciation`;
   const voice=dialog?` Voice: ${speaker}, ${voiceStyle||defaultVoice}. Natural lip-sync; no announcer tone, foreign accent, robotic rhythm or loud laughter. Say exactly: “${dialog}” Do not translate it or print spoken words on screen or packaging.`:'';
-  return `${scene}\n\nUltra-realistic ${duration}s ${aspect} smartphone UGC, soft natural light, visible skin pores and subtle imperfections, natural blinking, micro-expressions and small gestures. ${identity} ${hasRefs?'Follow the uploaded character and product references. ':''}No identity drift, face morphing, beauty-filter skin or changing hair/hijab/clothes. ${framing}${voice} No subtitles, watermark, duplicate person/product, invented labels, deformed hands, extra fingers, abrupt camera motion or exaggerated expression.`;
+  return `${scene}\n\nUltra-realistic ${duration}s ${aspect} smartphone UGC in one continuous take, soft natural light, visible skin pores and subtle imperfections, natural blinking, micro-expressions and small gestures. Keep the same location and background from start to finish; no cuts, scene changes or transitions. ${identity} ${hasRefs?'Follow the uploaded character and product references. ':''}No identity drift, face morphing, beauty-filter skin or changing hair/hijab/clothes. ${framing} Only the main character handles the product; no assistant, off-camera person or extra hand may enter the frame.${voice} No subtitles, watermark, duplicate person/product, invented labels, deformed hands, extra fingers, abrupt camera motion, wide-open-mouth smile or exaggerated expression. A subtle smooth push-in is allowed, but no extreme zoom or crop.`;
 }
 
 // Router utama AI Studio: tentukan fungsi (chat/image/video) lalu jalankan
@@ -9875,10 +9896,10 @@ async function studioSend() {
         ? `${styleTxt?styleTxt+', ':''}Create a high-impact ${coverNames[studioState.coverFormat]||'social media cover'} about "${resolved}"${consistencyTxt}. Strong focal subject, bold clean composition, high contrast, mobile-readable hierarchy, professional creator design, safe margins.${studioState.coverText?` Render the exact main headline: "${resolved}". Keep it large, short, correctly spelled and highly readable.`:' Do not render any text; leave clean negative space for a headline.'} No watermark, no duplicate subject, no clutter, high quality, detailed. Output aspect ratio ${ratio.w}:${ratio.h}`
         : `${styleTxt?styleTxt+', ':''}${resolved}${consistencyTxt}, high quality, detailed. Output aspect ratio ${ratio.w}:${ratio.h}`;
       const imgPrompt=coverPrompt;
-      if(provId==='arena-manual'){
+      if(provId==='arena-manual'||provId==='flow-manual'){
         const el=document.getElementById(loadingId);
-        el.innerHTML=arenaHandoffHtml('image',imgPrompt,message,loadingId,refImgs);
-        toast('Handoff Arena siap','Prompt siap disalin; unggah hasil Arena kembali ke slot ini.','success');
+        el.innerHTML=arenaHandoffHtml('image',imgPrompt,message,loadingId,refImgs,provId);
+        toast('Handoff siap',`Prompt siap disalin; unggah hasil ${provId==='flow-manual'?'Flow':'Arena'} kembali ke slot ini.`,'success');
         return;
       }
       const res = await generateImageAI(imgPrompt, { width:ratio.w, height:ratio.h, providerId:provId, model:modelId, inputImages: refImgs.length?refImgs:undefined, strictProvider:true });
@@ -9901,7 +9922,7 @@ async function studioSend() {
       // @mention: ganti @nama → Nama asli sebelum diterjemahkan
       const { resolved: resolvedVid, mentioned: vidMentioned } = studioResolveMentions(message);
       let enPrompt = resolvedVid;
-      if (provId !== 'arena-manual' && /\b(dan|yang|dengan|di|ke|dari|sebuah|seorang|gerakan|kamera|adegan)\b/i.test(resolvedVid)) {
+      if (provId !== 'arena-manual' && provId !== 'flow-manual' && /\b(dan|yang|dengan|di|ke|dari|sebuah|seorang|gerakan|kamera|adegan)\b/i.test(resolvedVid)) {
         try { setMsg('Menerjemahkan deskripsi...'); const t = await callAI(`Terjemahkan ke Bahasa Inggris sinematik untuk AI video, jawab HANYA terjemahannya: """${resolvedVid.slice(0,500)}"""`); const tc=(t||'').trim().replace(/^["']|["']$/g,'').split('\n')[0]; if (tc) enPrompt = tc; } catch(_){}
       }
       // Referensi: sheet storyboard (adegan) + foto karakter (subjek konsisten). @tag > dropdown.
@@ -9921,11 +9942,12 @@ async function studioSend() {
       }
       refImages = refImages.slice(0,3);
       const manualRefs=[...refImages,studioState.vidStartFrame,studioState.vidEndFrame].filter(Boolean);
-      const productionPrompt=studioVideoProductionPrompt(provId==='arena-manual'?resolvedVid:enPrompt,{aspect,duration:studioState.vidDur,dialog:studioState.vidDialog,hasRefs:manualRefs.length>0});
-      if(provId==='arena-manual'){
+      const isManual=provId==='arena-manual'||provId==='flow-manual';
+      const productionPrompt=studioVideoProductionPrompt(isManual?resolvedVid:enPrompt,{aspect,duration:studioState.vidDur,dialog:studioState.vidDialog,hasRefs:manualRefs.length>0});
+      if(isManual){
         const el=document.getElementById(loadingId);
-        el.innerHTML=arenaHandoffHtml('video',productionPrompt,message,loadingId,manualRefs);
-        toast('Handoff Arena siap','Prompt video siap; unggah hasil Arena kembali ke slot ini.','success');
+        el.innerHTML=arenaHandoffHtml('video',productionPrompt,message,loadingId,manualRefs,provId);
+        toast('Handoff siap',`Prompt video siap; unggah hasil ${provId==='flow-manual'?'Flow':'Arena'} kembali ke slot ini.`,'success');
         return;
       }
       const vOpts = { providerId:provId, model:modelId, duration:studioState.vidDur, aspect_ratio:aspect, resolution:'720p', onProgress:setMsg };
@@ -10898,5 +10920,5 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41e7ad298e4fd2b',t:'MTc5MDU1Mzc1MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
