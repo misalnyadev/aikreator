@@ -13,7 +13,6 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="AiKreator">
-<script src="https://js.puter.com/v2/"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.8/index.css">
 <style>
 :root{
@@ -2184,29 +2183,6 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 // bisa dipakai (utamakan free tier) yang didaftarkan. Diverifikasi Sept 2026.
 const AI_PROVIDERS = [
   {
-    id:'puter',
-    name:'Bawaan',
-    color:'#c8a24a',
-    short:'PU',
-    desc:'★ Foto & video langsung pakai — tanpa perlu mengatur apa pun. Direkomendasikan.',
-    url:'https://puter.com/',
-    getKey:'https://puter.com/',
-    caps:['image','video'],
-    noKey:true,
-    note:'★ Paling mudah — tidak perlu diatur. Saat pertama membuat foto/video, muncul popup masuk sekali; setelah itu langsung produksi foto (Nano Banana/FLUX/GPT Image) & video (Google Veo).',
-    models:[
-      {id:'google/gemini-2.5-flash-image',name:'Nano Banana (Foto) ★',recommended:true,free:true,purpose:'image'},
-      {id:'black-forest-labs/flux-schnell',name:'FLUX Schnell (cepat)',free:true,purpose:'image'},
-      {id:'openai/gpt-image-2',name:'GPT Image 2 (kualitas tinggi)',free:true,purpose:'image'},
-      {id:'veo-3.1-lite',name:'Veo 3.1 Lite (4/6/8s +audio) ★',recommended:true,free:true,purpose:'video'},
-      {id:'veo-3.1-fast',name:'Veo 3.1 Fast (4/6/8s +audio)',free:true,purpose:'video'},
-      {id:'bytedance/seedance-2.0',name:'Seedance 2.0 (4–15s +audio)',purpose:'video'},
-      {id:'bytedance/seedance-2.5',name:'Seedance 2.5 (4–30s +audio)',purpose:'video'},
-      {id:'wan-ai/wan2.7-t2v',name:'Wan 2.7 (2–15s +audio)',purpose:'video'}
-    ],
-    format:'puter'
-  },
-  {
     id:'openrouter',
     name:'OpenRouter',
     color:'#6366f1',
@@ -2272,15 +2248,14 @@ const AI_PROVIDERS = [
     name:'Google Gemini',
     color:'#3b82f6',
     short:'GE',
-    desc:'Gemini (chat) + Nano Banana (foto, ~500 gambar/hari) — tanpa kartu',
+    desc:'Vision, logika, naskah & TTS dengan API key pengguna. Generate gambar tidak ditawarkan pada free API tier.',
     url:'https://aistudio.google.com/',
     getKey:'https://aistudio.google.com/app/apikey',
-    caps:['chat','image'],
+    caps:['chat'],
     models:[
       {id:'gemini-flash-latest',name:'Gemini Flash (terbaru)',recommended:true,free:true,purpose:'chat'},
       {id:'gemini-flash-lite-latest',name:'Gemini Flash-Lite (cepat & hemat)',free:true,purpose:'chat'},
-      {id:'gemini-3.6-flash',name:'Gemini 3.6 Flash',free:true,purpose:'chat'},
-      {id:'gemini-2.5-flash-image',name:'Nano Banana (Foto) ★',recommended:true,free:true,purpose:'image'}
+      {id:'gemini-3.6-flash',name:'Gemini 3.6 Flash',free:true,purpose:'chat'}
     ],
     apiBase:'https://generativelanguage.googleapis.com/v1beta/models/',
     format:'gemini'
@@ -4850,15 +4825,8 @@ function openCharacterEditor(id) {
         <div id="chOwnVoiceOut"></div>
       </div>
       <div id="chVoiceAiBox">
-        <div class="ce-prop-row" style="display:flex;gap:.5rem;flex-wrap:wrap">
-          <div class="ce-prop-group" style="flex:1;min-width:150px"><label>Mesin suara</label>
-            <select class="form-select" id="chVoiceProvider" onchange="charVoiceProviderChange()">
-              <option value="gemini">Gemini (natural, kontrol gaya)</option>
-              <option value="openai">OpenAI (ekspresif, kontrol gaya)</option>
-            </select></div>
-          <div class="ce-prop-group" style="flex:1;min-width:150px"><label>Pilih voice</label>
-            <select class="form-select" id="chVoiceName" onchange="_charSyncVoiceCfg()"></select></div>
-        </div>
+        <div class="ce-prop-group"><label>Pilih voice</label>
+          <select class="form-select" id="chVoiceName" onchange="_charSyncVoiceCfg()"></select></div>
         <div class="ce-prop-group"><label>Gaya bicara / "kostum" suara (instructions)</label>
           <textarea class="form-input" id="chVoiceStyle" rows="3" placeholder="mis: perempuan muda Indonesia, ceria & hangat, tempo santai seperti ngobrol dengan sahabat, terdengar sedang tersenyum, energi ringan, artikulasi jelas." oninput="_charSyncVoiceCfg()"></textarea></div>
         <div class="ce-prop-group"><label>Bahasa</label>
@@ -4869,10 +4837,14 @@ function openCharacterEditor(id) {
           </select></div>
         <div class="ce-prop-group"><label>Teks sampel untuk audisi</label>
           <textarea class="form-input" id="chVoiceSample" rows="2">Halo semuanya, aku ${escapeHtml(c.name||'karakter')} — senang banget bisa nemenin kalian hari ini! Yuk kita mulai.</textarea></div>
-        <div class="che-gen-actions">
+        <div class="che-gen-actions" style="align-items:center;flex-wrap:wrap">
           <button class="btn btn-primary btn-sm" id="chAuditionBtn" onclick="charAuditionVoice()"><svg class="ico"><use href="#i-play"/></svg> Coba suara (audisi)</button>
-          <button class="btn btn-ghost btn-sm" onclick="charTestVoice()" title="Preview cepat pakai suara browser (tanpa internet)">Preview browser</button>
+          <select class="form-select" id="chVoiceProvider" onchange="charVoiceProviderChange()" style="width:auto;min-width:210px;padding:.45rem .7rem" aria-label="Provider suara">
+            <option value="gemini">Google Gemini TTS (API key sendiri)</option>
+          </select>
+          <button class="btn btn-ghost btn-sm" onclick="charTestVoice()" title="Preview cepat memakai suara yang tersedia di browser">Preview browser</button>
         </div>
+        <div class="form-hint">Provider dipilih manual. Audisi Gemini memakai API key Gemini dari Pengaturan API—tanpa Puter.</div>
         <div id="chVoiceAuditionOut"></div>
       </div>
       <div class="che-hint" id="chVoiceSavedInfo" style="display:none"></div>
@@ -4920,18 +4892,24 @@ function charInitVoiceUI() {
   const cfg = _charEdit.voiceCfg;
   const provSel = document.getElementById('chVoiceProvider');
   if (!provSel) return;
-  provSel.value = cfg.provider || 'gemini';
+  // Puter/OpenAI transport lama tidak lagi dipakai untuk Voice Studio.
+  provSel.value = Array.from(provSel.options).some(o=>o.value===cfg.provider) ? cfg.provider : 'gemini';
   charVoiceProviderChange(true);
-  document.getElementById('chVoiceName').value = cfg.voice || CHAR_VOICES[provSel.value][0].id;
+  const voices = CHAR_VOICES[provSel.value] || CHAR_VOICES.gemini;
+  const wanted = voices.some(v=>v.id===cfg.voice) ? cfg.voice : voices[0].id;
+  document.getElementById('chVoiceName').value = wanted;
+  cfg.provider = provSel.value; cfg.voice = wanted;
   document.getElementById('chVoiceStyle').value = cfg.style || _charEdit.voice || '';
   document.getElementById('chVoiceLang').value = cfg.lang || 'id-ID';
   _charUpdateVoiceSavedInfo();
 }
 function charVoiceProviderChange(keep) {
-  const prov = document.getElementById('chVoiceProvider').value;
+  const provEl = document.getElementById('chVoiceProvider');
+  const prov = provEl?.value || 'gemini';
   const sel = document.getElementById('chVoiceName');
-  sel.innerHTML = CHAR_VOICES[prov].map(v=>`<option value="${v.id}">${v.label}</option>`).join('');
-  if (!keep) { _charEdit.voiceCfg.provider = prov; _charEdit.voiceCfg.voice = CHAR_VOICES[prov][0].id; }
+  const voices = CHAR_VOICES[prov] || CHAR_VOICES.gemini;
+  sel.innerHTML = voices.map(v=>`<option value="${v.id}">${v.label}</option>`).join('');
+  if (!keep) { _charEdit.voiceCfg.provider = prov; _charEdit.voiceCfg.voice = voices[0].id; }
   _charSyncVoiceCfg();
 }
 function _charSyncVoiceCfg() {
@@ -4952,6 +4930,45 @@ function _charUpdateVoiceSavedInfo() {
     box.innerHTML = `✅ <strong>Suara terkunci</strong> untuk karakter ini (${label}). Sampel tersimpan & akan jadi referensi saat produksi video. <button class="btn btn-ghost btn-sm" style="margin-left:.5rem" onclick="charUnlockVoice()">Ganti suara</button>`;
   } else { box.style.display = 'none'; }
 }
+async function _charPcmToWavDataUrl(b64Pcm, sampleRate=24000) {
+  const bin = atob(b64Pcm), len = bin.length;
+  const buf = new ArrayBuffer(44 + len), v = new DataView(buf);
+  const write = (offset, text)=>{ for(let i=0;i<text.length;i++) v.setUint8(offset+i,text.charCodeAt(i)); };
+  write(0,'RIFF'); v.setUint32(4,36+len,true); write(8,'WAVE'); write(12,'fmt ');
+  v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
+  v.setUint32(24,sampleRate,true); v.setUint32(28,sampleRate*2,true);
+  v.setUint16(32,2,true); v.setUint16(34,16,true); write(36,'data'); v.setUint32(40,len,true);
+  const bytes = new Uint8Array(buf,44); for(let i=0;i<len;i++) bytes[i]=bin.charCodeAt(i);
+  return await new Promise((resolve,reject)=>{
+    const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=()=>reject(r.error); r.readAsDataURL(new Blob([buf],{type:'audio/wav'}));
+  });
+}
+async function _charGeminiTTS(text, voice, style) {
+  const keys = providerKeys(state.providers?.gemini);
+  if (!keys.length) throw new Error('API key Gemini belum diisi. Buka Pengaturan API → Google Gemini.');
+  const model = 'gemini-3.1-flash-tts-preview';
+  const spoken = (style?.trim() ? style.trim().replace(/[:：]\s*$/,'')+': ' : 'Say naturally: ') + text;
+  const body = JSON.stringify({
+    contents:[{parts:[{text:spoken}]}],
+    generationConfig:{responseModalities:['AUDIO'],speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:voice||'Kore'}}}}
+  });
+  let lastError = null;
+  for (const key of keys) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`,{
+        method:'POST',headers:{'Content-Type':'application/json'},body
+      });
+      const data = await res.json().catch(()=>({}));
+      if(!res.ok) throw new Error(`Gemini TTS HTTP ${res.status}: ${data.error?.message||'request gagal'}`);
+      const part=(data.candidates?.[0]?.content?.parts||[]).find(p=>p.inlineData?.data);
+      if(!part) throw new Error('Gemini tidak mengembalikan audio.');
+      const rate=parseInt((/rate=(\d+)/i.exec(part.inlineData.mimeType||'')||[])[1]||'24000',10);
+      notifyProviderUsed('voice','Google Gemini',model,'gemini');
+      return await _charPcmToWavDataUrl(part.inlineData.data,rate);
+    } catch(err) { lastError=err; if(!isLimitError(err)) break; }
+  }
+  throw lastError || new Error('Gemini TTS gagal.');
+}
 async function charAuditionVoice() {
   _charSyncVoiceCfg();
   const c = _charEdit.voiceCfg;
@@ -4959,26 +4976,18 @@ async function charAuditionVoice() {
   const out = document.getElementById('chVoiceAuditionOut');
   const btn = document.getElementById('chAuditionBtn');
   const orig = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<svg class="ico"><use href="#i-refresh"/></svg> Membuat suara…';
-  out.innerHTML = `<div class="tm-meta">Menghasilkan audisi suara…</div>`;
+  out.innerHTML = `<div class="tm-meta">Menghasilkan audisi via Google Gemini TTS…</div>`;
   try {
-    if (typeof puter === 'undefined' || !puter?.ai?.txt2speech) throw new Error('Puter.js belum termuat. Buka via https & pastikan online.');
-    const opts = { provider: c.provider, voice: c.voice };
-    if (c.style) opts.instructions = c.style;
-    if (c.provider === 'gemini') opts.model = 'gemini-2.5-flash-preview-tts';
-    if (c.provider === 'openai') opts.model = 'gpt-4o-mini-tts';
-    if (c.lang) opts.language = c.lang;
-    const audio = await puter.ai.txt2speech(text, opts);
-    const src = audio && (audio.src || (audio.querySelector && audio.querySelector('source')?.src));
-    if (!src) throw new Error('Tidak ada audio yang dihasilkan.');
+    if(c.provider!=='gemini') throw new Error('Provider suara belum didukung. Pilih Google Gemini TTS.');
+    const src = await _charGeminiTTS(text,c.voice,c.style);
     _charEdit._lastVoiceSample = src;
     out.innerHTML = `
-      <audio src="${src}" controls style="width:100%;margin-top:.5rem"></audio>
+      <audio src="${src}" controls autoplay style="width:100%;margin-top:.5rem"></audio>
       <div class="che-gen-actions">
         <button class="btn btn-primary btn-sm" onclick="charLockVoice()"><svg class="ico"><use href="#i-save"/></svg> Pas! Kunci suara ini ke karakter</button>
         <button class="btn btn-ghost btn-sm" onclick="charAuditionVoice()"><svg class="ico"><use href="#i-refresh"/></svg> Coba lagi</button>
       </div>
-      <div class="tm-meta">Belum pas? Ganti voice/gaya di atas lalu "Coba suara" lagi. Kalau sudah pas, klik "Kunci suara".</div>`;
-    try { audio.play?.(); } catch(_){}
+      <div class="tm-meta">Diproses langsung oleh Gemini dengan API key milikmu—tanpa Puter. Jika sudah pas, klik "Kunci suara".</div>`;
   } catch (e) {
     out.innerHTML = `<div class="tm-meta" style="color:var(--danger,#e05252)">Gagal: ${escapeHtml(e.message||'')}</div>`;
   } finally { btn.disabled = false; btn.innerHTML = orig; }
@@ -5115,7 +5124,6 @@ function _charShowOwnVoice(url) {
     <audio src="${url}" controls style="width:100%;margin:.35rem 0"></audio>
     <div class="che-gen-actions">
       <button class="btn btn-primary btn-sm" onclick="charLockOwnVoice(false)"><svg class="ico"><use href="#i-save"/></svg> Pakai suara asliku (kunci)</button>
-      <button class="btn btn-secondary btn-sm" onclick="charEnhanceOwnVoice()"><svg class="ico"><use href="#i-sparkle"/></svg> Bersihkan noise (AI)</button>
     </div>
     <div class="tm-meta">Suara asli ini akan dipakai untuk narasi & jadi referensi produksi video.</div>`;
 }
@@ -6903,7 +6911,7 @@ function renderSettings() {
   const list = document.getElementById('providersList');
   // Hanya provider yang layak dipakai langsung dari browser ditampilkan.
   // Integrasi lama tetap dikenali untuk kompatibilitas data, tetapi tidak merusak UI.
-  const settingsProviderIds = ['openrouter','groq','mistral','cerebras','chutes','gemini','puter','kie','pixazo','ninerouter','cloudflare'];
+  const settingsProviderIds = ['openrouter','groq','mistral','cerebras','chutes','gemini','kie','pixazo','ninerouter','cloudflare'];
   const settingsProviders = AI_PROVIDERS.filter(p => settingsProviderIds.includes(p.id));
   list.innerHTML = settingsProviders.map(p => {
     const hasKey = state.providers[p.id]?.apiKey;
@@ -6987,22 +6995,39 @@ function renderSettings() {
     `;
   }).join('');
 
-  // Susun provider menjadi accordion berbasis fungsi; hanya satu terbuka sekaligus.
+  // Tiga kartu fungsi saja. Provider dipilih lewat dropdown agar halaman tidak menjadi daftar panjang.
   const settingsGroups = [
     {id:'text', icon:'✦', title:'Teks & Penalaran', desc:'Ide, chat, optimasi dan storyboard', ids:['openrouter','groq','mistral','cerebras','chutes']},
-    {id:'vision', icon:'◉', title:'Vision', desc:'Membaca gambar dan konteks visual', ids:['gemini']},
-    {id:'media', icon:'▣', title:'Gambar & Video', desc:'Membuat foto, adegan dan klip', ids:['puter','kie','pixazo','ninerouter','cloudflare']}
+    {id:'vision', icon:'◉', title:'Vision, Logika & Suara', desc:'Gemini untuk membaca gambar, logika dan TTS', ids:['gemini']},
+    {id:'media', icon:'▣', title:'Gambar & Video', desc:'Kie.ai dan provider media BYOK', ids:['kie','pixazo','ninerouter','cloudflare']}
   ];
   const cardHtml = {};
   list.querySelectorAll('.provider-card').forEach(card => { cardHtml[card.id.replace('provider-card-','')] = card.outerHTML; });
   list.innerHTML = settingsGroups.map((g, i) => {
-    const cards = g.ids.map(id => cardHtml[id] || '').join('');
+    const saved = localStorage.getItem(`aik-settings-provider-${g.id}`);
+    const configured = g.ids.find(id => providerKeys(state.providers[id]).length > 0);
+    const selected = g.ids.includes(saved) ? saved : (configured || g.ids[0]);
+    const options = g.ids.map(id => {
+      const p = AI_PROVIDERS.find(x => x.id === id);
+      if (!p) return '';
+      const ready = p.noKey || providerKeys(state.providers[id]).length > 0;
+      return `<option value="${id}" ${id===selected?'selected':''}>${escapeHtml(p.name)}${ready?' ✓':''}</option>`;
+    }).join('');
+    const cards = g.ids.map(id => `<div class="settings-provider-panel" data-provider-panel="${id}" style="display:${id===selected?'block':'none'}">${cardHtml[id] || ''}</div>`).join('');
     return `<details class="settings-group" data-settings-group="${g.id}" ${i === 0 ? 'open' : ''}>
       <summary onclick="settingsAccordion(event,this)">
         <span class="sg-icon">${g.icon}</span>
         <span class="sg-main"><b>${g.title}</b><span>${g.desc}</span></span>
-        <span class="sg-count">${g.ids.length} provider</span><span class="sg-arrow">›</span>
-      </summary><div class="sg-body">${cards}</div>
+        <span class="sg-count">Pilih provider</span><span class="sg-arrow">›</span>
+      </summary>
+      <div class="sg-body">
+        <div class="form-group" style="margin-bottom:1rem">
+          <label class="form-label">Provider</label>
+          <select class="form-select" onchange="settingsProviderDropdown(this,'${g.id}')">${options}</select>
+          <div class="form-hint">Hanya pengaturan provider yang dipilih yang ditampilkan.</div>
+        </div>
+        ${cards}
+      </div>
     </details>`;
   }).join('');
   
@@ -7028,6 +7053,15 @@ function settingsAccordion(event, summary) {
   document.querySelectorAll('#providersList .settings-group[open]').forEach(group => {
     if (group !== current) group.removeAttribute('open');
   });
+}
+
+function settingsProviderDropdown(select, groupId) {
+  const group = select.closest('.settings-group');
+  if (!group) return;
+  group.querySelectorAll('[data-provider-panel]').forEach(panel => {
+    panel.style.display = panel.dataset.providerPanel === select.value ? 'block' : 'none';
+  });
+  localStorage.setItem(`aik-settings-provider-${groupId}`, select.value);
 }
 
 function toggleKeyVisibility(id) {
@@ -7244,7 +7278,7 @@ async function callProviderWithModel(provider, config, model, prompt) {
 }
 
 async function testAllProviders() {
-  const visibleIds = ['openrouter','groq','mistral','cerebras','chutes','gemini','puter','kie'];
+  const visibleIds = ['openrouter','groq','mistral','cerebras','chutes','gemini','kie'];
   const activeProviders = AI_PROVIDERS.filter(p => visibleIds.includes(p.id) && (p.noKey || state.providers[p.id]?.apiKey));
   if (activeProviders.length === 0) {
     toast('Tidak ada provider','Atur API key terlebih dahulu','warning');
@@ -9729,15 +9763,10 @@ async function studioGenerateCharacterVoiceover(dialog, boxId) {
   if(v.mode==='own'){
     box.innerHTML=`<div class="form-hint">Suara asli ${escapeHtml(c.name)} terkunci. Rekam dialog baru dari menu Karakter → Suara.${v.sampleUrl?`</div><audio src="${v.sampleUrl}" controls style="width:100%;margin-top:.4rem"></audio>`:'</div>'}`;return;
   }
-  box.innerHTML='<div class="form-hint">Membuat voiceover dengan suara karakter...</div>';
+  box.innerHTML='<div class="form-hint">Membuat voiceover dengan Google Gemini TTS...</div>';
   try{
-    if(typeof puter==='undefined'||!puter?.ai?.txt2speech)throw new Error('Puter TTS belum termuat');
-    const opts={provider:v.provider,voice:v.voice}; if(v.style)opts.instructions=v.style;if(v.lang)opts.language=v.lang;
-    if(v.provider==='gemini')opts.model='gemini-2.5-flash-preview-tts';
-    if(v.provider==='openai')opts.model='gpt-4o-mini-tts';
-    const audio=await puter.ai.txt2speech(dialog.slice(0,2900),opts);
-    const src=audio&&(audio.src||(audio.querySelector&&audio.querySelector('source')?.src));if(!src)throw new Error('Audio kosong');
-    box.innerHTML=`<div class="form-hint"><svg class="ico"><use href="#i-mic"/></svg> Voiceover ${escapeHtml(c.name)} · ${escapeHtml(v.voice||'suara terkunci')}</div><audio src="${src}" controls style="width:100%;margin-top:.4rem"></audio>${studioMediaActions('audio',src,`${c.name} — voiceover`)}`;
+    const src=await _charGeminiTTS(dialog.slice(0,2900),v.voice||'Kore',v.style||'');
+    box.innerHTML=`<div class="form-hint"><svg class="ico"><use href="#i-mic"/></svg> Voiceover ${escapeHtml(c.name)} · Gemini · ${escapeHtml(v.voice||'Kore')}</div><audio src="${src}" controls style="width:100%;margin-top:.4rem"></audio>${studioMediaActions('audio',src,`${c.name} — voiceover`)}`;
   }catch(e){box.innerHTML=`<div class="form-hint" style="color:var(--danger)">Voiceover gagal: ${escapeHtml(e.message||'')}</div>`;}
 }
 
@@ -10204,7 +10233,7 @@ async function generateImageAI(prompt, opts = {}) {
   // Bila ada gambar referensi, utamakan provider image-to-image hanya saat fallback diizinkan.
   const hasRefs = (opts.inputImages && opts.inputImages.length) || opts.inputImage;
   if (hasRefs && !opts.strictProvider) {
-    const i2iFormats = ['puter','gemini','openai'];
+    const i2iFormats = ['gemini','openai'];
     order.sort((a, b) => (i2iFormats.includes(b.format)?1:0) - (i2iFormats.includes(a.format)?1:0));
   }
 
@@ -10919,6 +10948,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42523ca2e09ab53',t:'MTc5MDYyMzU4Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a425a4211c8e0a06',t:'MTc5MDYyODg0Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
