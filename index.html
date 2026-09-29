@@ -3156,7 +3156,8 @@ function renderAssets() {
     if (a.type === 'text') body += `<div class="atext">${escapeHtml(a.content || '')}</div>`;
     else if (a.type === 'audio') body += `<audio ${a.mediaId?`data-asset-media="${escapeHtml(a.mediaId)}"`:`src="${escapeHtml(a.url||'')}"`} controls onclick="event.stopPropagation()" style="width:100%;margin-top:.4rem;height:34px"></audio>`;
     else if (a.type === 'link') body += `<a class="alink" href="${escapeHtml(a.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${escapeHtml(a.url)}</a>`;
-    if (proj) body += `<div class="atext" style="color:${proj.color};font-weight:600;margin-top:.3rem">${escapeHtml(proj.emoji)} ${escapeHtml(proj.name)}</div>`;
+    if (a.type !== 'text' && a.content) body += `<div class="atext" title="${escapeHtml(a.content)}">${escapeHtml(a.content)}</div>`;
+    if (proj) body += `<div class="atext" style="color:${proj.color};font-weight:600;margin-top:.3rem">${escapeHtml(proj.emoji||'')} ${escapeHtml(proj.name)}</div>`;
     return `<div class="asset-card" onclick="openAssetModal('${a.id}')">
       <span class="asset-kind">${kindLabel[a.type] || a.type}</span>
       <button class="asset-del" onclick="event.stopPropagation();hapusAsset('${a.id}')" title="Hapus"><svg class="ico"><use href="#i-trash"/></svg> ️</button>
@@ -3200,9 +3201,9 @@ function openAssetModal(id) {
         <input class="form-input" id="assetUrl" placeholder="Opsional: URL eksternal" value="${escapeHtml(cur.url || '')}">
         ${cur.mediaId?'<div class="form-hint">✓ File lokal sudah tersimpan. Pilih file baru hanya jika ingin menggantinya.</div>':''}
       </div>
-      <div id="assetTextWrap" style="display:${cur.type==='text'?'block':'none'}">
-        <label>Isi Teks</label>
-        <textarea class="form-textarea" id="assetContent" rows="4" placeholder="Tulis catatan, script, caption referensi...">${escapeHtml(cur.content || '')}</textarea>
+      <div id="assetTextWrap" style="display:block">
+        <label id="assetContentLabel">${cur.type==='text'?'Isi Teks':'Cerita Adegan / Catatan'}</label>
+        <textarea class="form-textarea" id="assetContent" rows="4" placeholder="${cur.type==='text'?'Tulis catatan atau naskah...':'Tulis deskripsi adegan, dialog, gerakan kamera, atau catatan produksi...'}">${escapeHtml(cur.content || '')}</textarea>
       </div>
       <label>Masukkan ke Project</label>
       <select class="form-select" id="assetProject">${projOpts}</select>
@@ -3215,7 +3216,10 @@ function openAssetModal(id) {
 function switchAssetType() {
   const t = document.getElementById('assetType').value;
   document.getElementById('assetUrlWrap').style.display = t === 'text' ? 'none' : 'block';
-  document.getElementById('assetTextWrap').style.display = t === 'text' ? 'block' : 'none';
+  document.getElementById('assetTextWrap').style.display = 'block';
+  const contentLabel=document.getElementById('assetContentLabel'), content=document.getElementById('assetContent');
+  if(contentLabel)contentLabel.textContent=t==='text'?'Isi Teks':'Cerita Adegan / Catatan';
+  if(content)content.placeholder=t==='text'?'Tulis catatan atau naskah...':'Tulis deskripsi adegan, dialog, gerakan kamera, atau catatan produksi...';
   const lbl = document.getElementById('assetUrlLabel');
   if (lbl) lbl.textContent = t === 'link' ? 'URL Link' : t === 'video' ? 'Sumber Video' : t === 'audio' ? 'Sumber Audio' : 'Sumber Gambar';
   const fw=document.getElementById('assetFileWrap'), fi=document.getElementById('assetFile');
@@ -3232,7 +3236,7 @@ async function simpanAsset(id) {
   const data = {
     type, name,
     url: type !== 'text' ? document.getElementById('assetUrl').value.trim() : '',
-    content: type === 'text' ? document.getElementById('assetContent').value.trim() : '',
+    content: document.getElementById('assetContent').value.trim(),
     project: document.getElementById('assetProject').value,
     mediaId: existing?.mediaId||''
   };
@@ -11004,6 +11008,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42bfe173992fd96',t:'MTc5MDY5NTQ0Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42c133fdc3bfdf7',t:'MTc5MDY5NjMwOQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+</body>
 </html>
