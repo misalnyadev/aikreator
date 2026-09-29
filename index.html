@@ -3134,15 +3134,17 @@ function openAssetModal(id) {
     <div class="modal-form">
       <label>Jenis Asset</label>
       <select class="form-select" id="assetType" onchange="switchAssetType()">
-        <option value="image" ${cur.type==='image'?'selected':''}>Gambar (URL)</option>
+        <option value="image" ${cur.type==='image'?'selected':''}>Gambar</option>
+        <option value="video" ${cur.type==='video'?'selected':''}>Video</option>
+        <option value="audio" ${cur.type==='audio'?'selected':''}>Audio</option>
         <option value="text" ${cur.type==='text'?'selected':''}>Teks / Catatan</option>
         <option value="link" ${cur.type==='link'?'selected':''}>Link Referensi</option>
       </select>
       <label>Nama / Judul</label>
       <input class="form-input" id="assetName" placeholder="mis: Referensi thumbnail kompetitor" value="${escapeHtml(cur.name || '')}">
       <div id="assetUrlWrap" style="display:${cur.type==='text'?'none':'block'}">
-        <label id="assetUrlLabel">${cur.type==='link'?'URL Link':'URL Gambar'}</label>
-        <input class="form-input" id="assetUrl" placeholder="https://..." value="${escapeHtml(cur.url || '')}">
+        <label id="assetUrlLabel">${cur.type==='link'?'URL Link':cur.type==='video'?'Sumber Video':cur.type==='audio'?'Sumber Audio':'Sumber Gambar'}</label>
+        <input class="form-input" id="assetUrl" placeholder="URL atau media tersimpan" value="${escapeHtml(cur.url || '')}">
       </div>
       <div id="assetTextWrap" style="display:${cur.type==='text'?'block':'none'}">
         <label>Isi Teks</label>
@@ -3161,7 +3163,7 @@ function switchAssetType() {
   document.getElementById('assetUrlWrap').style.display = t === 'text' ? 'none' : 'block';
   document.getElementById('assetTextWrap').style.display = t === 'text' ? 'block' : 'none';
   const lbl = document.getElementById('assetUrlLabel');
-  if (lbl) lbl.textContent = t === 'link' ? 'URL Link' : 'URL Gambar';
+  if (lbl) lbl.textContent = t === 'link' ? 'URL Link' : t === 'video' ? 'Sumber Video' : t === 'audio' ? 'Sumber Audio' : 'Sumber Gambar';
 }
 function simpanAsset(id) {
   const type = document.getElementById('assetType').value;
@@ -3174,13 +3176,22 @@ function simpanAsset(id) {
     project: document.getElementById('assetProject').value,
   };
   if (type !== 'text' && !data.url) { toast('URL kosong','Isi URL-nya dulu ya','warning'); return; }
+  let rollback = null;
   if (id) {
     const a = state.assets.find(x => x.id === id);
-    if (a) Object.assign(a, data);
+    if (a) { rollback = {...a}; Object.assign(a, data); }
   } else {
-    state.assets.unshift({ id: 'a' + Date.now(), ts: Date.now(), ...data });
+    const created = { id: 'a' + Date.now(), ts: Date.now(), ...data };
+    state.assets.unshift(created);
+    rollback = created.id;
   }
-  save('assets', state.assets);
+  if (!save('assets', state.assets)) {
+    // Jangan biarkan UI tampak sukses bila video terlalu besar untuk localStorage.
+    if (id && rollback) Object.assign(state.assets.find(x => x.id === id) || {}, rollback);
+    else if (rollback) state.assets = state.assets.filter(x => x.id !== rollback);
+    renderAssets();
+    return;
+  }
   closeModal();
   renderAssets();
   toast('Tersimpan', `Asset "${name}" disimpan.`,'success');
@@ -10924,6 +10935,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42b58943dfece5a',t:'MTc5MDY4ODY2Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42b6640dcbff93b',t:'MTc5MDY4OTIyMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+</body>
 </html>
