@@ -739,8 +739,13 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 /* asset card */
 .asset-card{border:1px solid var(--border);border-radius:var(--r-lg);background:var(--bg-card);overflow:hidden;transition:all .18s;position:relative}
 .asset-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
-.asset-thumb{height:130px;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.asset-thumb{height:130px;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;overflow:hidden;transition:height .2s}
 .asset-thumb img{width:100%;height:100%;object-fit:cover}
+.asset-thumb video{width:100%;height:100%;object-fit:contain;background:#000}
+.asset-card.is-portrait .asset-thumb{height:260px}
+.asset-card.is-square .asset-thumb{height:190px}
+.asset-card.is-landscape .asset-thumb{height:130px}
+.asset-card.is-portrait .asset-thumb img{object-fit:contain;background:#0a0a0a}
 .asset-thumb .big{font-size:2.4rem}
 .asset-body{padding:.85rem}
 .asset-body b{font-size:.88rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -3106,9 +3111,16 @@ async function assetMediaUrl(id) {
   const row=await assetMediaGet(id); if(!row?.blob)return '';
   const url=URL.createObjectURL(row.blob);_assetObjectUrls.set(id,url);return url;
 }
+function assetApplyOrientation(el) {
+  const w=el.videoWidth||el.naturalWidth||0,h=el.videoHeight||el.naturalHeight||0;
+  if(!w||!h)return;
+  const card=el.closest('.asset-card');if(!card)return;
+  card.classList.remove('is-portrait','is-square','is-landscape');
+  card.classList.add(h>w*1.12?'is-portrait':w>h*1.12?'is-landscape':'is-square');
+}
 async function hydrateAssetMedia(root=document) {
   const nodes=[...root.querySelectorAll('[data-asset-media]')];
-  await Promise.all(nodes.map(async el=>{try{const u=await assetMediaUrl(el.dataset.assetMedia);if(u)el.src=u;else el.outerHTML='<div class="form-hint" style="padding:1rem">File media tidak ditemukan. Unggah ulang dari perangkat.</div>';}catch(e){console.error(e);}}));
+  await Promise.all(nodes.map(async el=>{try{const u=await assetMediaUrl(el.dataset.assetMedia);if(u){el.src=u;if(el.tagName==='VIDEO')el.load();}else el.outerHTML='<div class="form-hint" style="padding:1rem">File media tidak ditemukan. Unggah ulang dari perangkat.</div>';}catch(e){console.error(e);}}));
 }
 function renderAssets() {
   const box = document.getElementById('assetGrid');
@@ -3131,8 +3143,8 @@ function renderAssets() {
     const proj = (state.projects || []).find(p => p.id === a.project);
     let thumb = '';
     const mediaAttr = a.mediaId ? `data-asset-media="${escapeHtml(a.mediaId)}"` : `src="${escapeHtml(a.url||'')}"`;
-    if (a.type === 'image') thumb = `<img ${mediaAttr} alt="${escapeHtml(a.name)}" onerror="this.parentElement.innerHTML='<span class=\\'big\\'><svg class="ico"><use href="#i-image"/></svg></span>'">`;
-    else if (a.type === 'video') thumb = `<video ${mediaAttr} muted playsinline controls onmouseover="this.play()" onmouseout="this.pause()" onclick="event.stopPropagation()" style="width:100%;height:100%;object-fit:cover"></video>`;
+    if (a.type === 'image') thumb = `<img ${mediaAttr} alt="${escapeHtml(a.name)}" onload="assetApplyOrientation(this)" onerror="this.parentElement.innerHTML='<span class=\\'big\\'><svg class="ico"><use href="#i-image"/></svg></span>'">`;
+    else if (a.type === 'video') thumb = `<video ${mediaAttr} muted playsinline controls preload="metadata" onloadedmetadata="assetApplyOrientation(this)" onclick="event.stopPropagation()"></video>`;
     else if (a.type === 'audio') thumb = `<span class="big"><svg class="ico"><use href="#i-mic"/></svg></span>`;
     else if (a.type === 'link') thumb = `<span class="big"><svg class="ico"><use href="#i-link"/></svg></span>`;
     else thumb = `<span class="big"><svg class="ico"><use href="#i-pen"/></svg></span>`;
@@ -10989,5 +11001,5 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42bb09bbaa5eb9d',t:'MTc5MDY5MjI2OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
