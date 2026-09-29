@@ -3126,16 +3126,6 @@ async function hydrateAssetMedia(root=document) {
   const nodes=[...root.querySelectorAll('[data-asset-media]')];
   await Promise.all(nodes.map(async el=>{try{const u=await assetMediaUrl(el.dataset.assetMedia);if(u){el.src=u;if(el.tagName==='VIDEO')el.load();}else el.outerHTML='<div class="form-hint" style="padding:1rem">File media tidak ditemukan. Unggah ulang dari perangkat.</div>';}catch(e){console.error(e);}}));
 }
-let _assetVideoObserver=null;
-function assetInitAutoplay(root=document){
-  if(_assetVideoObserver)_assetVideoObserver.disconnect();
-  _assetVideoObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
-    const v=entry.target;
-    if(entry.isIntersecting&&entry.intersectionRatio>=.55)v.play().catch(()=>{});
-    else v.pause();
-  }),{threshold:[0,.55,1]});
-  root.querySelectorAll('.asset-thumb video').forEach(v=>_assetVideoObserver.observe(v));
-}
 function renderAssets() {
   const box = document.getElementById('assetGrid');
   if (!box) return;
@@ -3158,7 +3148,7 @@ function renderAssets() {
     let thumb = '';
     const mediaAttr = a.mediaId ? `data-asset-media="${escapeHtml(a.mediaId)}"` : `src="${escapeHtml(a.url||'')}"`;
     if (a.type === 'image') thumb = `<img ${mediaAttr} alt="${escapeHtml(a.name)}" onload="assetApplyOrientation(this)" onerror="this.parentElement.innerHTML='<span class=\\'big\\'><svg class="ico"><use href="#i-image"/></svg></span>'">`;
-    else if (a.type === 'video') thumb = `<video ${mediaAttr} muted autoplay loop playsinline controls preload="metadata" onloadedmetadata="assetApplyOrientation(this)" onclick="event.stopPropagation()"></video>`;
+    else if (a.type === 'video') thumb = `<video ${mediaAttr} muted loop playsinline controls preload="metadata" onloadedmetadata="assetApplyOrientation(this)" onmouseenter="this.play().catch(()=>{})" onmouseleave="this.pause()" onclick="event.stopPropagation()"></video>`;
     else if (a.type === 'audio') thumb = `<span class="big"><svg class="ico"><use href="#i-mic"/></svg></span>`;
     else if (a.type === 'link') thumb = `<span class="big"><svg class="ico"><use href="#i-link"/></svg></span>`;
     else thumb = `<span class="big"><svg class="ico"><use href="#i-pen"/></svg></span>`;
@@ -3174,7 +3164,7 @@ function renderAssets() {
       <div class="asset-body">${body}</div>
     </div>`;
   }).join('');
-  hydrateAssetMedia(box).finally(()=>assetInitAutoplay(box));
+  hydrateAssetMedia(box);
 }
 function filterAssets(f) {
   state.assetFilter = f;
@@ -11015,5 +11005,5 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42bcde6df07f92c',t:'MTc5MDY5MzQ2OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42bfe173992fd96',t:'MTc5MDY5NTQ0Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
