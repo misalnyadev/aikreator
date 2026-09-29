@@ -3080,6 +3080,36 @@ function bukaAssetProject(id) {
 }
 
 // ============ RUANG KERJA: ASSETS ============
+// File media disimpan sebagai Blob di IndexedDB; localStorage hanya menyimpan metadata.
+const _assetObjectUrls = new Map();
+function assetMediaDb() {
+  return new Promise((resolve,reject)=>{
+    const req=indexedDB.open('kh_asset_media',1);
+    req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('media'))req.result.createObjectStore('media',{keyPath:'id'});};
+    req.onsuccess=()=>resolve(req.result); req.onerror=()=>reject(req.error);
+  });
+}
+async function assetMediaPut(id,blob,name='') {
+  const db=await assetMediaDb();
+  return new Promise((resolve,reject)=>{const tx=db.transaction('media','readwrite');tx.objectStore('media').put({id,blob,name,type:blob.type,updatedAt:Date.now()});tx.oncomplete=()=>{db.close();resolve(true)};tx.onerror=()=>{db.close();reject(tx.error)};});
+}
+async function assetMediaGet(id) {
+  const db=await assetMediaDb();
+  return new Promise((resolve,reject)=>{const req=db.transaction('media').objectStore('media').get(id);req.onsuccess=()=>{db.close();resolve(req.result||null)};req.onerror=()=>{db.close();reject(req.error)};});
+}
+async function assetMediaDelete(id) {
+  if(!id)return; const db=await assetMediaDb();
+  return new Promise((resolve,reject)=>{const tx=db.transaction('media','readwrite');tx.objectStore('media').delete(id);tx.oncomplete=()=>{db.close();const u=_assetObjectUrls.get(id);if(u)URL.revokeObjectURL(u);_assetObjectUrls.delete(id);resolve(true)};tx.onerror=()=>{db.close();reject(tx.error)};});
+}
+async function assetMediaUrl(id) {
+  if(_assetObjectUrls.has(id))return _assetObjectUrls.get(id);
+  const row=await assetMediaGet(id); if(!row?.blob)return '';
+  const url=URL.createObjectURL(row.blob);_assetObjectUrls.set(id,url);return url;
+}
+async function hydrateAssetMedia(root=document) {
+  const nodes=[...root.querySelectorAll('[data-asset-media]')];
+  await Promise.all(nodes.map(async el=>{try{const u=await assetMediaUrl(el.dataset.assetMedia);if(u)el.src=u;else el.outerHTML='<div class="form-hint" style="padding:1rem">File media tidak ditemukan. Unggah ulang dari perangkat.</div>';}catch(e){console.error(e);}}));
+}
 function renderAssets() {
   const box = document.getElementById('assetGrid');
   if (!box) return;
@@ -3100,14 +3130,15 @@ function renderAssets() {
   box.innerHTML = list.map(a => {
     const proj = (state.projects || []).find(p => p.id === a.project);
     let thumb = '';
-    if (a.type === 'image') thumb = `<img src="${escapeHtml(a.url)}" alt="${escapeHtml(a.name)}" onerror="this.parentElement.innerHTML='<span class=\\'big\\'><svg class="ico"><use href="#i-image"/></svg></span>'">`;
-    else if (a.type === 'video') thumb = `<video src="${escapeHtml(a.url)}" muted playsinline onmouseover="this.play()" onmouseout="this.pause()" style="width:100%;height:100%;object-fit:cover"></video>`;
+    const mediaAttr = a.mediaId ? `data-asset-media="${escapeHtml(a.mediaId)}"` : `src="${escapeHtml(a.url||'')}"`;
+    if (a.type === 'image') thumb = `<img ${mediaAttr} alt="${escapeHtml(a.name)}" onerror="this.parentElement.innerHTML='<span class=\\'big\\'><svg class="ico"><use href="#i-image"/></svg></span>'">`;
+    else if (a.type === 'video') thumb = `<video ${mediaAttr} muted playsinline controls onmouseover="this.play()" onmouseout="this.pause()" onclick="event.stopPropagation()" style="width:100%;height:100%;object-fit:cover"></video>`;
     else if (a.type === 'audio') thumb = `<span class="big"><svg class="ico"><use href="#i-mic"/></svg></span>`;
     else if (a.type === 'link') thumb = `<span class="big"><svg class="ico"><use href="#i-link"/></svg></span>`;
     else thumb = `<span class="big"><svg class="ico"><use href="#i-pen"/></svg></span>`;
     let body = `<b title="${escapeHtml(a.name)}">${escapeHtml(a.name)}</b>`;
     if (a.type === 'text') body += `<div class="atext">${escapeHtml(a.content || '')}</div>`;
-    else if (a.type === 'audio') body += `<audio src="${escapeHtml(a.url)}" controls onclick="event.stopPropagation()" style="width:100%;margin-top:.4rem;height:34px"></audio>`;
+    else if (a.type === 'audio') body += `<audio ${a.mediaId?`data-asset-media="${escapeHtml(a.mediaId)}"`:`src="${escapeHtml(a.url||'')}"`} controls onclick="event.stopPropagation()" style="width:100%;margin-top:.4rem;height:34px"></audio>`;
     else if (a.type === 'link') body += `<a class="alink" href="${escapeHtml(a.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${escapeHtml(a.url)}</a>`;
     if (proj) body += `<div class="atext" style="color:${proj.color};font-weight:600;margin-top:.3rem">${escapeHtml(proj.emoji)} ${escapeHtml(proj.name)}</div>`;
     return `<div class="asset-card" onclick="openAssetModal('${a.id}')">
@@ -3117,6 +3148,7 @@ function renderAssets() {
       <div class="asset-body">${body}</div>
     </div>`;
   }).join('');
+  hydrateAssetMedia(box);
 }
 function filterAssets(f) {
   state.assetFilter = f;
@@ -3143,8 +3175,14 @@ function openAssetModal(id) {
       <label>Nama / Judul</label>
       <input class="form-input" id="assetName" placeholder="mis: Referensi thumbnail kompetitor" value="${escapeHtml(cur.name || '')}">
       <div id="assetUrlWrap" style="display:${cur.type==='text'?'none':'block'}">
+        <div id="assetFileWrap" style="display:${cur.type==='link'?'none':'block'};margin-bottom:.7rem">
+          <label>Upload dari hard disk</label>
+          <input class="form-input" id="assetFile" type="file" accept="${cur.type==='video'?'video/*':cur.type==='audio'?'audio/*':'image/*'}">
+          <div class="form-hint">File disimpan lokal di IndexedDB browser dan tetap tersedia setelah refresh.</div>
+        </div>
         <label id="assetUrlLabel">${cur.type==='link'?'URL Link':cur.type==='video'?'Sumber Video':cur.type==='audio'?'Sumber Audio':'Sumber Gambar'}</label>
-        <input class="form-input" id="assetUrl" placeholder="URL atau media tersimpan" value="${escapeHtml(cur.url || '')}">
+        <input class="form-input" id="assetUrl" placeholder="Opsional: URL eksternal" value="${escapeHtml(cur.url || '')}">
+        ${cur.mediaId?'<div class="form-hint">✓ File lokal sudah tersimpan. Pilih file baru hanya jika ingin menggantinya.</div>':''}
       </div>
       <div id="assetTextWrap" style="display:${cur.type==='text'?'block':'none'}">
         <label>Isi Teks</label>
@@ -3164,24 +3202,38 @@ function switchAssetType() {
   document.getElementById('assetTextWrap').style.display = t === 'text' ? 'block' : 'none';
   const lbl = document.getElementById('assetUrlLabel');
   if (lbl) lbl.textContent = t === 'link' ? 'URL Link' : t === 'video' ? 'Sumber Video' : t === 'audio' ? 'Sumber Audio' : 'Sumber Gambar';
+  const fw=document.getElementById('assetFileWrap'), fi=document.getElementById('assetFile');
+  if(fw)fw.style.display=(t==='link'||t==='text')?'none':'block';
+  if(fi)fi.accept=t==='video'?'video/*':t==='audio'?'audio/*':'image/*';
 }
-function simpanAsset(id) {
+async function simpanAsset(id) {
   const type = document.getElementById('assetType').value;
   const name = document.getElementById('assetName').value.trim();
   if (!name) { toast('Nama kosong','Beri nama asset dulu','warning'); return; }
+  const existing=id?(state.assets||[]).find(x=>x.id===id):null;
+  const file=document.getElementById('assetFile')?.files?.[0]||null;
+  const assetId=id||('a'+Date.now());
   const data = {
     type, name,
     url: type !== 'text' ? document.getElementById('assetUrl').value.trim() : '',
     content: type === 'text' ? document.getElementById('assetContent').value.trim() : '',
     project: document.getElementById('assetProject').value,
+    mediaId: existing?.mediaId||''
   };
-  if (type !== 'text' && !data.url) { toast('URL kosong','Isi URL-nya dulu ya','warning'); return; }
+  if (!['text','link'].includes(type) && file) {
+    const expected=type==='video'?'video/':type==='audio'?'audio/':'image/';
+    if(!file.type.startsWith(expected)){toast('File tidak sesuai',`Pilih file ${type}.`,'warning');return;}
+    try{await assetMediaPut(assetId,file,file.name);data.mediaId=assetId;data.url='';}
+    catch(e){toast('Upload gagal',e.message||'IndexedDB tidak tersedia','error');return;}
+  }
+  if (type !== 'text' && !data.url && !data.mediaId) { toast('Media kosong','Upload file dari hard disk atau isi URL.','warning'); return; }
+  if(['text','link'].includes(type))data.mediaId='';
   let rollback = null;
   if (id) {
     const a = state.assets.find(x => x.id === id);
     if (a) { rollback = {...a}; Object.assign(a, data); }
   } else {
-    const created = { id: 'a' + Date.now(), ts: Date.now(), ...data };
+    const created = { id: assetId, ts: Date.now(), ...data };
     state.assets.unshift(created);
     rollback = created.id;
   }
@@ -3202,6 +3254,7 @@ function hapusAsset(id) {
   if (!confirm(`Hapus asset "${a.name}"?`)) return;
   state.assets = state.assets.filter(x => x.id !== id);
   save('assets', state.assets);
+  if(a.mediaId)assetMediaDelete(a.mediaId).catch(console.error);
   renderAssets();
   toast('Dihapus','Asset dihapus.','info');
 }
@@ -9728,17 +9781,17 @@ async function studioShareMedia(id){
     toast('Gunakan menu browser','Jika Safari memblokir download, tekan lama media atau gunakan Bagikan.','warning');
   }
 }
-function studioSaveMedia(id) {
+async function studioSaveMedia(id) {
   const m = (window._studioMedia||{})[id];
   if (!m) return;
-  state.assets.unshift({
-    id:'a'+Date.now(), ts:Date.now(),
-    type: m.kind==='video'?'video':m.kind==='audio'?'audio':'image',
-    name: (m.caption||('Hasil '+m.kind)).slice(0,60),
-    url: m.url, content: m.caption||'', project:''
-  });
-  save('assets', state.assets);
-  toast('Tersimpan', `${m.kind==='video'?'Video':'Foto'} masuk ke Assets `,'success');
+  const assetId='a'+Date.now();
+  try{
+    const response=await fetch(m.url);if(!response.ok)throw new Error('Media tidak dapat dibaca');
+    const blob=await response.blob();await assetMediaPut(assetId,blob,studioMediaFileInfo(m).name);
+    state.assets.unshift({id:assetId,ts:Date.now(),type:m.kind==='video'?'video':m.kind==='audio'?'audio':'image',name:(m.caption||('Hasil '+m.kind)).slice(0,60),url:'',mediaId:assetId,content:m.caption||'',project:''});
+    if(!save('assets',state.assets)){state.assets=state.assets.filter(a=>a.id!==assetId);await assetMediaDelete(assetId);return;}
+    toast('Tersimpan permanen',`${m.kind==='video'?'Video':m.kind==='audio'?'Audio':'Foto'} masuk ke Assets lokal.`,'success');
+  }catch(e){toast('Gagal menyimpan media',e.message||'','error');}
 }
 
 async function studioGenerateCharacterVoiceover(dialog, boxId) {
@@ -10935,6 +10988,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42b8229b953c826',t:'MTc5MDY5MDM2Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
