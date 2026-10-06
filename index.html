@@ -4986,36 +4986,19 @@ function _charUpdateVoiceSavedInfo() {
     box.innerHTML = `✅ <strong>Suara terkunci</strong> untuk karakter ini (${label}). Sampel tersimpan & akan jadi referensi saat produksi video. <button class="btn btn-ghost btn-sm" style="margin-left:.5rem" onclick="charUnlockVoice()">Ganti suara</button>`;
   } else { box.style.display = 'none'; }
 }
+function charPcmBase64ToWav(data,sampleRate=24000){const raw=atob(data),n=raw.length,b=new ArrayBuffer(44+n),v=new DataView(b),w=(o,t)=>{for(let i=0;i<t.length;i++)v.setUint8(o+i,t.charCodeAt(i))};w(0,'RIFF');v.setUint32(4,36+n,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,sampleRate,true);v.setUint32(28,sampleRate*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n,true);for(let i=0;i<n;i++)v.setUint8(44+i,raw.charCodeAt(i));return URL.createObjectURL(new Blob([b],{type:'audio/wav'}))}
 async function charAuditionVoice() {
   _charSyncVoiceCfg();
-  const c = _charEdit.voiceCfg;
-  const text = (document.getElementById('chVoiceSample').value || 'Halo, ini suara karakterku.').slice(0,2900);
-  const out = document.getElementById('chVoiceAuditionOut');
-  const btn = document.getElementById('chAuditionBtn');
-  const orig = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<svg class="ico"><use href="#i-refresh"/></svg> Membuat suara…';
-  out.innerHTML = `<div class="tm-meta">Menghasilkan audisi suara…</div>`;
-  try {
-    if (typeof puter === 'undefined' || !puter?.ai?.txt2speech) throw new Error('Puter.js belum termuat. Buka via https & pastikan online.');
-    const opts = { provider: c.provider, voice: c.voice };
-    if (c.style) opts.instructions = c.style;
-    if (c.provider === 'gemini') opts.model = 'gemini-2.5-flash-preview-tts';
-    if (c.provider === 'openai') opts.model = 'gpt-4o-mini-tts';
-    if (c.lang) opts.language = c.lang;
-    const audio = await puter.ai.txt2speech(text, opts);
-    const src = audio && (audio.src || (audio.querySelector && audio.querySelector('source')?.src));
-    if (!src) throw new Error('Tidak ada audio yang dihasilkan.');
-    _charEdit._lastVoiceSample = src;
-    out.innerHTML = `
-      <audio src="${src}" controls style="width:100%;margin-top:.5rem"></audio>
-      <div class="che-gen-actions">
-        <button class="btn btn-primary btn-sm" onclick="charLockVoice()"><svg class="ico"><use href="#i-save"/></svg> Pas! Kunci suara ini ke karakter</button>
-        <button class="btn btn-ghost btn-sm" onclick="charAuditionVoice()"><svg class="ico"><use href="#i-refresh"/></svg> Coba lagi</button>
-      </div>
-      <div class="tm-meta">Belum pas? Ganti voice/gaya di atas lalu "Coba suara" lagi. Kalau sudah pas, klik "Kunci suara".</div>`;
-    try { audio.play?.(); } catch(_){}
-  } catch (e) {
-    out.innerHTML = `<div class="tm-meta" style="color:var(--danger,#e05252)">Gagal: ${escapeHtml(e.message||'')}</div>`;
-  } finally { btn.disabled = false; btn.innerHTML = orig; }
+  const c=_charEdit.voiceCfg,text=(document.getElementById('chVoiceSample').value||'Halo, ini suara karakterku.').slice(0,2900),out=document.getElementById('chVoiceAuditionOut'),btn=document.getElementById('chAuditionBtn'),orig=btn.innerHTML;
+  btn.disabled=true;btn.innerHTML='<svg class="ico"><use href="#i-refresh"/></svg> Membuat suara…';out.innerHTML='<div class="tm-meta">Gemini sedang membuat audisi suara…</div>';
+  try{
+    const cfg=state.providers?.gemini,keys=cfg?providerKeys(cfg):[];if(!keys.length)throw new Error('API key Gemini belum tersedia. Atur dan verifikasi di Pengaturan.');
+    const model='gemini-2.5-flash-preview-tts',spoken=c.style?`${c.style}\n\nUcapkan teks berikut persis tanpa menambah kata:\n${text}`:text;
+    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(keys[0])}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:spoken}]}],generationConfig:{responseModalities:['AUDIO'],speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:c.voice}}}}})});
+    const j=await r.json();if(!r.ok)throw new Error(j.error?.message||'Gemini TTS gagal');const part=j.candidates?.[0]?.content?.parts?.find(x=>x.inlineData||x.inline_data),inline=part?.inlineData||part?.inline_data;if(!inline?.data)throw new Error('Gemini tidak mengembalikan audio.');
+    const mime=inline.mimeType||inline.mime_type||'',src=/wav|mpeg|mp3|ogg/i.test(mime)?`data:${mime};base64,${inline.data}`:charPcmBase64ToWav(inline.data,Number((mime.match(/rate=(\d+)/)||[])[1]||24000));
+    _charEdit._lastVoiceSample=src;out.innerHTML=`<audio src="${src}" controls autoplay style="width:100%;margin-top:.5rem"></audio><div class="che-gen-actions"><button class="btn btn-primary btn-sm" onclick="charLockVoice()"><svg class="ico"><use href="#i-save"/></svg> Kunci suara</button><button class="btn btn-ghost btn-sm" onclick="charAuditionVoice()"><svg class="ico"><use href="#i-refresh"/></svg> Coba lagi</button></div>`;
+  }catch(e){out.innerHTML=`<div class="tm-meta" style="color:var(--danger,#e05252)">Gagal: ${escapeHtml(e.message||'')}</div>`}finally{btn.disabled=false;btn.innerHTML=orig}
 }
 function charVoiceSignature(c=_charEdit){const v=c.voiceCfg||{};return JSON.stringify({mode:v.mode,provider:v.provider,voice:v.voice,style:v.style,lang:v.lang,ownVoiceUrl:v.ownVoiceUrl||''})}
 function charLockVoice() {
@@ -5260,7 +5243,7 @@ async function charGenSheet() {
     prog.innerHTML = shots.map((sh,idx)=>`<div class="sheet-cell ${idx<i?'done':idx===i?'active':''}">${generated[idx]?`<img src="${generated[idx].url}">`:`<span>${escapeHtml(sh.label)}</span>`}${idx===i?'<div class="sheet-spin"></div>':''}</div>`).join('');
     try {
       const prompt = `${idBase()}. ${shot.prompt}. Keep the exact same face, identity, hairstyle and features as the reference image. Photorealistic, consistent lighting, plain neutral background, high detail`;
-      const res = await generateImageAI(prompt, { width:1024, height:1024, inputImages:[master.url], providerId:'kie' });
+      const res = await generateImageAI(prompt, { width:1024, height:1024, inputImages:[master.url], providerId:'kie', strictProvider:true });
       generated[i] = { url:res.dataUrl, label:shot.label };
     } catch (e) {
       generated[i] = null;
@@ -10303,6 +10286,10 @@ async function generateImageAI(prompt, opts = {}) {
   throw lastError || new Error('Tidak ada provider foto yang tersedia.');
 }
 
+async function kieUploadReference(apiKey,dataUrl){
+  const res=await fetch('https://kieai.redpandaai.co/api/file-base64-upload',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},body:JSON.stringify({base64Data:dataUrl,uploadPath:'images/base64',fileName:`character-ref-${Date.now()}.jpg`})});
+  if(!res.ok)throw new Error(`Kie.ai upload HTTP ${res.status} — ${(await res.text()).slice(0,160)}`);const d=await res.json().catch(()=>({})),u=d.data?.downloadUrl||d.data?.fileUrl||d.data?.url||d.downloadUrl||d.url;if(!u)throw new Error('Kie.ai tidak mengembalikan URL foto referensi.');return u;
+}
 async function callImageProvider(provider, config, model, prompt, o = {}) {
   const width = o.width || 1024, height = o.height || 1024;
   const controller = new AbortController();
@@ -10404,9 +10391,11 @@ async function callImageProvider(provider, config, model, prompt, o = {}) {
     }
     if (provider.format === 'kie') {
       // Kie.ai async: createTask → poll recordInfo → resultJson.resultUrls[0]. CORS ramah browser.
-      const slug = model || 'google/nano-banana';
+      const refs=(o.inputImages||[]).filter(Boolean);
+      const slug = refs.length ? 'google/nano-banana-edit' : (model || 'google/nano-banana');
       const ar = (width===height) ? '1:1' : (width>height ? '16:9' : '9:16');
       const input = { prompt, output_format:'png', image_size:ar, aspect_ratio:ar };
+      if(refs.length)input.image_urls=[await kieUploadReference(config.apiKey,refs[0])];
       const res = await fetch(provider.apiBase, {
         method:'POST',
         headers:{'Content-Type':'application/json','Authorization':`Bearer ${config.apiKey}`},
