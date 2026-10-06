@@ -13,6 +13,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="AiKreator">
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.8/index.css">
 <style>
 :root{
@@ -739,14 +740,8 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 /* asset card */
 .asset-card{border:1px solid var(--border);border-radius:var(--r-lg);background:var(--bg-card);overflow:hidden;transition:all .18s;position:relative}
 .asset-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
-.asset-thumb{height:130px;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;overflow:hidden;transition:height .2s}
+.asset-thumb{height:130px;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .asset-thumb img{width:100%;height:100%;object-fit:cover}
-.asset-thumb video{width:100%;height:100%;object-fit:contain;background:#000}
-.asset-card.is-portrait .asset-thumb{height:260px}
-.asset-card.is-square .asset-thumb{height:190px}
-.asset-card.is-landscape .asset-thumb{height:130px}
-.asset-card.has-native-ratio .asset-thumb{height:auto}
-.asset-card.is-portrait .asset-thumb img{object-fit:contain;background:#0a0a0a}
 .asset-thumb .big{font-size:2.4rem}
 .asset-body{padding:.85rem}
 .asset-body b{font-size:.88rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1223,6 +1218,15 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
   .sidebar .avatar{width:32px;height:32px}
   .sidebar-scrim{background:rgba(16,15,13,.14)}
 }
+</style>
+<style>
+.char-editor-page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1rem;padding:1.25rem 1.4rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg)}
+.char-editor-page-head h2{font-size:1.45rem;margin:.15rem 0 .35rem}.char-editor-page-head p{color:var(--text-muted);max-width:720px;font-size:.88rem}.char-editor-eyebrow{font-size:.68rem;letter-spacing:.14em;color:var(--accent);font-weight:800}
+.char-editor-workspace{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.35rem;min-height:65vh}
+.char-editor-workspace .che-tabs{position:sticky;top:0;z-index:8;background:var(--bg-card);padding:.35rem 0 .85rem;margin-bottom:1rem;border-bottom:1px solid var(--border);overflow-x:auto;flex-wrap:nowrap}
+.char-editor-workspace .che-pane{max-width:980px;margin:0 auto}.char-step-one-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.12fr);gap:1rem;align-items:start}.char-step-one-grid>.che-pane{display:block;max-width:none;width:100%;margin:0;padding:1rem;border:1px solid var(--border);border-radius:var(--r-lg);background:var(--bg-elevated)}.char-column-title{display:flex;align-items:center;gap:.65rem;margin-bottom:1rem;padding-bottom:.8rem;border-bottom:1px solid var(--border)}.char-column-title>span{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#111;font-weight:800}.char-column-title b{display:block}.char-column-title small{display:block;color:var(--text-muted);margin-top:.15rem}.char-basic-top{display:grid;grid-template-columns:176px minmax(0,1fr);gap:1rem;align-items:start}.char-photo-block>label,.char-section-label{display:block;font-size:.78rem;font-weight:700;margin-bottom:.4rem}.char-canonical-img,.char-photo-empty{width:176px;height:313px;background:#090909;border:1px solid var(--border);border-radius:10px;margin-top:.55rem}.char-canonical-img{object-fit:cover;object-position:center}.char-photo-empty{display:grid;place-items:center;align-content:center;gap:.5rem;color:var(--text-muted)}.char-photo-empty .ico{width:30px;height:30px}.char-photo-picker{width:176px;justify-content:center;margin-top:.55rem;cursor:pointer}.char-basic-fields .ce-prop-group{margin-bottom:0}.char-step-one-grid .role-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.35rem .65rem}.char-step-one-grid .role-option{margin:0}.char-editor-workspace .modal-footer{position:sticky;bottom:0;background:var(--bg-card);z-index:8;padding-bottom:.3rem}
+@media(max-width:900px){.char-step-one-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.char-basic-top{grid-template-columns:1fr}.char-canonical-img,.char-photo-empty,.char-photo-picker{width:100%}.char-canonical-img,.char-photo-empty{height:300px}.char-step-one-grid .role-options{grid-template-columns:1fr}.char-editor-page-head{padding:1rem;flex-direction:column}.char-editor-workspace{padding:.85rem}.char-editor-page-head .btn{width:100%}.char-editor-workspace .modal-footer{flex-direction:column}.char-editor-workspace .modal-footer .btn{width:100%;flex:none!important}}
 </style>
 </head>
 <body>
@@ -2036,16 +2040,20 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
           <span class="ws-chip" data-f="text" onclick="filterAssets('text')"><svg class="ico"><use href="#i-pen"/></svg> Teks</span>
           <span class="ws-chip" data-f="link" onclick="filterAssets('link')"><svg class="ico"><use href="#i-link"/></svg> Link</span>
         </div>
-        <button class="btn btn-primary" onclick="openAssetModal()">+ Tambah Asset</button>
+<button class="btn" onclick="document.getElementById('akProductionFile').click()">Impor AK Production</button><input id="akProductionFile" type="file" accept=".akproduction,.json" hidden onchange="importAKProduction(event)"><button class="btn btn-primary" onclick="openAssetModal()">+ Tambah Asset</button>
       </div>
       <div id="assetGrid" class="ws-grid"></div>
     </div>
 
     <!-- ===== KARAKTER (AI INFLUENCER / CHARACTER BIBLE) ===== -->
+    <div class="view" id="view-character-editor">
+      <div id="characterEditorPage"></div>
+    </div>
+
     <div class="view" id="view-characters">
       <div class="ws-toolbar">
         <div class="tb-intro" style="margin:0;flex:1">AI Influencer, model UGC & tokoh — wajah, suara & referensi terkunci agar konsisten di tiap foto, storyboard, dan video.</div>
-        <button class="btn btn-primary" onclick="openCharacterEditor()"><svg class="ico"><use href="#i-plus"/></svg> Karakter Baru</button>
+<label class="btn" style="cursor:pointer"><svg class="ico"><use href="#i-upload"/></svg> Hubungkan Karakter<input type="file" accept=".akcharacter,.json" hidden onchange="importSharedCharacter(event)"></label><button class="btn btn-primary" onclick="openCharacterEditor()"><svg class="ico"><use href="#i-plus"/></svg> Karakter Baru</button>
       </div>
       <div id="characterGrid" class="tb-grid-inner" style="margin-top:1.25rem"></div>
     </div>
@@ -2232,11 +2240,11 @@ const AI_PROVIDERS = [
     name:'Hugging Face',
     color:'#fbbf24',
     short:'HF',
-    desc:'Inference Router untuk eksperimen chat dan gambar; kuota gratis sangat terbatas',
+    desc:'Inference Router — chat + GENERATE FOTO (FLUX/SDXL), free tier ~300 req/jam',
     url:'https://huggingface.co/',
     getKey:'https://huggingface.co/settings/tokens',
     caps:['chat','image'],
-    note:'Butuh token dengan izin “Make calls to Inference Providers”. Kuota gratis kecil dan pengujian gambar sebelumnya pernah mendapat 402, jadi gunakan untuk eksperimen—bukan jalur gambar utama.',
+    note:'Butuh token dgn izin "Make calls to Inference Providers". Chat: router.huggingface.co/v1. Foto: FLUX.1-schnell dll (via provider auto).',
     models:[
       {id:'meta-llama/Llama-3.3-70B-Instruct',name:'Llama 3.3 70B',recommended:true,free:true,purpose:'chat'},
       {id:'openai/gpt-oss-120b',name:'GPT-OSS 120B',free:true,purpose:'chat'},
@@ -2254,15 +2262,15 @@ const AI_PROVIDERS = [
     name:'Google Gemini',
     color:'#3b82f6',
     short:'GE',
-    desc:'Vision, logika, naskah & TTS dengan API key pengguna. Generate gambar tidak ditawarkan pada free API tier.',
+    desc:'Gemini (chat) + Nano Banana (foto, ~500 gambar/hari) — tanpa kartu',
     url:'https://aistudio.google.com/',
     getKey:'https://aistudio.google.com/app/apikey',
-    caps:['chat'],
-    note:'Model suara: gemini-3.1-flash-tts-preview (dipakai otomatis oleh Voice Studio).',
+    caps:['chat','image'],
     models:[
-      {id:'gemini-3.5-flash-lite',name:'Gemini 3.5 Flash-Lite — cepat & hemat',free:true,purpose:'chat'},
-      {id:'gemini-3.6-flash',name:'Gemini 3.6 Flash — stabil',free:true,purpose:'chat'},
-      {id:'gemini-3.8-flash',name:'Gemini 3.8 Flash — terbaru',recommended:true,free:true,purpose:'chat'}
+      {id:'gemini-flash-latest',name:'Gemini Flash (terbaru)',recommended:true,free:true,purpose:'chat'},
+      {id:'gemini-flash-lite-latest',name:'Gemini Flash-Lite (cepat & hemat)',free:true,purpose:'chat'},
+      {id:'gemini-3.6-flash',name:'Gemini 3.6 Flash',free:true,purpose:'chat'},
+      {id:'gemini-2.5-flash-image',name:'Nano Banana (Foto) ★',recommended:true,free:true,purpose:'image'}
     ],
     apiBase:'https://generativelanguage.googleapis.com/v1beta/models/',
     format:'gemini'
@@ -2300,6 +2308,24 @@ const AI_PROVIDERS = [
       {id:'magistral-small-latest',name:'Magistral Small (reasoning)',free:true,purpose:'chat'}
     ],
     apiBase:'https://api.mistral.ai/v1/chat/completions',
+    format:'openai'
+  },
+  {
+    id:'cerebras',
+    name:'Cerebras',
+    color:'#06b6d4',
+    short:'CB',
+    desc:'Inference tercepat di dunia — free tier',
+    url:'https://cloud.cerebras.ai/',
+    getKey:'https://cloud.cerebras.ai/',
+    caps:['chat'],
+    models:[
+      {id:'llama-3.3-70b',name:'Llama 3.3 70B',recommended:true,free:true,purpose:'chat'},
+      {id:'llama3.1-8b',name:'Llama 3.1 8B',free:true,purpose:'chat'},
+      {id:'gpt-oss-120b',name:'GPT-OSS 120B',free:true,purpose:'chat'},
+      {id:'qwen-3-32b',name:'Qwen3 32B',free:true,purpose:'chat'}
+    ],
+    apiBase:'https://api.cerebras.ai/v1/chat/completions',
     format:'openai'
   },
   {
@@ -2342,6 +2368,23 @@ const AI_PROVIDERS = [
     ],
     apiBase:'https://api.venice.ai/api/v1/chat/completions',
     imageApiBase:'https://api.venice.ai/api/v1/image/generate',
+    format:'openai'
+  },
+  {
+    id:'chutes',
+    name:'Chutes AI',
+    color:'#14b8a6',
+    short:'CH',
+    desc:'Free tier model open-source (DeepSeek, Llama, Qwen)',
+    url:'https://chutes.ai/',
+    getKey:'https://chutes.ai/dashboard',
+    caps:['chat'],
+    models:[
+      {id:'deepseek-ai/DeepSeek-V3.2-TEE',name:'DeepSeek V3.2',recommended:true,free:true,purpose:'chat'},
+      {id:'Qwen/Qwen3-32B-TEE',name:'Qwen3 32B',free:true,purpose:'chat'},
+      {id:'Qwen/Qwen3.8-27B-TEE',name:'Qwen3.8 27B',free:true,purpose:'chat'}
+    ],
+    apiBase:'https://llm.chutes.ai/v1/chat/completions',
     format:'openai'
   },
   {
@@ -2465,12 +2508,12 @@ const AI_PROVIDERS = [
     name:'Pollinations',
     color:'#10b981',
     short:'PL',
-    desc:'Generator gambar cadangan — akses anonim kadang tersedia tanpa API key',
+    desc:'Foto cadangan — butuh API key (kebijakan "Pollen" 2026)',
     url:'https://pollinations.ai/',
     getKey:'https://enter.pollinations.ai/keys',
     caps:['image','chat'],
     optionalKey:true,
-    note:'API key bersifat opsional. Mode anonim tanpa key dapat bekerja untuk model gratis, tetapi best-effort: dapat terkena antrean, rate limit, 429, atau perubahan kebijakan. Tambahkan key Pollinations untuk akses dan limit yang lebih stabil; jangan jadikan jalur produksi utama.',
+    note:'Sejak 2026 Pollinations pakai sistem kredit "Pollen". Tanpa API key, generate foto akan gagal (error 402/saldo 0). Daftar di enter.pollinations.ai/keys → tempel API key di bawah. Bisa dipakai untuk foto & chat (uji key lewat chat: kalau menjawab, key benar). Dipakai sebagai cadangan bila penyedia lain limit.',
     models:[
       {id:'flux',name:'Flux (Generate Foto)',recommended:true,free:true,purpose:'image'},
       {id:'turbo',name:'Turbo (cepat)',free:true,purpose:'image'},
@@ -2631,10 +2674,10 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMobileSidebar()
 window.addEventListener('resize',()=>{if(window.innerWidth>1024)closeMobileSidebar();});
 
 function switchView(viewId) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => {v.classList.remove('active');v.style.display='none';v.style.visibility='hidden';v.style.opacity='0'});
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   const viewEl = document.getElementById(`view-${viewId}`);
-  if (viewEl) viewEl.classList.add('active');
+  if (viewEl){viewEl.classList.add('active');viewEl.style.display='block';viewEl.style.visibility='visible';viewEl.style.opacity='1'}
   const navItem = document.querySelector(`.nav-item[data-view="${viewId}"]`);
   if (navItem) navItem.classList.add('active');
   const [title, subtitle] = viewTitles[viewId] || ['', ''];
@@ -3086,46 +3129,6 @@ function bukaAssetProject(id) {
 }
 
 // ============ RUANG KERJA: ASSETS ============
-// File media disimpan sebagai Blob di IndexedDB; localStorage hanya menyimpan metadata.
-const _assetObjectUrls = new Map();
-function assetMediaDb() {
-  return new Promise((resolve,reject)=>{
-    const req=indexedDB.open('kh_asset_media',1);
-    req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('media'))req.result.createObjectStore('media',{keyPath:'id'});};
-    req.onsuccess=()=>resolve(req.result); req.onerror=()=>reject(req.error);
-  });
-}
-async function assetMediaPut(id,blob,name='') {
-  const db=await assetMediaDb();
-  return new Promise((resolve,reject)=>{const tx=db.transaction('media','readwrite');tx.objectStore('media').put({id,blob,name,type:blob.type,updatedAt:Date.now()});tx.oncomplete=()=>{db.close();resolve(true)};tx.onerror=()=>{db.close();reject(tx.error)};});
-}
-async function assetMediaGet(id) {
-  const db=await assetMediaDb();
-  return new Promise((resolve,reject)=>{const req=db.transaction('media').objectStore('media').get(id);req.onsuccess=()=>{db.close();resolve(req.result||null)};req.onerror=()=>{db.close();reject(req.error)};});
-}
-async function assetMediaDelete(id) {
-  if(!id)return; const db=await assetMediaDb();
-  return new Promise((resolve,reject)=>{const tx=db.transaction('media','readwrite');tx.objectStore('media').delete(id);tx.oncomplete=()=>{db.close();const u=_assetObjectUrls.get(id);if(u)URL.revokeObjectURL(u);_assetObjectUrls.delete(id);resolve(true)};tx.onerror=()=>{db.close();reject(tx.error)};});
-}
-async function assetMediaUrl(id) {
-  if(_assetObjectUrls.has(id))return _assetObjectUrls.get(id);
-  const row=await assetMediaGet(id); if(!row?.blob)return '';
-  const url=URL.createObjectURL(row.blob);_assetObjectUrls.set(id,url);return url;
-}
-function assetApplyOrientation(el) {
-  const w=el.videoWidth||el.naturalWidth||0,h=el.videoHeight||el.naturalHeight||0;
-  if(!w||!h)return;
-  const card=el.closest('.asset-card');if(!card)return;
-  card.classList.remove('is-portrait','is-square','is-landscape');
-  card.classList.add('has-native-ratio');
-  card.classList.add(h>w*1.12?'is-portrait':w>h*1.12?'is-landscape':'is-square');
-  const thumb=el.closest('.asset-thumb');
-  if(thumb)thumb.style.aspectRatio=`${w} / ${h}`;
-}
-async function hydrateAssetMedia(root=document) {
-  const nodes=[...root.querySelectorAll('[data-asset-media]')];
-  await Promise.all(nodes.map(async el=>{try{const u=await assetMediaUrl(el.dataset.assetMedia);if(u){el.src=u;if(el.tagName==='VIDEO')el.load();}else el.outerHTML='<div class="form-hint" style="padding:1rem">File media tidak ditemukan. Unggah ulang dari perangkat.</div>';}catch(e){console.error(e);}}));
-}
 function renderAssets() {
   const box = document.getElementById('assetGrid');
   if (!box) return;
@@ -3146,18 +3149,16 @@ function renderAssets() {
   box.innerHTML = list.map(a => {
     const proj = (state.projects || []).find(p => p.id === a.project);
     let thumb = '';
-    const mediaAttr = a.mediaId ? `data-asset-media="${escapeHtml(a.mediaId)}"` : `src="${escapeHtml(a.url||'')}"`;
-    if (a.type === 'image') thumb = `<img ${mediaAttr} alt="${escapeHtml(a.name)}" onload="assetApplyOrientation(this)" onerror="this.parentElement.innerHTML='<span class=\\'big\\'><svg class="ico"><use href="#i-image"/></svg></span>'">`;
-    else if (a.type === 'video') thumb = `<video ${mediaAttr} muted loop playsinline controls preload="metadata" onloadedmetadata="assetApplyOrientation(this)" onmouseenter="this.play().catch(()=>{})" onmouseleave="this.pause()" onclick="event.stopPropagation()"></video>`;
+    if (a.type === 'image') thumb = `<img src="${escapeHtml(a.url)}" alt="${escapeHtml(a.name)}" onerror="this.parentElement.innerHTML='<span class=\\'big\\'><svg class="ico"><use href="#i-image"/></svg></span>'">`;
+    else if (a.type === 'video') thumb = `<video src="${escapeHtml(a.url)}" muted playsinline onmouseover="this.play()" onmouseout="this.pause()" style="width:100%;height:100%;object-fit:cover"></video>`;
     else if (a.type === 'audio') thumb = `<span class="big"><svg class="ico"><use href="#i-mic"/></svg></span>`;
     else if (a.type === 'link') thumb = `<span class="big"><svg class="ico"><use href="#i-link"/></svg></span>`;
     else thumb = `<span class="big"><svg class="ico"><use href="#i-pen"/></svg></span>`;
     let body = `<b title="${escapeHtml(a.name)}">${escapeHtml(a.name)}</b>`;
     if (a.type === 'text') body += `<div class="atext">${escapeHtml(a.content || '')}</div>`;
-    else if (a.type === 'audio') body += `<audio ${a.mediaId?`data-asset-media="${escapeHtml(a.mediaId)}"`:`src="${escapeHtml(a.url||'')}"`} controls onclick="event.stopPropagation()" style="width:100%;margin-top:.4rem;height:34px"></audio>`;
+    else if (a.type === 'audio') body += `<audio src="${escapeHtml(a.url)}" controls onclick="event.stopPropagation()" style="width:100%;margin-top:.4rem;height:34px"></audio>`;
     else if (a.type === 'link') body += `<a class="alink" href="${escapeHtml(a.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${escapeHtml(a.url)}</a>`;
-    if (a.type !== 'text' && a.content) body += `<div class="atext" title="${escapeHtml(a.content)}">${escapeHtml(a.content)}</div>`;
-    if (proj) body += `<div class="atext" style="color:${proj.color};font-weight:600;margin-top:.3rem">${escapeHtml(proj.emoji||'')} ${escapeHtml(proj.name)}</div>`;
+    if (proj) body += `<div class="atext" style="color:${proj.color};font-weight:600;margin-top:.3rem">${escapeHtml(proj.emoji)} ${escapeHtml(proj.name)}</div>`;
     return `<div class="asset-card" onclick="openAssetModal('${a.id}')">
       <span class="asset-kind">${kindLabel[a.type] || a.type}</span>
       <button class="asset-del" onclick="event.stopPropagation();hapusAsset('${a.id}')" title="Hapus"><svg class="ico"><use href="#i-trash"/></svg> ️</button>
@@ -3165,7 +3166,6 @@ function renderAssets() {
       <div class="asset-body">${body}</div>
     </div>`;
   }).join('');
-  hydrateAssetMedia(box);
 }
 function filterAssets(f) {
   state.assetFilter = f;
@@ -3183,27 +3183,19 @@ function openAssetModal(id) {
     <div class="modal-form">
       <label>Jenis Asset</label>
       <select class="form-select" id="assetType" onchange="switchAssetType()">
-        <option value="image" ${cur.type==='image'?'selected':''}>Gambar</option>
-        <option value="video" ${cur.type==='video'?'selected':''}>Video</option>
-        <option value="audio" ${cur.type==='audio'?'selected':''}>Audio</option>
+        <option value="image" ${cur.type==='image'?'selected':''}>Gambar (URL)</option>
         <option value="text" ${cur.type==='text'?'selected':''}>Teks / Catatan</option>
         <option value="link" ${cur.type==='link'?'selected':''}>Link Referensi</option>
       </select>
       <label>Nama / Judul</label>
       <input class="form-input" id="assetName" placeholder="mis: Referensi thumbnail kompetitor" value="${escapeHtml(cur.name || '')}">
       <div id="assetUrlWrap" style="display:${cur.type==='text'?'none':'block'}">
-        <div id="assetFileWrap" style="display:${cur.type==='link'?'none':'block'};margin-bottom:.7rem">
-          <label>Upload dari hard disk</label>
-          <input class="form-input" id="assetFile" type="file" accept="${cur.type==='video'?'video/*':cur.type==='audio'?'audio/*':'image/*'}">
-          <div class="form-hint">File disimpan lokal di IndexedDB browser dan tetap tersedia setelah refresh.</div>
-        </div>
-        <label id="assetUrlLabel">${cur.type==='link'?'URL Link':cur.type==='video'?'Sumber Video':cur.type==='audio'?'Sumber Audio':'Sumber Gambar'}</label>
-        <input class="form-input" id="assetUrl" placeholder="Opsional: URL eksternal" value="${escapeHtml(cur.url || '')}">
-        ${cur.mediaId?'<div class="form-hint">✓ File lokal sudah tersimpan. Pilih file baru hanya jika ingin menggantinya.</div>':''}
+        <label id="assetUrlLabel">${cur.type==='link'?'URL Link':'URL Gambar'}</label>
+        <input class="form-input" id="assetUrl" placeholder="https://..." value="${escapeHtml(cur.url || '')}">
       </div>
-      <div id="assetTextWrap" style="display:block">
-        <label id="assetContentLabel">${cur.type==='text'?'Isi Teks':'Cerita Adegan / Catatan'}</label>
-        <textarea class="form-textarea" id="assetContent" rows="4" placeholder="${cur.type==='text'?'Tulis catatan atau naskah...':'Tulis deskripsi adegan, dialog, gerakan kamera, atau catatan produksi...'}">${escapeHtml(cur.content || '')}</textarea>
+      <div id="assetTextWrap" style="display:${cur.type==='text'?'block':'none'}">
+        <label>Isi Teks</label>
+        <textarea class="form-textarea" id="assetContent" rows="4" placeholder="Tulis catatan, script, caption referensi...">${escapeHtml(cur.content || '')}</textarea>
       </div>
       <label>Masukkan ke Project</label>
       <select class="form-select" id="assetProject">${projOpts}</select>
@@ -3216,54 +3208,28 @@ function openAssetModal(id) {
 function switchAssetType() {
   const t = document.getElementById('assetType').value;
   document.getElementById('assetUrlWrap').style.display = t === 'text' ? 'none' : 'block';
-  document.getElementById('assetTextWrap').style.display = 'block';
-  const contentLabel=document.getElementById('assetContentLabel'), content=document.getElementById('assetContent');
-  if(contentLabel)contentLabel.textContent=t==='text'?'Isi Teks':'Cerita Adegan / Catatan';
-  if(content)content.placeholder=t==='text'?'Tulis catatan atau naskah...':'Tulis deskripsi adegan, dialog, gerakan kamera, atau catatan produksi...';
+  document.getElementById('assetTextWrap').style.display = t === 'text' ? 'block' : 'none';
   const lbl = document.getElementById('assetUrlLabel');
-  if (lbl) lbl.textContent = t === 'link' ? 'URL Link' : t === 'video' ? 'Sumber Video' : t === 'audio' ? 'Sumber Audio' : 'Sumber Gambar';
-  const fw=document.getElementById('assetFileWrap'), fi=document.getElementById('assetFile');
-  if(fw)fw.style.display=(t==='link'||t==='text')?'none':'block';
-  if(fi)fi.accept=t==='video'?'video/*':t==='audio'?'audio/*':'image/*';
+  if (lbl) lbl.textContent = t === 'link' ? 'URL Link' : 'URL Gambar';
 }
-async function simpanAsset(id) {
+function simpanAsset(id) {
   const type = document.getElementById('assetType').value;
   const name = document.getElementById('assetName').value.trim();
   if (!name) { toast('Nama kosong','Beri nama asset dulu','warning'); return; }
-  const existing=id?(state.assets||[]).find(x=>x.id===id):null;
-  const file=document.getElementById('assetFile')?.files?.[0]||null;
-  const assetId=id||('a'+Date.now());
   const data = {
     type, name,
     url: type !== 'text' ? document.getElementById('assetUrl').value.trim() : '',
-    content: document.getElementById('assetContent').value.trim(),
+    content: type === 'text' ? document.getElementById('assetContent').value.trim() : '',
     project: document.getElementById('assetProject').value,
-    mediaId: existing?.mediaId||''
   };
-  if (!['text','link'].includes(type) && file) {
-    const expected=type==='video'?'video/':type==='audio'?'audio/':'image/';
-    if(!file.type.startsWith(expected)){toast('File tidak sesuai',`Pilih file ${type}.`,'warning');return;}
-    try{await assetMediaPut(assetId,file,file.name);data.mediaId=assetId;data.url='';}
-    catch(e){toast('Upload gagal',e.message||'IndexedDB tidak tersedia','error');return;}
-  }
-  if (type !== 'text' && !data.url && !data.mediaId) { toast('Media kosong','Upload file dari hard disk atau isi URL.','warning'); return; }
-  if(['text','link'].includes(type))data.mediaId='';
-  let rollback = null;
+  if (type !== 'text' && !data.url) { toast('URL kosong','Isi URL-nya dulu ya','warning'); return; }
   if (id) {
     const a = state.assets.find(x => x.id === id);
-    if (a) { rollback = {...a}; Object.assign(a, data); }
+    if (a) Object.assign(a, data);
   } else {
-    const created = { id: assetId, ts: Date.now(), ...data };
-    state.assets.unshift(created);
-    rollback = created.id;
+    state.assets.unshift({ id: 'a' + Date.now(), ts: Date.now(), ...data });
   }
-  if (!save('assets', state.assets)) {
-    // Jangan biarkan UI tampak sukses bila video terlalu besar untuk localStorage.
-    if (id && rollback) Object.assign(state.assets.find(x => x.id === id) || {}, rollback);
-    else if (rollback) state.assets = state.assets.filter(x => x.id !== rollback);
-    renderAssets();
-    return;
-  }
+  save('assets', state.assets);
   closeModal();
   renderAssets();
   toast('Tersimpan', `Asset "${name}" disimpan.`,'success');
@@ -3274,7 +3240,6 @@ function hapusAsset(id) {
   if (!confirm(`Hapus asset "${a.name}"?`)) return;
   state.assets = state.assets.filter(x => x.id !== id);
   save('assets', state.assets);
-  if(a.mediaId)assetMediaDelete(a.mediaId).catch(console.error);
   renderAssets();
   toast('Dihapus','Asset dihapus.','info');
 }
@@ -4781,7 +4746,7 @@ function renderCharacters() {
 let _charEdit = null; // karakter yang sedang diedit (objek kerja)
 
 function openCharacterEditor(id) {
-  const existing = id ? (state.characters||[]).find(c => c.id === id) : null;
+  const existing = id&&typeof id==='object' ? id : (id ? (state.characters||[]).find(c => c.id === id) : null);
   _charEdit = existing ? JSON.parse(JSON.stringify(existing)) : {
     id: 'c'+Date.now(), name:'', role:'AI Influencer', tagline:'', mode:'fictional',
     identity:'', bible:'', voice:'', refs:[], ts:Date.now(),
@@ -4789,18 +4754,31 @@ function openCharacterEditor(id) {
   };
   if (!_charEdit.voiceCfg) _charEdit.voiceCfg = { provider:'gemini', voice:'Aoede', style:_charEdit.voice||'', lang:'id-ID', sampleUrl:'', locked:false, ownVoiceUrl:'', mode:'ai' };
   if (!_charEdit.mode) _charEdit.mode = 'fictional';
+  _charEdit.basic=_charEdit.basic||{age:'',eth:'',gender:'',height:'',roles:_charEdit.role?[_charEdit.role]:['AI Influencer']};
+  _charEdit.physicalIdentity=_charEdit.physicalIdentity||{};
+  _charEdit.styleDefaults=_charEdit.styleDefaults||{};
+  _charEdit.productionLocks=_charEdit.productionLocks||{};
   const c = _charEdit;
-  openModal(`
-    <div class="modal-header"><h2 class="modal-title">${existing?'Edit Karakter':'Karakter Baru'}</h2>
-      <button class="modal-close" onclick="closeModal()"><svg class="ico"><use href="#i-x"/></svg></button></div>
+  document.querySelectorAll('.view').forEach(v=>{v.classList.remove('active');v.style.display='none';v.style.visibility='hidden';v.style.opacity='0'});
+  const editorView=document.getElementById('view-character-editor');editorView.classList.add('active');editorView.style.display='block';editorView.style.visibility='visible';editorView.style.opacity='1';
+  const titleEl=document.getElementById('viewTitle'),subEl=document.getElementById('viewSubtitle');
+  if(titleEl)titleEl.textContent=existing?'Edit Karakter':'Karakter Baru';
+  if(subEl)subEl.textContent='Bangun identitas produksi yang konsisten dan siap dihubungkan ke AK Talent.';
+  const host=document.getElementById('characterEditorPage');
+  host.innerHTML=`
+    <div class="char-editor-page-head"><div><div class="char-editor-eyebrow">CHARACTER WORKSPACE</div><h2>${existing?'Edit Karakter':'Karakter Baru'}</h2><p>Lengkapi identitas, konsistensi visual, Master Set, Character Bible, dan suara dalam satu ruang kerja.</p></div>
+      <button class="btn btn-ghost" onclick="charCloseEditor()"><svg class="ico"><use href="#i-arrow-left"/></svg> Kembali ke Karakter</button></div>
+    <div class="char-editor-workspace">
     <div class="che-tabs">
-      <button class="che-tab on" data-pane="identity" onclick="charTab('identity')"><svg class="ico"><use href="#i-user"/></svg> Identitas</button>
-      <button class="che-tab" data-pane="refs" onclick="charTab('refs')"><svg class="ico"><use href="#i-image"/></svg> Foto Referensi</button>
-      <button class="che-tab" data-pane="bible" onclick="charTab('bible')"><svg class="ico"><use href="#i-doc"/></svg> Character Bible</button>
-      <button class="che-tab" data-pane="voice" onclick="charTab('voice')"><svg class="ico"><use href="#i-mic"/></svg> Suara</button>
+      <button class="che-tab on" data-pane="identity" onclick="charTab('identity')"><svg class="ico"><use href="#i-user"/></svg> 1 · Data & Detail Identitas</button>
+      <button class="che-tab" data-pane="refs" onclick="charTab('refs')"><svg class="ico"><use href="#i-image"/></svg> 2 · Master Set</button>
+      <button class="che-tab" data-pane="voice" onclick="charTab('voice')"><svg class="ico"><use href="#i-mic"/></svg> 3 · Suara</button>
+      <button class="che-tab" data-pane="bible" onclick="charTab('bible')"><svg class="ico"><use href="#i-doc"/></svg> 4 · Character Bible</button>
     </div>
 
+    <div class="char-step-one-grid" id="charStepOneGrid">
     <div class="che-pane on" id="chp-identity">
+      <div class="char-column-title"><span>1</span><div><b>Foto & data dasar</b></div></div>
       <label style="font-weight:600;font-size:.82rem;margin-bottom:.35rem;display:block">Jenis karakter</label>
       <div class="char-mode-row" style="display:flex;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap">
         <div class="char-mode-opt ${c.mode==='fictional'?'on':''}" data-mode="fictional" onclick="charSetMode('fictional')">
@@ -4812,19 +4790,40 @@ function openCharacterEditor(id) {
           <div><div class="cm-t">Kreator Asli (aku sendiri)</div><div class="cm-d">Jadikan diri sendiri AI Influencer — wajah & suara asli</div></div>
         </div>
       </div>
-      <div class="ce-prop-group"><label>Nama karakter</label><input class="form-input" id="chName" value="${escapeHtml(c.name)}" placeholder="mis: Ayuna" oninput="_charEdit.name=this.value"></div>
-      <div class="ce-prop-group"><label>Peran</label><select class="form-select" id="chRole" onchange="_charEdit.role=this.value">${CHAR_ROLES.map(r=>`<option ${c.role===r?'selected':''}>${r}</option>`).join('')}</select></div>
-      <div class="ce-prop-group"><label>Tagline singkat</label><input class="form-input" id="chTagline" value="${escapeHtml(c.tagline)}" placeholder="mis: Gadis sebelah rumah, hangat & ceria" oninput="_charEdit.tagline=this.value"></div>
-      <div class="ce-prop-group"><label>Deskripsi identitas (dipakai untuk generate & bible)</label>
-        <textarea class="form-input" id="chIdentity" rows="6" placeholder="Deskripsikan penampilan detail: usia, wajah, rambut, kulit, gaya, kepribadian, gaya bicara. Makin detail makin konsisten. Boleh Bahasa Indonesia atau Inggris." oninput="_charEdit.identity=this.value">${escapeHtml(c.identity)}</textarea></div>
+      <div class="char-basic-top">
+        <div class="char-photo-block"><label>Foto canonical *</label><div id="chCanonicalPreview">${(c.refs||[])[0]?.url?`<img src="${(c.refs||[])[0].url}" class="char-canonical-img">`:'<div class="char-photo-empty"><svg class="ico"><use href="#i-user"/></svg><span>Foto wajah</span></div>'}</div><label class="btn char-photo-picker"><svg class="ico"><use href="#i-upload"/></svg> Pilih Foto<input type="file" accept="image/*" hidden onchange="charLoadCanonicalPhoto(event)"></label></div>
+        <div class="char-basic-fields"><div class="char-section-label">Identitas dasar</div>
+      <div class="ce-prop-row" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem">
+        <div class="ce-prop-group"><label>Nama karakter *</label><input class="form-input" id="chName" value="${escapeHtml(c.name)}" placeholder="Nama karakter" oninput="_charEdit.name=this.value"></div>
+        <div class="ce-prop-group"><label>Usia visual *</label><input class="form-input" id="chAge" value="${escapeHtml(c.basic.age||'')}" placeholder="25" oninput="_charEdit.basic.age=this.value"></div>
+        <div class="ce-prop-group"><label>Etnis</label><input class="form-input" id="chEth" value="${escapeHtml(c.basic.eth||'')}" placeholder="Indonesia" oninput="_charEdit.basic.eth=this.value"></div>
+        <div class="ce-prop-group"><label>Gender *</label><input class="form-input" id="chGender" value="${escapeHtml(c.basic.gender||'')}" placeholder="Perempuan" oninput="_charEdit.basic.gender=this.value"></div>
+        <div class="ce-prop-group"><label>Tinggi badan</label><input class="form-input" id="chHeight" value="${escapeHtml(c.basic.height||'')}" placeholder="165 cm" oninput="_charEdit.basic.height=this.value"></div>
+      </div></div></div>
+      <div class="ce-prop-group"><label>Peran produksi *</label><div class="role-options">${['AI Influencer','Model','UGC Creator','Brand Ambassador','Aktor/Aktris','Host/Presenter','Penyanyi/Musisi'].map(r=>`<label class="role-option"><input type="checkbox" ${c.basic.roles?.includes(r)?'checked':''} onchange="charToggleBasicRole('${r}',this.checked)">${r}</label>`).join('')}</div></div>
+      <div class="ce-prop-group"><label>Peran lainnya</label><input class="form-input" id="chRoleCustom" value="${escapeHtml((c.basic.roles||[]).filter(r=>!['AI Influencer','Model','UGC Creator','Brand Ambassador','Aktor/Aktris','Host/Presenter','Penyanyi/Musisi'].includes(r)).join(', '))}" placeholder="Barista, mentor kreatif" oninput="charSetCustomRoles(this.value)"></div>
+      <div class="ce-prop-group"><label>Tagline singkat</label><input class="form-input" id="chTagline" value="${escapeHtml(c.tagline)}" placeholder="Ringkasan identitas atau positioning karakter" oninput="_charEdit.tagline=this.value"></div>
+      <div class="ce-prop-group"><label>Catatan tambahan untuk Gemini</label><textarea class="form-input" id="chIdentity" rows="4" placeholder="Opsional: ciri yang diketahui pemilik, asal karakter, atau arahan identitas yang tidak dapat disimpulkan dari foto." oninput="_charEdit.identity=this.value">${escapeHtml(c.identity)}</textarea></div>
       <div class="che-gen-actions">
-        <button class="btn btn-secondary btn-sm" onclick="charFillTemplate()"><svg class="ico"><use href="#i-doc"/></svg> Isi contoh template</button>
+        <button class="btn btn-primary" id="chAnalyzeGeminiBtn" onclick="charAnalyzeGemini()"><svg class="ico"><use href="#i-sparkle"/></svg> 4. Deteksi Identitas dengan Gemini</button>
       </div>
-      <div class="che-hint">Makin detail identitas (wajah, rambut, gaya, kepribadian), makin konsisten hasilnya.</div>
+    </div>
+
+    <div class="che-pane on" id="chp-consistency">
+      <div class="char-column-title"><span>2</span><div><b>Detail fisik</b></div></div>
+      <div style="font-weight:700;margin:0 0 .4rem">Identity Lock</div>
+      ${[['faceShape','Bentuk wajah'],['skin','Warna kulit dasar'],['skinTexture','Tekstur kulit'],['eyes','Mata'],['eyeDetail','Detail mata'],['eyebrows','Alis'],['nose','Hidung'],['lips','Bibir'],['lipDetail','Detail bibir'],['hairBase','Rambut dasar'],['hairDetail','Detail rambut'],['bodyType','Proporsi/bentuk tubuh']].map(([k,l])=>`<div class="ce-prop-group"><label>${l}</label><input class="form-input" value="${escapeHtml(c.physicalIdentity[k]||'')}" oninput="_charEdit.physicalIdentity['${k}']=this.value"></div>`).join('')}
+      <div class="ce-prop-group"><label>Ciri permanen</label><textarea class="form-input" rows="2" oninput="_charEdit.physicalIdentity.permanentTraits=this.value.split(',').map(x=>x.trim()).filter(Boolean)">${escapeHtml((c.physicalIdentity.permanentTraits||[]).join(', '))}</textarea></div>
+      <div style="font-weight:700;margin:.8rem 0 .4rem">Mutable Styling</div>
+      <div class="che-hint">Boleh diganti per job tanpa mengubah wajah: pakaian, gaya rambut, makeup, lipstick, aksesori, perhiasan, dan lainnya.</div>
+      <div class="ce-prop-group"><label>Gaya default</label><textarea class="form-input" rows="3" oninput="_charEdit.styleDefaults.description=this.value">${escapeHtml(c.styleDefaults.description||'')}</textarea></div>
+      <div style="font-weight:700;margin:.8rem 0 .4rem">Production Locks</div>
+      <div class="ce-prop-group"><label>Elemen yang tidak boleh berubah</label><textarea class="form-input" rows="4" placeholder="Wajah, usia visual, proporsi tubuh, ciri permanen..." oninput="_charEdit.productionLocks.text=this.value">${escapeHtml(c.productionLocks.text||'')}</textarea></div>
+    </div>
     </div>
 
     <div class="che-pane" id="chp-refs">
-      <div class="che-hint" id="chRefHint">Unggah 1–8 foto karakter. Klik satu untuk jadikan <strong>Master</strong> — acuan wajah agar tetap sama di setiap gambar baru.</div>
+      <div class="che-hint" id="chRefHint">Canonical Master Set menargetkan tepat <strong>12 referensi</strong>. Klik satu untuk menjadikannya acuan utama; seluruh gambar tetap dipakai sebagai identitas multi-angle.</div>
       <div class="che-gen-actions" id="chWebcamRow" style="display:none">
         <button class="btn btn-secondary btn-sm" onclick="charOpenWebcam()"><svg class="ico"><use href="#i-camera"/></svg> Ambil foto dari kamera</button>
       </div>
@@ -4875,8 +4874,14 @@ function openCharacterEditor(id) {
         <div id="chOwnVoiceOut"></div>
       </div>
       <div id="chVoiceAiBox">
-        <div class="ce-prop-group"><label>Pilih voice</label>
-          <select class="form-select" id="chVoiceName" onchange="_charSyncVoiceCfg()"></select></div>
+        <div class="ce-prop-row" style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <div class="ce-prop-group" style="flex:1;min-width:150px"><label>Mesin suara</label>
+            <select class="form-select" id="chVoiceProvider" onchange="charVoiceProviderChange()">
+              <option value="gemini">Gemini (natural, kontrol gaya)</option>
+            </select></div>
+          <div class="ce-prop-group" style="flex:1;min-width:150px"><label>Pilih voice</label>
+            <select class="form-select" id="chVoiceName" onchange="_charSyncVoiceCfg()"></select></div>
+        </div>
         <div class="ce-prop-group"><label>Gaya bicara / "kostum" suara (instructions)</label>
           <textarea class="form-input" id="chVoiceStyle" rows="3" placeholder="mis: perempuan muda Indonesia, ceria & hangat, tempo santai seperti ngobrol dengan sahabat, terdengar sedang tersenyum, energi ringan, artikulasi jelas." oninput="_charSyncVoiceCfg()"></textarea></div>
         <div class="ce-prop-group"><label>Bahasa</label>
@@ -4887,14 +4892,10 @@ function openCharacterEditor(id) {
           </select></div>
         <div class="ce-prop-group"><label>Teks sampel untuk audisi</label>
           <textarea class="form-input" id="chVoiceSample" rows="2">Halo semuanya, aku ${escapeHtml(c.name||'karakter')} — senang banget bisa nemenin kalian hari ini! Yuk kita mulai.</textarea></div>
-        <div class="che-gen-actions" style="align-items:center;flex-wrap:wrap">
+        <div class="che-gen-actions">
           <button class="btn btn-primary btn-sm" id="chAuditionBtn" onclick="charAuditionVoice()"><svg class="ico"><use href="#i-play"/></svg> Coba suara (audisi)</button>
-          <select class="form-select" id="chVoiceProvider" onchange="charVoiceProviderChange()" style="width:auto;min-width:210px;padding:.45rem .7rem" aria-label="Provider suara">
-            <option value="gemini">Google Gemini TTS (API key sendiri)</option>
-          </select>
-          <button class="btn btn-ghost btn-sm" onclick="charTestVoice()" title="Preview cepat memakai suara yang tersedia di browser">Preview browser</button>
+          <button class="btn btn-ghost btn-sm" onclick="charTestVoice()" title="Preview cepat pakai suara browser (tanpa internet)">Preview browser</button>
         </div>
-        <div class="form-hint">Provider dipilih manual. Audisi Gemini memakai API key Gemini dari Pengaturan API—tanpa Puter.</div>
         <div id="chVoiceAuditionOut"></div>
       </div>
       <div class="che-hint" id="chVoiceSavedInfo" style="display:none"></div>
@@ -4902,14 +4903,25 @@ function openCharacterEditor(id) {
 
     <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:1.25rem;border-top:1px solid var(--border);padding-top:1rem">
       <button class="btn btn-primary" style="flex:1" onclick="saveCharacter()"><svg class="ico"><use href="#i-save"/></svg> Simpan Karakter</button>
-      ${existing?`<button class="btn btn-danger" onclick="deleteCharacter('${c.id}')"><svg class="ico"><use href="#i-trash"/></svg> Hapus</button>`:''}
-      <button class="btn btn-ghost" onclick="closeModal()">Tutup</button>
+      ${existing?`<button class="btn btn-secondary" onclick="exportSharedCharacter('${c.id}')"><svg class="ico"><use href="#i-download"/></svg> Hubungkan ke AK Talent</button><button class="btn btn-danger" onclick="deleteCharacter('${c.id}')"><svg class="ico"><use href="#i-trash"/></svg> Hapus</button>`:''}
+      <button class="btn btn-ghost" onclick="charCloseEditor()">Tutup</button>
     </div>
-  `);
+    </div>
+  `;
   charRenderRefs();
   charInitVoiceUI();
   charApplyMode();
   charSetVoiceMode(_charEdit.voiceCfg.mode === 'own' ? 'own' : 'ai');
+}
+function charCloseEditor(){
+  document.querySelectorAll('.view').forEach(v=>{v.classList.remove('active');v.style.display='none';v.style.visibility='hidden';v.style.opacity='0'});
+  const listView=document.getElementById('view-characters');listView.classList.add('active');listView.style.display='block';listView.style.visibility='visible';listView.style.opacity='1';
+  const nav=document.querySelector('.nav-item[data-view="characters"]');
+  document.querySelectorAll('.nav-item').forEach(x=>x.classList.toggle('active',x===nav));
+  const titleEl=document.getElementById('viewTitle'),subEl=document.getElementById('viewSubtitle');
+  if(titleEl)titleEl.textContent='Karakter';
+  if(subEl)subEl.textContent='Identitas produksi, referensi canonical, Bible, dan suara karakter.';
+  renderCharacters();
 }
 
 // ---- Voice Studio ----
@@ -4942,24 +4954,18 @@ function charInitVoiceUI() {
   const cfg = _charEdit.voiceCfg;
   const provSel = document.getElementById('chVoiceProvider');
   if (!provSel) return;
-  // Puter/OpenAI transport lama tidak lagi dipakai untuk Voice Studio.
-  provSel.value = Array.from(provSel.options).some(o=>o.value===cfg.provider) ? cfg.provider : 'gemini';
+  provSel.value = cfg.provider || 'gemini';
   charVoiceProviderChange(true);
-  const voices = CHAR_VOICES[provSel.value] || CHAR_VOICES.gemini;
-  const wanted = voices.some(v=>v.id===cfg.voice) ? cfg.voice : voices[0].id;
-  document.getElementById('chVoiceName').value = wanted;
-  cfg.provider = provSel.value; cfg.voice = wanted;
+  document.getElementById('chVoiceName').value = cfg.voice || CHAR_VOICES[provSel.value][0].id;
   document.getElementById('chVoiceStyle').value = cfg.style || _charEdit.voice || '';
   document.getElementById('chVoiceLang').value = cfg.lang || 'id-ID';
   _charUpdateVoiceSavedInfo();
 }
 function charVoiceProviderChange(keep) {
-  const provEl = document.getElementById('chVoiceProvider');
-  const prov = provEl?.value || 'gemini';
+  const prov = document.getElementById('chVoiceProvider').value;
   const sel = document.getElementById('chVoiceName');
-  const voices = CHAR_VOICES[prov] || CHAR_VOICES.gemini;
-  sel.innerHTML = voices.map(v=>`<option value="${v.id}">${v.label}</option>`).join('');
-  if (!keep) { _charEdit.voiceCfg.provider = prov; _charEdit.voiceCfg.voice = voices[0].id; }
+  sel.innerHTML = CHAR_VOICES[prov].map(v=>`<option value="${v.id}">${v.label}</option>`).join('');
+  if (!keep) { _charEdit.voiceCfg.provider = prov; _charEdit.voiceCfg.voice = CHAR_VOICES[prov][0].id; }
   _charSyncVoiceCfg();
 }
 function _charSyncVoiceCfg() {
@@ -4980,45 +4986,6 @@ function _charUpdateVoiceSavedInfo() {
     box.innerHTML = `✅ <strong>Suara terkunci</strong> untuk karakter ini (${label}). Sampel tersimpan & akan jadi referensi saat produksi video. <button class="btn btn-ghost btn-sm" style="margin-left:.5rem" onclick="charUnlockVoice()">Ganti suara</button>`;
   } else { box.style.display = 'none'; }
 }
-async function _charPcmToWavDataUrl(b64Pcm, sampleRate=24000) {
-  const bin = atob(b64Pcm), len = bin.length;
-  const buf = new ArrayBuffer(44 + len), v = new DataView(buf);
-  const write = (offset, text)=>{ for(let i=0;i<text.length;i++) v.setUint8(offset+i,text.charCodeAt(i)); };
-  write(0,'RIFF'); v.setUint32(4,36+len,true); write(8,'WAVE'); write(12,'fmt ');
-  v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
-  v.setUint32(24,sampleRate,true); v.setUint32(28,sampleRate*2,true);
-  v.setUint16(32,2,true); v.setUint16(34,16,true); write(36,'data'); v.setUint32(40,len,true);
-  const bytes = new Uint8Array(buf,44); for(let i=0;i<len;i++) bytes[i]=bin.charCodeAt(i);
-  return await new Promise((resolve,reject)=>{
-    const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=()=>reject(r.error); r.readAsDataURL(new Blob([buf],{type:'audio/wav'}));
-  });
-}
-async function _charGeminiTTS(text, voice, style) {
-  const keys = providerKeys(state.providers?.gemini);
-  if (!keys.length) throw new Error('API key Gemini belum diisi. Buka Pengaturan API → Google Gemini.');
-  const model = 'gemini-3.1-flash-tts-preview';
-  const spoken = (style?.trim() ? style.trim().replace(/[:：]\s*$/,'')+': ' : 'Say naturally: ') + text;
-  const body = JSON.stringify({
-    contents:[{parts:[{text:spoken}]}],
-    generationConfig:{responseModalities:['AUDIO'],speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:voice||'Kore'}}}}
-  });
-  let lastError = null;
-  for (const key of keys) {
-    try {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`,{
-        method:'POST',headers:{'Content-Type':'application/json'},body
-      });
-      const data = await res.json().catch(()=>({}));
-      if(!res.ok) throw new Error(`Gemini TTS HTTP ${res.status}: ${data.error?.message||'request gagal'}`);
-      const part=(data.candidates?.[0]?.content?.parts||[]).find(p=>p.inlineData?.data);
-      if(!part) throw new Error('Gemini tidak mengembalikan audio.');
-      const rate=parseInt((/rate=(\d+)/i.exec(part.inlineData.mimeType||'')||[])[1]||'24000',10);
-      notifyProviderUsed('voice','Google Gemini',model,'gemini');
-      return await _charPcmToWavDataUrl(part.inlineData.data,rate);
-    } catch(err) { lastError=err; if(!isLimitError(err)) break; }
-  }
-  throw lastError || new Error('Gemini TTS gagal.');
-}
 async function charAuditionVoice() {
   _charSyncVoiceCfg();
   const c = _charEdit.voiceCfg;
@@ -5026,27 +4993,37 @@ async function charAuditionVoice() {
   const out = document.getElementById('chVoiceAuditionOut');
   const btn = document.getElementById('chAuditionBtn');
   const orig = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<svg class="ico"><use href="#i-refresh"/></svg> Membuat suara…';
-  out.innerHTML = `<div class="tm-meta">Menghasilkan audisi via Google Gemini TTS…</div>`;
+  out.innerHTML = `<div class="tm-meta">Menghasilkan audisi suara…</div>`;
   try {
-    if(c.provider!=='gemini') throw new Error('Provider suara belum didukung. Pilih Google Gemini TTS.');
-    const src = await _charGeminiTTS(text,c.voice,c.style);
+    if (typeof puter === 'undefined' || !puter?.ai?.txt2speech) throw new Error('Puter.js belum termuat. Buka via https & pastikan online.');
+    const opts = { provider: c.provider, voice: c.voice };
+    if (c.style) opts.instructions = c.style;
+    if (c.provider === 'gemini') opts.model = 'gemini-2.5-flash-preview-tts';
+    if (c.provider === 'openai') opts.model = 'gpt-4o-mini-tts';
+    if (c.lang) opts.language = c.lang;
+    const audio = await puter.ai.txt2speech(text, opts);
+    const src = audio && (audio.src || (audio.querySelector && audio.querySelector('source')?.src));
+    if (!src) throw new Error('Tidak ada audio yang dihasilkan.');
     _charEdit._lastVoiceSample = src;
     out.innerHTML = `
-      <audio src="${src}" controls autoplay style="width:100%;margin-top:.5rem"></audio>
+      <audio src="${src}" controls style="width:100%;margin-top:.5rem"></audio>
       <div class="che-gen-actions">
         <button class="btn btn-primary btn-sm" onclick="charLockVoice()"><svg class="ico"><use href="#i-save"/></svg> Pas! Kunci suara ini ke karakter</button>
         <button class="btn btn-ghost btn-sm" onclick="charAuditionVoice()"><svg class="ico"><use href="#i-refresh"/></svg> Coba lagi</button>
       </div>
-      <div class="tm-meta">Diproses langsung oleh Gemini dengan API key milikmu—tanpa Puter. Jika sudah pas, klik "Kunci suara".</div>`;
+      <div class="tm-meta">Belum pas? Ganti voice/gaya di atas lalu "Coba suara" lagi. Kalau sudah pas, klik "Kunci suara".</div>`;
+    try { audio.play?.(); } catch(_){}
   } catch (e) {
     out.innerHTML = `<div class="tm-meta" style="color:var(--danger,#e05252)">Gagal: ${escapeHtml(e.message||'')}</div>`;
   } finally { btn.disabled = false; btn.innerHTML = orig; }
 }
+function charVoiceSignature(c=_charEdit){const v=c.voiceCfg||{};return JSON.stringify({mode:v.mode,provider:v.provider,voice:v.voice,style:v.style,lang:v.lang,ownVoiceUrl:v.ownVoiceUrl||''})}
 function charLockVoice() {
   _charSyncVoiceCfg();
   _charEdit.voiceCfg.locked = true;
   _charEdit.voiceCfg.sampleUrl = _charEdit._lastVoiceSample || '';
   _charEdit.voiceCfg.sampleText = document.getElementById('chVoiceSample').value || '';
+  if(_charEdit.bibleVoiceSignature&&_charEdit.bibleVoiceSignature!==charVoiceSignature())_charEdit.bibleVoiceSignature='';
   _charUpdateVoiceSavedInfo();
   toast('Suara terkunci','Suara ini jadi referensi tetap karakter. Simpan karakter untuk menyimpan permanen.','success');
 }
@@ -5056,6 +5033,11 @@ function charUnlockVoice() {
   toast('Silakan ganti','Atur ulang voice/gaya lalu audisi & kunci lagi.','info');
 }
 
+const CHAR_CORE_ROLES=['AI Influencer','Model','UGC Creator','Brand Ambassador','Aktor/Aktris','Host/Presenter','Penyanyi/Musisi'];
+function charToggleBasicRole(role,on){_charEdit.basic.roles=_charEdit.basic.roles||[];if(on&&!_charEdit.basic.roles.includes(role))_charEdit.basic.roles.push(role);if(!on)_charEdit.basic.roles=_charEdit.basic.roles.filter(x=>x!==role);_charEdit.role=_charEdit.basic.roles[0]||''}
+function charSetCustomRoles(value){const custom=value.split(',').map(x=>x.trim()).filter(Boolean);_charEdit.basic.roles=[...(_charEdit.basic.roles||[]).filter(x=>CHAR_CORE_ROLES.includes(x)),...custom];_charEdit.role=_charEdit.basic.roles[0]||''}
+async function charLoadCanonicalPhoto(event){const f=event.target.files?.[0];event.target.value='';if(!f)return;if(f.size>8*1024*1024)return toast('Terlalu besar','Maksimal 8 MB','warning');const url=await _tbReadFile(f);_charEdit.refs=_charEdit.refs||[];if(_charEdit.refs.length)_charEdit.refs[0]={..._charEdit.refs[0],url,master:true,label:'Canonical Portrait',group:'Master Face',source:'owner-upload'};else _charEdit.refs.push({url,master:true,label:'Canonical Portrait',group:'Master Face',source:'owner-upload'});document.getElementById('chCanonicalPreview').innerHTML=`<img src="${url}" class="char-canonical-img">`;charRenderRefs()}
+async function charAnalyzeGemini(){const c=_charEdit;if(!c.name?.trim()||!c.basic?.age?.trim()||!c.basic?.gender?.trim()||!(c.basic?.roles||[]).length)return toast('Data belum lengkap','Isi nama, usia visual, gender, dan minimal satu peran sebelum menjalankan Gemini.','warning');const photo=(c.refs||[]).find(x=>x.master)?.url||(c.refs||[])[0]?.url;if(!photo)return toast('Foto diperlukan','Unggah foto sumber canonical terlebih dahulu.','warning');const cfg=state.providers?.gemini,keys=cfg?providerKeys(cfg):[];if(!keys.length)return toast('Gemini belum siap','Masukkan dan verifikasi API key Gemini di Pengaturan.','warning');const btn=document.getElementById('chAnalyzeGeminiBtn'),old=btn.innerHTML;btn.disabled=true;btn.textContent='Gemini sedang menganalisis…';try{const m=photo.match(/^data:([^;]+);base64,(.+)$/);if(!m)throw new Error('Format foto tidak didukung');const prompt=`Analisis foto karakter ini untuk konsistensi produksi. Data yang telah diberikan pemilik dan tidak boleh diubah: nama ${c.name}; usia visual ${c.basic.age}; etnis ${c.basic.eth||'tidak ditentukan'}; gender ${c.basic.gender}; tinggi ${c.basic.height||'tidak ditentukan'}; peran ${(c.basic.roles||[]).join(', ')}. Catatan pemilik: ${c.identity||'tidak ada'}. Keluarkan JSON saja tanpa markdown dengan keys: faceShape, skin, skinTexture, eyes, eyeDetail, eyebrows, nose, lips, lipDetail, hairBase, hairDetail, bodyType, permanentTraits (array), identityDescription. Gunakan Bahasa Indonesia, objektif, rinci, jangan menebak kepribadian dari wajah dan jangan mengganti data pemilik.`;const model='gemini-2.5-flash';const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(keys[0])}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt},{inline_data:{mime_type:m[1],data:m[2]}}]}],generationConfig:{responseMimeType:'application/json'}})});const j=await r.json();if(!r.ok)throw new Error(j.error?.message||'Gemini gagal');const raw=j.candidates?.[0]?.content?.parts?.[0]?.text||'';const data=JSON.parse(raw.replace(/```json|```/g,'').trim());c.physicalIdentity={...(c.physicalIdentity||{}),...data};delete c.physicalIdentity.identityDescription;if(data.identityDescription){c.identity=data.identityDescription;const x=document.getElementById('chIdentity');if(x)x.value=c.identity}toast('Deteksi selesai','Identity Lock telah diisi. Periksa di tab Konsistensi.','success');openCharacterEditor(c)}catch(e){toast('Deteksi gagal',e.message||String(e),'error')}finally{const b=document.getElementById('chAnalyzeGeminiBtn');if(b){b.disabled=false;b.innerHTML=old}}}
 function charFillTemplate() {
   if (!document.getElementById('chIdentity').value.trim() || confirm('Ganti isi identitas dengan contoh template?')) {
     const tpl = `Young Indonesian woman, 21 years old, [peran: hijab lifestyle creator / beauty / dll]. [Pakaian khas: mis. dusty pink pashmina hijab dengan pin mutiara, blouse floral pink]. Warm bright genuine smile, gentle expressive brown eyes. Clean glowing natural skin dengan tekstur realistis. Bibir natural soft rose-nude. Proporsi ramping elegan, tinggi ~165 cm. Kepribadian: ramah, ceria, hangat, rendah hati, seperti sahabat sebelah rumah. Vibe: cozy, wholesome, trustworthy. Visual style: soft natural window light, 35mm cinematic look, subtle film grain.`;
@@ -5174,6 +5156,7 @@ function _charShowOwnVoice(url) {
     <audio src="${url}" controls style="width:100%;margin:.35rem 0"></audio>
     <div class="che-gen-actions">
       <button class="btn btn-primary btn-sm" onclick="charLockOwnVoice(false)"><svg class="ico"><use href="#i-save"/></svg> Pakai suara asliku (kunci)</button>
+      <button class="btn btn-secondary btn-sm" onclick="charEnhanceOwnVoice()"><svg class="ico"><use href="#i-sparkle"/></svg> Bersihkan noise (AI)</button>
     </div>
     <div class="tm-meta">Suara asli ini akan dipakai untuk narasi & jadi referensi produksi video.</div>`;
 }
@@ -5209,14 +5192,15 @@ function charLockOwnVoice() {
 
 function charTab(pane) {
   document.querySelectorAll('.che-tab').forEach(t => t.classList.toggle('on', t.dataset.pane===pane));
-  document.querySelectorAll('.che-pane').forEach(p => p.classList.toggle('on', p.id==='chp-'+pane));
+  document.querySelectorAll('.che-pane').forEach(p => p.classList.toggle('on', pane==='identity'?(p.id==='chp-identity'||p.id==='chp-consistency'):p.id==='chp-'+pane));
+  const grid=document.getElementById('charStepOneGrid');if(grid)grid.style.display=pane==='identity'?'grid':'none';
 }
 
 function charRenderRefs() {
   const grid = document.getElementById('chRefGrid');
   if (!grid) return;
   const refs = _charEdit.refs || [];
-  grid.innerHTML = refs.map((r,i)=>`
+  grid.innerHTML = `<div style="grid-column:1/-1" class="che-hint">CANONICAL MASTER SET · ${Math.min(refs.length,12)}/12 ${refs.length===12?'· LENGKAP':'· perlu dilengkapi'}</div>`+refs.map((r,i)=>`
     <div class="che-ref ${r.master?'master':''}" onclick="charSetMaster(${i})" title="${r.label?escapeHtml(r.label)+' — ':''}Klik untuk jadikan Master">
       <img src="${r.url}">
       ${r.label?`<span class="che-ref-label">${escapeHtml(r.label)}</span>`:''}
@@ -5248,36 +5232,20 @@ const SHEET_BODY = [
   { id:'fullbody', label:'Seluruh Badan', prompt:'full body shot, head to toe, standing pose' },
 ];
 function charRenderSheetOpts() {
-  const el = document.getElementById('chSheetOpts');
-  if (!el) return;
-  _charEdit._sheetSel = _charEdit._sheetSel || {
-    angles:['front','left45','right45','profileL','profileR'],
-    expr:['natural','smile','laugh','thinking'],
-    body:['halfbody','fullbody']
-  };
-  const s = _charEdit._sheetSel;
-  const chip = (cat, id, label) => `<label class="sheet-chip ${s[cat].includes(id)?'on':''}"><input type="checkbox" ${s[cat].includes(id)?'checked':''} onchange="charToggleSheet('${cat}','${id}')">${label}</label>`;
-  el.innerHTML = `
-    <div class="sheet-cat"><span class="sheet-cat-t">Angle wajah</span><div class="sheet-chips">${SHEET_ANGLES.map(a=>chip('angles',a.id,a.label)).join('')}</div></div>
-    <div class="sheet-cat"><span class="sheet-cat-t">Ekspresi</span><div class="sheet-chips">${SHEET_EXPR.map(a=>chip('expr',a.id,a.label)).join('')}</div></div>
-    <div class="sheet-cat"><span class="sheet-cat-t">Badan</span><div class="sheet-chips">${SHEET_BODY.map(a=>chip('body',a.id,a.label)).join('')}</div></div>`;
+  const el=document.getElementById('chSheetOpts');if(!el)return;
+  const required=[...SHEET_ANGLES,...SHEET_EXPR.filter(x=>['natural','smile','laugh','thinking'].includes(x.id)),...SHEET_BODY];
+  el.innerHTML=`<div class="che-hint"><b>12 referensi tetap:</b> 1 foto canonical + 11 hasil Kie.ai. Tidak perlu memilih.</div><div class="sheet-chips">${required.map((x,i)=>`<span class="sheet-chip on">${i+2}. ${x.label}</span>`).join('')}</div>`;
 }
-function charToggleSheet(cat, id) {
-  const s = _charEdit._sheetSel;
-  const i = s[cat].indexOf(id);
-  if (i>=0) s[cat].splice(i,1); else s[cat].push(id);
-}
+function charToggleSheet(){ /* Canonical set v1 bersifat tetap. */ }
 async function charGenSheet() {
   const c = _charEdit;
   const master = (c.refs||[]).find(r=>r.master) || (c.refs||[])[0];
   if (!master) { toast('Perlu foto Master','Unggah/ambil minimal 1 foto & jadikan Master dulu','warning'); return; }
-  const s = c._sheetSel;
-  // susun daftar shot: angle + ekspresi + badan
-  const shots = [];
-  SHEET_ANGLES.filter(a=>s.angles.includes(a.id)).forEach(a=>shots.push({ label:a.label, prompt:a.prompt, kind:'angle' }));
-  SHEET_EXPR.filter(a=>s.expr.includes(a.id)).forEach(a=>shots.push({ label:a.label, prompt:'front view, '+a.prompt, kind:'expr' }));
-  SHEET_BODY.filter(a=>s.body.includes(a.id)).forEach(a=>shots.push({ label:a.label, prompt:a.prompt, kind:'body' }));
-  if (!shots.length) { toast('Pilih dulu','Centang minimal satu angle/ekspresi/badan','warning'); return; }
+  // Canonical Set v1 tetap: foto sumber + 11 shot wajib = tepat 12.
+  const shots=[];
+  SHEET_ANGLES.forEach(a=>shots.push({label:a.label,prompt:a.prompt,kind:'angle'}));
+  SHEET_EXPR.filter(a=>['natural','smile','laugh','thinking'].includes(a.id)).forEach(a=>shots.push({label:a.label,prompt:'front view, '+a.prompt,kind:'expr'}));
+  SHEET_BODY.forEach(a=>shots.push({label:a.label,prompt:a.prompt,kind:'body'}));
 
   const btn = document.getElementById('chSheetBtn');
   const orig = btn.innerHTML; btn.disabled = true;
@@ -5292,7 +5260,7 @@ async function charGenSheet() {
     prog.innerHTML = shots.map((sh,idx)=>`<div class="sheet-cell ${idx<i?'done':idx===i?'active':''}">${generated[idx]?`<img src="${generated[idx].url}">`:`<span>${escapeHtml(sh.label)}</span>`}${idx===i?'<div class="sheet-spin"></div>':''}</div>`).join('');
     try {
       const prompt = `${idBase()}. ${shot.prompt}. Keep the exact same face, identity, hairstyle and features as the reference image. Photorealistic, consistent lighting, plain neutral background, high detail`;
-      const res = await generateImageAI(prompt, { width:1024, height:1024, inputImages:[master.url] });
+      const res = await generateImageAI(prompt, { width:1024, height:1024, inputImages:[master.url], providerId:'kie' });
       generated[i] = { url:res.dataUrl, label:shot.label };
     } catch (e) {
       generated[i] = null;
@@ -5306,7 +5274,7 @@ async function charGenSheet() {
 
   // Simpan semua ke referensi karakter (terkunci konsistensi)
   c.refs = c.refs || [];
-  ok.forEach(g => c.refs.push({ url:g.url, master:false, label:g.label, fromSheet:true }));
+  ok.slice(0,Math.max(0,12-c.refs.length)).forEach(g => c.refs.push({ url:g.url, master:false, label:g.label, group:g.group||'Canonical Master', source:'AiKreator Sheet', fromSheet:true }));
   charRenderRefs();
   _charEdit._lastSheet = ok;
   document.getElementById('chSheetDlBtn').style.display = '';
@@ -5348,6 +5316,7 @@ async function charDownloadSheet() {
 async function charAddRefs(ev) {
   const files = [...ev.target.files];
   for (const f of files) {
+    _charEdit.refs=_charEdit.refs||[];if(_charEdit.refs.length>=12){toast('Master Set penuh','Maksimal 12 referensi canonical.','info');break}
     if (f.size > 8*1024*1024) { toast('Terlalu besar', f.name+' > 8MB, dilewati','warning'); continue; }
     const url = await _tbReadFile(f);
     _charEdit.refs = _charEdit.refs || [];
@@ -5370,6 +5339,7 @@ function charSetMaster(i) {
 async function charGenBible() {
   const c = _charEdit;
   if (!c.name && !c.identity) { toast('Isi dulu','Minimal nama & deskripsi identitas','warning'); charTab('identity'); return; }
+  if(!c.voiceCfg?.locked){toast('Kunci suara dahulu','Character Bible harus dibuat setelah Voice Identity final agar suara dan Bible tetap sinkron.','warning');charTab('voice');return}
   const btn = document.getElementById('chBibleBtn');
   const orig = btn.innerHTML; btn.disabled=true; btn.innerHTML='<svg class="ico"><use href="#i-refresh"/></svg> Membuat bible…';
   try {
@@ -5380,7 +5350,10 @@ Data karakter:
 - Peran: ${c.role||''}
 - Tagline: ${c.tagline||''}
 - Deskripsi identitas: ${c.identity||'(kembangkan dari nama & peran)'}
-- Profil suara: ${c.voice||'(kembangkan yang natural)'}
+- Voice Identity TERKUNCI: ${JSON.stringify(c.voiceCfg||{})}
+- Profil delivery: ${c.voice||c.voiceCfg?.style||''}
+
+Voice Identity di atas wajib dipertahankan. Jangan menciptakan provider, nama suara, gender suara, gaya delivery, bahasa, atau mode suara lain yang bertentangan.
 
 Format keluaran = Markdown dengan bagian bernomor persis seperti ini:
 1. Identitas inti (persona, gaya konten)
@@ -5394,9 +5367,10 @@ Format keluaran = Markdown dengan bagian bernomor persis seperti ini:
 9. Checklist sebelum publikasi
 
 Tulis padat, spesifik, actionable. Jangan menambah basa-basi di luar dokumen.`;
-    const out = await callAI(prompt);
+    const out = await callAI(prompt,{providerId:'gemini'});
     if (out && out.trim()) {
       c.bible = out.trim();
+      c.bibleVoiceSignature=charVoiceSignature(c);
       document.getElementById('chBible').value = c.bible;
       toast('Bible dibuat','Character Bible siap. Cek & sunting bila perlu.','success');
     } else throw new Error('Kosong');
@@ -5428,7 +5402,7 @@ async function charGenImage() {
   try {
     const master = (c.refs||[]).find(r=>r.master) || (c.refs||[])[0];
     const prompt = _charImagePrompt(scene);
-    const opts = { width:w, height:h };
+    const opts = { width:w, height:h, providerId:'kie' };
     if (master) opts.referenceImage = master.url; // dipakai bila provider mendukung image-to-image
     const { dataUrl, provider } = await generateImageAI(prompt, opts);
     out.innerHTML = `
@@ -5595,30 +5569,42 @@ async function charTestVoice() {
   } catch (e) { toast('Tidak didukung','Browser tidak mendukung preview suara','warning'); }
 }
 
+function akUniversalCharacterId(c){if(c.characterId?.startsWith('char_'))return c.characterId;if(c.id?.startsWith('char_'))return c.id;return 'char_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8)}
+function toSharedCharacterV1(c){const characterId=akUniversalCharacterId(c),traits=c.physicalIdentity||c.traits||{},refs=c.masterSet||c.refs||[];return{schema:'ak-character/v1',characterId,talentId:c.talentId||null,legacyId:c.id||null,characterVersion:Number(c.characterVersion||1),createdAt:c.createdAt||new Date(c.ts||Date.now()).toISOString(),updatedAt:new Date().toISOString(),updatedBy:'AiKreator',identity:{name:c.name||c.basic?.name||'',displayAge:c.basic?.age||'',ethnicity:c.basic?.eth||'',gender:c.basic?.gender||'',height:c.basic?.height||'',roles:c.basic?.roles?.length?c.basic.roles:[c.role||'AI Influencer'],tagline:c.tagline||'',mode:c.mode||'fictional'},physicalIdentity:{faceShape:traits.faceShape||'',skin:traits.skin||'',skinTexture:traits.skinTexture||'',eyes:traits.eyes||'',eyeDetail:traits.eyeDetail||'',eyebrows:traits.eyebrows||'',nose:traits.nose||'',lips:traits.lips||'',lipDetail:traits.lipDetail||'',hairBase:traits.hairBase||traits.hair||'',hairDetail:traits.hairDetail||'',bodyType:traits.bodyType||'',permanentTraits:traits.permanentTraits||[]},styleDefaults:c.styleDefaults||{description:traits.style||''},voiceIdentity:c.voiceIdentity||c.voiceCfg||null,productionCharacterBible:{text:c.bible||'',details:c.bibleDetails||{},contextSignature:c.bibleContextSignature||''},canonicalPortrait:c.canonicalPortrait||refs.find(r=>r.master)?.url||refs[0]?.url||null,masterSet:refs.slice(0,12).map(r=>({group:r.group||'Referensi',label:r.label||r.name||'Referensi',url:r.url,source:r.source||'AiKreator'})),productionLocks:c.productionLocks||{},ownership:{ownerAuthorizationRequired:true,visibility:'private'},productionExtension:{sourceApp:'AiKreator',legacyIdentityText:c.identity||'',generation:c.productionExtension||{}},careerExtension:c.careerExtension||{},credentialsIncluded:false}}
+function sharedToAiKreator(s,existing){const c=existing?JSON.parse(JSON.stringify(existing)):{refs:[],voiceCfg:{}};c.characterId=s.characterId;c.talentId=s.talentId||c.talentId||null;c.id=c.id||s.legacyId||s.characterId;c.characterVersion=s.characterVersion||1;c.name=s.identity?.name||c.name||'';c.role=s.identity?.roles?.[0]||c.role||'AI Influencer';c.tagline=s.identity?.tagline||c.tagline||'';c.mode=s.identity?.mode||c.mode||'fictional';c.physicalIdentity={...(c.physicalIdentity||{}),...(s.physicalIdentity||{})};c.styleDefaults={...(c.styleDefaults||{}),...(s.styleDefaults||{})};c.identity=s.productionExtension?.legacyIdentityText||c.identity||Object.values(s.physicalIdentity||{}).filter(x=>typeof x==='string'&&x).join(', ');c.bible=s.productionCharacterBible?.text||c.bible||'';c.voiceCfg=s.voiceIdentity||c.voiceCfg;c.refs=(s.masterSet||[]).map((r,i)=>({...r,master:i===0}));c.productionLocks=s.productionLocks||c.productionLocks||{};c.careerExtension=s.careerExtension||c.careerExtension||{};c.ts=c.ts||Date.now();return c}
+function downloadAKFile(data,name){const b=new Blob([JSON.stringify(data)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+function exportSharedCharacter(id){const c=(state.characters||[]).find(x=>x.id===id);if(!c)return;const s=toSharedCharacterV1(c);c.characterId=s.characterId;c.characterVersion=s.characterVersion;save('characters',state.characters);downloadAKFile(s,(c.name||'karakter').replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'.akcharacter')}
+async function importSharedCharacter(event){const f=event.target.files?.[0];event.target.value='';if(!f)return;try{const s=JSON.parse(await f.text());if(s.schema!=='ak-character/v1'||s.credentialsIncluded!==false)throw new Error('Format bukan ak-character/v1');const old=(state.characters||[]).find(x=>x.characterId===s.characterId||x.id===s.characterId);const c=sharedToAiKreator(s,old);state.characters=state.characters||[];const i=state.characters.findIndex(x=>x===old);if(i>=0)state.characters[i]=c;else state.characters.unshift(c);save('characters',state.characters);renderCharacters();toast('Terhubung',`${c.name} tersedia di AiKreator tanpa menghapus sumbernya.`,'success')}catch(e){toast('Impor gagal',e.message||String(e),'warning')}}
 function saveCharacter() {
   const c = _charEdit;
   c.name = (document.getElementById('chName')?.value || c.name || '').trim();
   c.tagline = document.getElementById('chTagline')?.value || c.tagline || '';
+  c.role=c.basic?.roles?.[0]||document.getElementById('chRole')?.value||c.role||'AI Influencer';
   c.identity = document.getElementById('chIdentity')?.value || c.identity || '';
   c.bible = document.getElementById('chBible')?.value || c.bible || '';
   if (document.getElementById('chVoiceProvider')) _charSyncVoiceCfg();
   c.voice = c.voiceCfg?.style || c.voice || '';
+  c.characterId=akUniversalCharacterId(c);c.characterVersion=Number(c.characterVersion||0)+1;
   delete c._lastVoiceSample; delete c._lastVideo;
   if (!c.name) { toast('Nama wajib','Beri nama karakter dulu','warning'); charTab('identity'); return; }
   state.characters = state.characters || [];
+  const existed=state.characters.some(x=>x.id===c.id);
+  if(!existed&&!(c.refs||[]).length){toast('Foto wajib','Unggah foto canonical terlebih dahulu.','warning');charTab('identity');return}
+  if(!existed&&(c.refs||[]).length!==12){toast('Master Set belum lengkap',`Lengkapi tepat 12 referensi. Saat ini ${(c.refs||[]).length}/12.`,'warning');charTab('refs');return}
+  if(!existed&&!c.voiceCfg?.locked){toast('Suara belum dikunci','Audisi atau unggah suara, lalu kunci pilihan suara.','warning');charTab('voice');return}
+  if(!existed&&!String(c.bible||'').trim()){toast('Bible belum dibuat','Buat dan periksa Character Bible dengan Gemini setelah suara dikunci.','warning');charTab('bible');return}
+  if(!existed&&c.bibleVoiceSignature!==charVoiceSignature(c)){toast('Bible belum sinkron','Buat ulang Character Bible setelah Voice Identity terakhir dikunci.','warning');charTab('bible');return}
   const idx = state.characters.findIndex(x => x.id === c.id);
   if (idx >= 0) state.characters[idx] = c; else state.characters.unshift(c);
   save('characters', state.characters);
-  closeModal();
-  renderCharacters();
+  charCloseEditor();
   toast('Tersimpan', `Karakter "${c.name}" disimpan`,'success');
 }
 function deleteCharacter(id) {
   if (!confirm('Hapus karakter ini beserta bible & referensinya?')) return;
   state.characters = (state.characters||[]).filter(c => c.id !== id);
   save('characters', state.characters);
-  closeModal();
-  renderCharacters();
+  charCloseEditor();
   toast('Dihapus','Karakter dihapus','info');
 }
 
@@ -6961,19 +6947,11 @@ function renderSettings() {
   const list = document.getElementById('providersList');
   // Hanya provider yang layak dipakai langsung dari browser ditampilkan.
   // Integrasi lama tetap dikenali untuk kompatibilitas data, tetapi tidak merusak UI.
-  const settingsProviderIds = ['openrouter','groq','mistral','huggingface','gemini','kie','pollinations','pixazo','ninerouter','cloudflare'];
+  const settingsProviderIds = ['openrouter','groq','mistral','cerebras','chutes','gemini','kie','pixazo','ninerouter','cloudflare'];
   const settingsProviders = AI_PROVIDERS.filter(p => settingsProviderIds.includes(p.id));
   list.innerHTML = settingsProviders.map(p => {
     const hasKey = state.providers[p.id]?.apiKey;
-    const savedModel = state.providers[p.id]?.model;
-    const selectedModel = p.models.some(m => m.id === savedModel)
-      ? savedModel
-      : ((p.models.find(m => m.recommended)?.id) || p.models[0]?.id || '');
-    // Pulihkan pilihan model lama/alias yang sudah tidak ditawarkan.
-    if (savedModel && savedModel !== selectedModel) {
-      if (!state.providers[p.id]) state.providers[p.id] = {};
-      state.providers[p.id].model = selectedModel;
-    }
+    const selectedModel = state.providers[p.id]?.model || (p.models.find(m => m.recommended)?.id) || p.models[0]?.id || '';
     const verified = state.verifiedModels[p.id];
     
     return `
@@ -6985,10 +6963,10 @@ function renderSettings() {
             <div class="provider-desc">${p.desc}</div>
           </div>
           <span class="provider-status ${p.noKey ? 'connected' : (p.optionalKey ? (hasKey ? 'connected' : 'testing') : (hasKey ? (verified?.working ? 'connected' : 'disconnected') : 'disconnected'))}">
-            ${p.noKey ? '✓ Siap dipakai' : (p.optionalKey ? (hasKey ? '✓ Key terpasang' : '◌ Mode anonim') : (hasKey ? (verified?.working ? '✓ Terhubung' : '⚠ Belum test') : 'Belum diatur'))}
+            ${p.noKey ? '✓ Siap dipakai' : (p.optionalKey ? (hasKey ? '✓ Key terpasang' : '⚠ Cadangan (butuh key)') : (hasKey ? (verified?.working ? '✓ Terhubung' : '⚠ Belum test') : 'Belum diatur'))}
           </span>
         </div>
-        ${p.browserBlocked ? `<div class="provider-note" style="background:rgba(239,68,68,.1);color:var(--danger)"><svg class="ico"><use href="#i-warn"/></svg> <b>${escapeHtml(p.name)} memblokir akses dari browser (CORS).</b> Provider ini hanya bisa dipanggil dari server, jadi tidak akan berfungsi di aplikasi ini yang berjalan langsung di browser. Gunakan provider lain yang sudah aktif (Groq, Gemini, atau OpenRouter).</div>` : ''}
+        ${p.browserBlocked ? `<div class="provider-note" style="background:rgba(239,68,68,.1);color:var(--danger)"><svg class="ico"><use href="#i-warn"/></svg> <b>${escapeHtml(p.name)} memblokir akses dari browser (CORS).</b> Provider ini hanya bisa dipanggil dari server, jadi tidak akan berfungsi di aplikasi ini yang berjalan langsung di browser. Gunakan provider lain (Groq, Gemini, OpenRouter, Cerebras, dll).</div>` : ''}
         ${p.note ? `<div class="provider-note">ℹ️ ${escapeHtml(p.note)}</div>` : ''}
         ${p.noKey ? '' : `<div class="form-group" style="margin-bottom:.75rem">
           <label class="form-label">API Key <span style="font-weight:400;color:var(--text-muted);font-size:.72rem">(boleh beberapa — 1 per baris untuk rotasi anti-limit)</span></label>
@@ -7015,7 +6993,7 @@ function renderSettings() {
               return `<optgroup label="${PURPOSE_META[pu]?.icon||''} ${PURPOSE_META[pu]?.label||pu}">${opts}</optgroup>`;
             }).join('')}
           </select>
-          <div class="form-hint">Model yang dipilih akan diuji saat disimpan. Riwayat model lama yang sudah tidak tersedia disembunyikan.</div>
+          <div class="form-hint">Model chat di-test otomatis saat disimpan. Model foto dipakai di AI Studio → Generate.</div>
         </div>
         ${p.needsAccountId ? `
         <div class="form-group" style="margin-bottom:.75rem">
@@ -7041,53 +7019,34 @@ function renderSettings() {
         <div id="test-result-${p.id}"></div>
         ${verified?.models ? `
         <div class="provider-status-bar">
-          <span style="font-size:.7rem;color:var(--text-muted);margin-right:.5rem">Status model aktif:</span>
-          ${Object.entries(verified.models)
-            .filter(([modelId]) => p.models.some(m => m.id === modelId))
-            .map(([modelId, status]) => `
+          <span style="font-size:.7rem;color:var(--text-muted);margin-right:.5rem">Status model:</span>
+          ${Object.entries(verified.models).map(([modelId, status]) => `
             <span class="status-chip ${status === 'ok' ? 'ok' : 'fail'}">
               <span class="dot"></span>
-              ${modelId.split('/').pop().substring(0, 28)}: ${status === 'ok' ? 'OK' : 'Fail'}
+              ${modelId.split('/').pop().substring(0, 20)}: ${status === 'ok' ? 'OK' : 'Fail'}
             </span>
-          `).join('') || '<span class="form-hint">Belum ada model aktif yang diuji.</span>'}
+          `).join('')}
         </div>` : ''}
       </div>
     `;
   }).join('');
 
-  // Tiga kartu fungsi saja. Provider dipilih lewat dropdown agar halaman tidak menjadi daftar panjang.
+  // Susun provider menjadi accordion berbasis fungsi; hanya satu terbuka sekaligus.
   const settingsGroups = [
-    {id:'text', icon:'✦', title:'Teks & Penalaran', desc:'Ide, chat, optimasi dan storyboard', ids:['openrouter','groq','mistral','huggingface']},
-    {id:'vision', icon:'◉', title:'Vision, Logika & Suara', desc:'Gemini untuk membaca gambar, logika dan TTS', ids:['gemini']},
-    {id:'media', icon:'▣', title:'Gambar & Video', desc:'Kie.ai, Pollinations dan provider media BYOK', ids:['kie','pollinations','pixazo','ninerouter','cloudflare']}
+    {id:'text', icon:'✦', title:'Teks & Penalaran', desc:'Ide, chat, optimasi dan storyboard', ids:['openrouter','groq','mistral','cerebras','chutes']},
+    {id:'vision', icon:'◉', title:'Vision', desc:'Membaca gambar dan konteks visual', ids:['gemini']},
+    {id:'media', icon:'▣', title:'Gambar & Video', desc:'Membuat foto, adegan dan klip', ids:['kie','pixazo','ninerouter','cloudflare']}
   ];
   const cardHtml = {};
   list.querySelectorAll('.provider-card').forEach(card => { cardHtml[card.id.replace('provider-card-','')] = card.outerHTML; });
   list.innerHTML = settingsGroups.map((g, i) => {
-    const saved = localStorage.getItem(`aik-settings-provider-${g.id}`);
-    const configured = g.ids.find(id => providerKeys(state.providers[id]).length > 0);
-    const selected = g.ids.includes(saved) ? saved : (configured || g.ids[0]);
-    const options = g.ids.map(id => {
-      const p = AI_PROVIDERS.find(x => x.id === id);
-      if (!p) return '';
-      const ready = p.noKey || providerKeys(state.providers[id]).length > 0;
-      return `<option value="${id}" ${id===selected?'selected':''}>${escapeHtml(p.name)}${ready?' ✓':''}</option>`;
-    }).join('');
-    const cards = g.ids.map(id => `<div class="settings-provider-panel" data-provider-panel="${id}" style="display:${id===selected?'block':'none'}">${cardHtml[id] || ''}</div>`).join('');
+    const cards = g.ids.map(id => cardHtml[id] || '').join('');
     return `<details class="settings-group" data-settings-group="${g.id}" ${i === 0 ? 'open' : ''}>
       <summary onclick="settingsAccordion(event,this)">
         <span class="sg-icon">${g.icon}</span>
         <span class="sg-main"><b>${g.title}</b><span>${g.desc}</span></span>
-        <span class="sg-count">Pilih provider</span><span class="sg-arrow">›</span>
-      </summary>
-      <div class="sg-body">
-        <div class="form-group" style="margin-bottom:1rem">
-          <label class="form-label">Provider</label>
-          <select class="form-select" onchange="settingsProviderDropdown(this,'${g.id}')">${options}</select>
-          <div class="form-hint">Hanya pengaturan provider yang dipilih yang ditampilkan.</div>
-        </div>
-        ${cards}
-      </div>
+        <span class="sg-count">${g.ids.length} provider</span><span class="sg-arrow">›</span>
+      </summary><div class="sg-body">${cards}</div>
     </details>`;
   }).join('');
   
@@ -7113,15 +7072,6 @@ function settingsAccordion(event, summary) {
   document.querySelectorAll('#providersList .settings-group[open]').forEach(group => {
     if (group !== current) group.removeAttribute('open');
   });
-}
-
-function settingsProviderDropdown(select, groupId) {
-  const group = select.closest('.settings-group');
-  if (!group) return;
-  group.querySelectorAll('[data-provider-panel]').forEach(panel => {
-    panel.style.display = panel.dataset.providerPanel === select.value ? 'block' : 'none';
-  });
-  localStorage.setItem(`aik-settings-provider-${groupId}`, select.value);
 }
 
 function toggleKeyVisibility(id) {
@@ -7338,7 +7288,7 @@ async function callProviderWithModel(provider, config, model, prompt) {
 }
 
 async function testAllProviders() {
-  const visibleIds = ['openrouter','groq','mistral','gemini','kie'];
+  const visibleIds = ['openrouter','groq','mistral','cerebras','chutes','gemini','kie'];
   const activeProviders = AI_PROVIDERS.filter(p => visibleIds.includes(p.id) && (p.noKey || state.providers[p.id]?.apiKey));
   if (activeProviders.length === 0) {
     toast('Tidak ada provider','Atur API key terlebih dahulu','warning');
@@ -9801,17 +9751,17 @@ async function studioShareMedia(id){
     toast('Gunakan menu browser','Jika Safari memblokir download, tekan lama media atau gunakan Bagikan.','warning');
   }
 }
-async function studioSaveMedia(id) {
+function studioSaveMedia(id) {
   const m = (window._studioMedia||{})[id];
   if (!m) return;
-  const assetId='a'+Date.now();
-  try{
-    const response=await fetch(m.url);if(!response.ok)throw new Error('Media tidak dapat dibaca');
-    const blob=await response.blob();await assetMediaPut(assetId,blob,studioMediaFileInfo(m).name);
-    state.assets.unshift({id:assetId,ts:Date.now(),type:m.kind==='video'?'video':m.kind==='audio'?'audio':'image',name:(m.caption||('Hasil '+m.kind)).slice(0,60),url:'',mediaId:assetId,content:m.caption||'',project:''});
-    if(!save('assets',state.assets)){state.assets=state.assets.filter(a=>a.id!==assetId);await assetMediaDelete(assetId);return;}
-    toast('Tersimpan permanen',`${m.kind==='video'?'Video':m.kind==='audio'?'Audio':'Foto'} masuk ke Assets lokal.`,'success');
-  }catch(e){toast('Gagal menyimpan media',e.message||'','error');}
+  state.assets.unshift({
+    id:'a'+Date.now(), ts:Date.now(),
+    type: m.kind==='video'?'video':m.kind==='audio'?'audio':'image',
+    name: (m.caption||('Hasil '+m.kind)).slice(0,60),
+    url: m.url, content: m.caption||'', project:''
+  });
+  save('assets', state.assets);
+  toast('Tersimpan', `${m.kind==='video'?'Video':'Foto'} masuk ke Assets `,'success');
 }
 
 async function studioGenerateCharacterVoiceover(dialog, boxId) {
@@ -9823,10 +9773,15 @@ async function studioGenerateCharacterVoiceover(dialog, boxId) {
   if(v.mode==='own'){
     box.innerHTML=`<div class="form-hint">Suara asli ${escapeHtml(c.name)} terkunci. Rekam dialog baru dari menu Karakter → Suara.${v.sampleUrl?`</div><audio src="${v.sampleUrl}" controls style="width:100%;margin-top:.4rem"></audio>`:'</div>'}`;return;
   }
-  box.innerHTML='<div class="form-hint">Membuat voiceover dengan Google Gemini TTS...</div>';
+  box.innerHTML='<div class="form-hint">Membuat voiceover dengan suara karakter...</div>';
   try{
-    const src=await _charGeminiTTS(dialog.slice(0,2900),v.voice||'Kore',v.style||'');
-    box.innerHTML=`<div class="form-hint"><svg class="ico"><use href="#i-mic"/></svg> Voiceover ${escapeHtml(c.name)} · Gemini · ${escapeHtml(v.voice||'Kore')}</div><audio src="${src}" controls style="width:100%;margin-top:.4rem"></audio>${studioMediaActions('audio',src,`${c.name} — voiceover`)}`;
+    if(typeof puter==='undefined'||!puter?.ai?.txt2speech)throw new Error('Puter TTS belum termuat');
+    const opts={provider:v.provider,voice:v.voice}; if(v.style)opts.instructions=v.style;if(v.lang)opts.language=v.lang;
+    if(v.provider==='gemini')opts.model='gemini-2.5-flash-preview-tts';
+    if(v.provider==='openai')opts.model='gpt-4o-mini-tts';
+    const audio=await puter.ai.txt2speech(dialog.slice(0,2900),opts);
+    const src=audio&&(audio.src||(audio.querySelector&&audio.querySelector('source')?.src));if(!src)throw new Error('Audio kosong');
+    box.innerHTML=`<div class="form-hint"><svg class="ico"><use href="#i-mic"/></svg> Voiceover ${escapeHtml(c.name)} · ${escapeHtml(v.voice||'suara terkunci')}</div><audio src="${src}" controls style="width:100%;margin-top:.4rem"></audio>${studioMediaActions('audio',src,`${c.name} — voiceover`)}`;
   }catch(e){box.innerHTML=`<div class="form-hint" style="color:var(--danger)">Voiceover gagal: ${escapeHtml(e.message||'')}</div>`;}
 }
 
@@ -10293,7 +10248,7 @@ async function generateImageAI(prompt, opts = {}) {
   // Bila ada gambar referensi, utamakan provider image-to-image hanya saat fallback diizinkan.
   const hasRefs = (opts.inputImages && opts.inputImages.length) || opts.inputImage;
   if (hasRefs && !opts.strictProvider) {
-    const i2iFormats = ['gemini','openai'];
+    const i2iFormats = ['puter','gemini','openai'];
     order.sort((a, b) => (i2iFormats.includes(b.format)?1:0) - (i2iFormats.includes(a.format)?1:0));
   }
 
@@ -11007,7 +10962,11 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
+let akProductionCurrent=null,akProductionResultVideo='';
+async function importAKProduction(event){const f=event.target.files?.[0];event.target.value='';if(!f)return;try{const data=JSON.parse(await f.text());if(data.schema!=='akproduction/v1'||data.credentialsIncluded!==false)throw new Error('Paket AK Production tidak valid');akProductionCurrent=data;openAKProductionModal()}catch(e){alert('Impor gagal: '+(e.message||e))}}
+function openAKProductionModal(){const p=akProductionCurrent;if(!p)return;const o=document.createElement('div');o.className='modal-overlay show';o.id='akProductionModal';o.innerHTML=`<div class="modal" style="max-width:760px"><div class="modal-header"><div><h2>AK Production</h2><div class="form-hint">${escapeHtml(p.manifest.title)} · ${p.manifest.duration}s · ${p.manifest.aspect}</div></div><button class="modal-close" onclick="document.getElementById('akProductionModal').remove()">×</button></div>${p.storyboard.continuityFrame?`<img src="${p.storyboard.continuityFrame}" style="max-width:180px;max-height:280px;object-fit:contain;background:#000;border-radius:8px">`:''}<div class="form-group"><label class="form-label">VIDEO PROMPT</label><textarea class="form-textarea" rows="8" readonly>${escapeHtml(p.storyboard.videoPrompt||'')}</textarea></div><div class="form-group"><label class="form-label">HASIL VIDEO</label><input class="form-input" type="file" accept="video/*" onchange="loadAKProductionResult(event)"><div id="akResultPreview"></div></div><button class="btn btn-primary" onclick="exportAKResult()">Kirim Hasil ke AK Talent</button></div>`;document.body.appendChild(o)}
+async function loadAKProductionResult(event){const f=event.target.files?.[0];event.target.value='';if(!f)return;akProductionResultVideo=await _tbBlobToDataUrl(f);const b=document.getElementById('akResultPreview');if(b)b.innerHTML=`<video src="${akProductionResultVideo}" controls playsinline style="width:100%;max-height:360px;background:#000;margin-top:.6rem"></video>`}
+function exportAKResult(){if(!akProductionCurrent)return;if(!akProductionResultVideo)return alert('Unggah video hasil terlebih dahulu.');const p=akProductionCurrent,result={schema:'akresult/v1',exportedAt:new Date().toISOString(),credentialsIncluded:false,manifest:{productionId:p.manifest.productionId,storyboardId:p.manifest.storyboardId,storyboardVersion:p.manifest.storyboardVersion,status:'APPROVED',duration:p.manifest.duration,aspect:p.manifest.aspect},output:{type:'video',mimeType:'video/mp4',videoDataUrl:akProductionResultVideo}};const blob=new Blob([JSON.stringify(result)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=(p.manifest.title||'ak-result').replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'.akresult';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42c133fdc3bfdf7',t:'MTc5MDY5NjMwOQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
