@@ -4902,7 +4902,7 @@ function openCharacterEditor(id) {
     </div>
 
     <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:1.25rem;border-top:1px solid var(--border);padding-top:1rem">
-      <button class="btn btn-primary" style="flex:1" onclick="saveCharacter()"><svg class="ico"><use href="#i-save"/></svg> Simpan Karakter</button>
+      <button class="btn btn-primary" style="flex:1" onclick="saveCharacter()"><svg class="ico"><use href="#i-save"/></svg> Simpan Progres</button>
       ${existing?`<button class="btn btn-secondary" onclick="exportSharedCharacter('${c.id}')"><svg class="ico"><use href="#i-download"/></svg> Hubungkan ke AK Talent</button><button class="btn btn-danger" onclick="deleteCharacter('${c.id}')"><svg class="ico"><use href="#i-trash"/></svg> Hapus</button>`:''}
       <button class="btn btn-ghost" onclick="charCloseEditor()">Tutup</button>
     </div>
@@ -5214,21 +5214,21 @@ const SHEET_BODY = [
   { id:'halfbody', label:'Setengah Badan', prompt:'half body shot, waist up' },
   { id:'fullbody', label:'Seluruh Badan', prompt:'full body shot, head to toe, standing pose' },
 ];
+function charRequiredSheetShots(){const a=[];SHEET_ANGLES.forEach(x=>a.push({...x,kind:'angle'}));SHEET_EXPR.filter(x=>['natural','smile','laugh','thinking'].includes(x.id)).forEach(x=>a.push({...x,prompt:'front view, '+x.prompt,kind:'expr'}));SHEET_BODY.forEach(x=>a.push({...x,kind:'body'}));return a}
 function charRenderSheetOpts() {
-  const el=document.getElementById('chSheetOpts');if(!el)return;
-  const required=[...SHEET_ANGLES,...SHEET_EXPR.filter(x=>['natural','smile','laugh','thinking'].includes(x.id)),...SHEET_BODY];
-  el.innerHTML=`<div class="che-hint"><b>12 referensi tetap:</b> 1 foto canonical + 11 hasil Kie.ai. Tidak perlu memilih.</div><div class="sheet-chips">${required.map((x,i)=>`<span class="sheet-chip on">${i+2}. ${x.label}</span>`).join('')}</div>`;
+  const el=document.getElementById('chSheetOpts');if(!el)return;const required=charRequiredSheetShots(),have=new Set((_charEdit.refs||[]).map(x=>x.label)),missing=required.filter(x=>!have.has(x.label));
+  el.innerHTML=`<div class="che-hint"><b>12 referensi tetap:</b> 1 foto canonical + 11 hasil Kie.ai. ${missing.length?`Kurang ${missing.length}.`:'Lengkap.'}</div><div class="sheet-chips">${required.map((x,i)=>`<span class="sheet-chip ${have.has(x.label)?'on':''}">${i+2}. ${x.label}${have.has(x.label)?' ✓':''}</span>`).join('')}</div>`;
+  const btn=document.getElementById('chSheetBtn');if(btn){btn.disabled=!missing.length;btn.innerHTML=missing.length?`<svg class="ico"><use href="#i-sparkle"/></svg> ${missing.length===11?'Buat Character Sheet':`Lengkapi ${missing.length} Referensi`}`:'Master Set Lengkap'}
 }
 function charToggleSheet(){ /* Canonical set v1 bersifat tetap. */ }
 async function charGenSheet() {
   const c = _charEdit;
   const master = (c.refs||[]).find(r=>r.master) || (c.refs||[])[0];
   if (!master) { toast('Perlu foto Master','Unggah/ambil minimal 1 foto & jadikan Master dulu','warning'); return; }
-  // Canonical Set v1 tetap: foto sumber + 11 shot wajib = tepat 12.
-  const shots=[];
-  SHEET_ANGLES.forEach(a=>shots.push({label:a.label,prompt:a.prompt,kind:'angle'}));
-  SHEET_EXPR.filter(a=>['natural','smile','laugh','thinking'].includes(a.id)).forEach(a=>shots.push({label:a.label,prompt:'front view, '+a.prompt,kind:'expr'}));
-  SHEET_BODY.forEach(a=>shots.push({label:a.label,prompt:a.prompt,kind:'body'}));
+  // Generate hanya label canonical yang belum tersedia agar retry tidak memboroskan kredit.
+  const have=new Set((c.refs||[]).map(x=>x.label));
+  const shots=charRequiredSheetShots().filter(x=>!have.has(x.label));
+  if(!shots.length){toast('Master Set lengkap','Seluruh 12 referensi sudah tersedia.','success');return}
 
   const btn = document.getElementById('chSheetBtn');
   const orig = btn.innerHTML; btn.disabled = true;
@@ -5262,7 +5262,7 @@ async function charGenSheet() {
   _charEdit._lastSheet = ok;
   document.getElementById('chSheetDlBtn').style.display = '';
   out.insertAdjacentHTML('beforeend', `<div class="tm-meta" style="margin-top:.5rem">✅ ${ok.length} referensi ditambahkan & terkunci ke karakter. Simpan karakter untuk permanen.</div>`);
-  toast('Sheet jadi', `${ok.length} referensi konsistensi ditambahkan`,'success');
+  toast(ok.length===shots.length?'Sheet diperbarui':'Sebagian berhasil', `${ok.length}/${shots.length} referensi yang diminta berhasil ditambahkan`,'success');
 }
 async function charDownloadSheet() {
   const shots = _charEdit._lastSheet;
@@ -5556,7 +5556,8 @@ function akUniversalCharacterId(c){if(c.characterId?.startsWith('char_'))return 
 function toSharedCharacterV1(c){const characterId=akUniversalCharacterId(c),traits=c.physicalIdentity||c.traits||{},refs=c.masterSet||c.refs||[];return{schema:'ak-character/v1',characterId,talentId:c.talentId||null,legacyId:c.id||null,characterVersion:Number(c.characterVersion||1),createdAt:c.createdAt||new Date(c.ts||Date.now()).toISOString(),updatedAt:new Date().toISOString(),updatedBy:'AiKreator',identity:{name:c.name||c.basic?.name||'',displayAge:c.basic?.age||'',ethnicity:c.basic?.eth||'',gender:c.basic?.gender||'',height:c.basic?.height||'',roles:c.basic?.roles?.length?c.basic.roles:[c.role||'AI Influencer'],tagline:c.tagline||'',mode:c.mode||'fictional'},physicalIdentity:{faceShape:traits.faceShape||'',skin:traits.skin||'',skinTexture:traits.skinTexture||'',eyes:traits.eyes||'',eyeDetail:traits.eyeDetail||'',eyebrows:traits.eyebrows||'',nose:traits.nose||'',lips:traits.lips||'',lipDetail:traits.lipDetail||'',hairBase:traits.hairBase||traits.hair||'',hairDetail:traits.hairDetail||'',bodyType:traits.bodyType||'',permanentTraits:traits.permanentTraits||[]},styleDefaults:c.styleDefaults||{description:traits.style||''},voiceIdentity:c.voiceIdentity||c.voiceCfg||null,productionCharacterBible:{text:c.bible||'',details:c.bibleDetails||{},contextSignature:c.bibleContextSignature||''},canonicalPortrait:c.canonicalPortrait||refs.find(r=>r.master)?.url||refs[0]?.url||null,masterSet:refs.slice(0,12).map(r=>({group:r.group||'Referensi',label:r.label||r.name||'Referensi',url:r.url,source:r.source||'AiKreator'})),productionLocks:c.productionLocks||{},ownership:{ownerAuthorizationRequired:true,visibility:'private'},productionExtension:{sourceApp:'AiKreator',legacyIdentityText:c.identity||'',generation:c.productionExtension||{}},careerExtension:c.careerExtension||{},credentialsIncluded:false}}
 function sharedToAiKreator(s,existing){const c=existing?JSON.parse(JSON.stringify(existing)):{refs:[],voiceCfg:{}};c.characterId=s.characterId;c.talentId=s.talentId||c.talentId||null;c.id=c.id||s.legacyId||s.characterId;c.characterVersion=s.characterVersion||1;c.name=s.identity?.name||c.name||'';c.role=s.identity?.roles?.[0]||c.role||'AI Influencer';c.tagline=s.identity?.tagline||c.tagline||'';c.mode=s.identity?.mode||c.mode||'fictional';c.physicalIdentity={...(c.physicalIdentity||{}),...(s.physicalIdentity||{})};c.styleDefaults={...(c.styleDefaults||{}),...(s.styleDefaults||{})};c.identity=s.productionExtension?.legacyIdentityText||c.identity||Object.values(s.physicalIdentity||{}).filter(x=>typeof x==='string'&&x).join(', ');c.bible=s.productionCharacterBible?.text||c.bible||'';c.voiceCfg=s.voiceIdentity||c.voiceCfg;c.refs=(s.masterSet||[]).map((r,i)=>({...r,master:i===0}));c.productionLocks=s.productionLocks||c.productionLocks||{};c.careerExtension=s.careerExtension||c.careerExtension||{};c.ts=c.ts||Date.now();return c}
 function downloadAKFile(data,name){const b=new Blob([JSON.stringify(data)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
-function exportSharedCharacter(id){const c=(state.characters||[]).find(x=>x.id===id);if(!c)return;const s=toSharedCharacterV1(c);c.characterId=s.characterId;c.characterVersion=s.characterVersion;save('characters',state.characters);downloadAKFile(s,(c.name||'karakter').replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'.akcharacter')}
+function characterReadiness(c){const missing=[];if(!(c.refs||[]).length)missing.push('foto canonical');if((c.refs||[]).length!==12)missing.push(`Master Set ${(c.refs||[]).length}/12`);if(!c.voiceCfg?.locked)missing.push('suara');if(!String(c.bible||'').trim())missing.push('Character Bible');if(c.bible&&c.bibleVoiceSignature!==charVoiceSignature(c))missing.push('sinkronisasi Bible-suara');return{ready:!missing.length,missing}}
+function exportSharedCharacter(id){const c=(state.characters||[]).find(x=>x.id===id);if(!c)return;const ready=characterReadiness(c);if(!ready.ready)return toast('Karakter belum siap',`Lengkapi: ${ready.missing.join(', ')}.`,'warning');const s=toSharedCharacterV1(c);c.characterId=s.characterId;c.characterVersion=s.characterVersion;save('characters',state.characters);downloadAKFile(s,(c.name||'karakter').replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'.akcharacter')}
 async function importSharedCharacter(event){const f=event.target.files?.[0];event.target.value='';if(!f)return;try{const s=JSON.parse(await f.text());if(s.schema!=='ak-character/v1'||s.credentialsIncluded!==false)throw new Error('Format bukan ak-character/v1');const old=(state.characters||[]).find(x=>x.characterId===s.characterId||x.id===s.characterId);const c=sharedToAiKreator(s,old);state.characters=state.characters||[];const i=state.characters.findIndex(x=>x===old);if(i>=0)state.characters[i]=c;else state.characters.unshift(c);save('characters',state.characters);renderCharacters();toast('Terhubung',`${c.name} tersedia di AiKreator tanpa menghapus sumbernya.`,'success')}catch(e){toast('Impor gagal',e.message||String(e),'warning')}}
 function saveCharacter() {
   const c = _charEdit;
@@ -5571,17 +5572,13 @@ function saveCharacter() {
   delete c._lastVoiceSample; delete c._lastVideo;
   if (!c.name) { toast('Nama wajib','Beri nama karakter dulu','warning'); charTab('identity'); return; }
   state.characters = state.characters || [];
-  const existed=state.characters.some(x=>x.id===c.id);
-  if(!existed&&!(c.refs||[]).length){toast('Foto wajib','Unggah foto canonical terlebih dahulu.','warning');charTab('identity');return}
-  if(!existed&&(c.refs||[]).length!==12){toast('Master Set belum lengkap',`Lengkapi tepat 12 referensi. Saat ini ${(c.refs||[]).length}/12.`,'warning');charTab('refs');return}
-  if(!existed&&!c.voiceCfg?.locked){toast('Suara belum dikunci','Audisi atau unggah suara, lalu kunci pilihan suara.','warning');charTab('voice');return}
-  if(!existed&&!String(c.bible||'').trim()){toast('Bible belum dibuat','Buat dan periksa Character Bible dengan Gemini setelah suara dikunci.','warning');charTab('bible');return}
-  if(!existed&&c.bibleVoiceSignature!==charVoiceSignature(c)){toast('Bible belum sinkron','Buat ulang Character Bible setelah Voice Identity terakhir dikunci.','warning');charTab('bible');return}
+  if(!(c.refs||[]).length){toast('Foto wajib','Unggah foto canonical sebelum menyimpan draft.','warning');charTab('identity');return}
+  const readiness=characterReadiness(c);c.buildStatus=readiness.ready?'READY':'DRAFT';c.readinessMissing=readiness.missing;c.updatedAt=new Date().toISOString();
   const idx = state.characters.findIndex(x => x.id === c.id);
   if (idx >= 0) state.characters[idx] = c; else state.characters.unshift(c);
   save('characters', state.characters);
   charCloseEditor();
-  toast('Tersimpan', `Karakter "${c.name}" disimpan`,'success');
+  toast(readiness.ready?'Karakter siap':'Draft tersimpan',readiness.ready?`Karakter \"${c.name}\" siap digunakan dan dihubungkan.`:`Progres ${c.name} aman. Belum lengkap: ${readiness.missing.join(', ')}.`,'success');
 }
 function deleteCharacter(id) {
   if (!confirm('Hapus karakter ini beserta bible & referensinya?')) return;
