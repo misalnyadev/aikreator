@@ -2562,17 +2562,25 @@ let state = {
   assetFilter: 'all'
 };
 
-const AIK_DB='aikreator-data',AIK_DB_VERSION=1,AIK_CHARACTER_STORE='characters';
-function openAiKreatorDb(){return new Promise((resolve,reject)=>{const req=indexedDB.open(AIK_DB,AIK_DB_VERSION);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(AIK_CHARACTER_STORE))db.createObjectStore(AIK_CHARACTER_STORE,{keyPath:'id'})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+const AIK_DB='aikreator-data',AIK_DB_VERSION=2,AIK_CHARACTER_STORE='characters',AIK_ASSET_STORE='assets';
+function openAiKreatorDb(){return new Promise((resolve,reject)=>{const req=indexedDB.open(AIK_DB,AIK_DB_VERSION);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(AIK_CHARACTER_STORE))db.createObjectStore(AIK_CHARACTER_STORE,{keyPath:'id'});if(!db.objectStoreNames.contains(AIK_ASSET_STORE))db.createObjectStore(AIK_ASSET_STORE,{keyPath:'id'})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);req.onblocked=()=>reject(new Error('Upgrade database terblokir. Tutup tab AiKreator lain lalu muat ulang.'))})}
 async function aikPutCharacter(c){const db=await openAiKreatorDb();return new Promise((resolve,reject)=>{const tx=db.transaction(AIK_CHARACTER_STORE,'readwrite');tx.objectStore(AIK_CHARACTER_STORE).put(c);tx.oncomplete=()=>resolve(c);tx.onerror=()=>reject(tx.error)})}
 async function aikDeleteCharacter(id){const db=await openAiKreatorDb();return new Promise((resolve,reject)=>{const tx=db.transaction(AIK_CHARACTER_STORE,'readwrite');tx.objectStore(AIK_CHARACTER_STORE).delete(id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)})}
 async function aikGetCharacters(){const db=await openAiKreatorDb();return new Promise((resolve,reject)=>{const req=db.transaction(AIK_CHARACTER_STORE,'readonly').objectStore(AIK_CHARACTER_STORE).getAll();req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error)})}
+async function aikReplaceAssets(rows){const db=await openAiKreatorDb();return new Promise((resolve,reject)=>{const tx=db.transaction(AIK_ASSET_STORE,'readwrite'),store=tx.objectStore(AIK_ASSET_STORE);store.clear();(rows||[]).forEach(a=>store.put(a));tx.oncomplete=()=>resolve(rows);tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error||new Error('Transaksi aset dibatalkan'))})}
+async function aikGetAssets(){const db=await openAiKreatorDb();return new Promise((resolve,reject)=>{const req=db.transaction(AIK_ASSET_STORE,'readonly').objectStore(AIK_ASSET_STORE).getAll();req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error)})}
+function persistAssetIndex(){const light=(state.assets||[]).map(a=>({id:a.id,type:a.type,name:a.name,project:a.project,ts:a.ts,updatedAt:a.updatedAt}));try{localStorage.setItem('kh_assets',JSON.stringify(light))}catch(e){console.warn('Asset index save failed',e)}}
+let _assetSaveQueue=Promise.resolve();
+function persistAssetsToDb(rows){const snapshot=structuredClone(rows||[]);_assetSaveQueue=_assetSaveQueue.then(()=>aikReplaceAssets(snapshot)).then(()=>{persistAssetIndex();return true}).catch(e=>{console.error('Asset database save failed',e);toast('Aset belum tersimpan','IndexedDB gagal menyimpan aset: '+(e.message||e),'error');return false});return _assetSaveQueue}
+async function hydrateAssetsFromDb(){try{let rows=await aikGetAssets();const legacy=state.assets||[];if(!rows.length&&legacy.some(a=>a.url||a.content)){await aikReplaceAssets(legacy);rows=await aikGetAssets()}if(rows.length){state.assets=rows;persistAssetIndex();if(document.getElementById('view-assets')?.classList.contains('active'))renderAssets()}}catch(e){console.error('Asset database load failed',e);toast('Database aset','Gagal membaca penyimpanan aset: '+(e.message||e),'error')}}
 function persistCharacterIndex(){const light=(state.characters||[]).map(c=>({id:c.id,characterId:c.characterId,name:c.name,role:c.role,tagline:c.tagline,mode:c.mode,buildStatus:c.buildStatus,ts:c.ts,updatedAt:c.updatedAt}));try{localStorage.setItem('kh_characters',JSON.stringify(light))}catch(e){console.warn('Character index save failed',e)}}
 async function hydrateCharactersFromDb(){try{let rows=await aikGetCharacters();if(!rows.length&&(state.characters||[]).some(c=>(c.refs||[]).length||c.bible)){for(const c of state.characters)await aikPutCharacter(c);rows=await aikGetCharacters()}if(rows.length){state.characters=rows;persistCharacterIndex();if(document.getElementById('view-characters')?.classList.contains('active'))renderCharacters()}}catch(e){console.error('Character database load failed',e);toast('Database karakter','Gagal membaca penyimpanan karakter: '+(e.message||e),'error')}}
 hydrateCharactersFromDb();
+hydrateAssetsFromDb();
 
 // ============ UTILITIES ============
 function save(key, data) {
+  if(key==='assets'){persistAssetsToDb(data);return true}
   try {
     localStorage.setItem(`kh_${key}`, JSON.stringify(data));
     return true;
