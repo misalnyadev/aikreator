@@ -1220,6 +1220,8 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 }
 
 .sheet-chip.retry{outline:2px solid var(--accent);outline-offset:2px}.sheet-chip{cursor:pointer}
+
+.che-ref-slot{position:absolute;left:3px;right:3px;bottom:3px;width:calc(100% - 6px);padding:4px 3px;border:0;border-radius:5px;background:rgba(16,16,16,.88);color:#fff;font-size:10px;z-index:2}
 </style>
 <style>
 .char-editor-page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1rem;padding:1.25rem 1.4rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg)}
@@ -2559,6 +2561,15 @@ let state = {
   characters: JSON.parse(localStorage.getItem('kh_characters') || '[]'),
   assetFilter: 'all'
 };
+
+const AIK_DB='aikreator-data',AIK_DB_VERSION=1,AIK_CHARACTER_STORE='characters';
+function openAiKreatorDb(){return new Promise((resolve,reject)=>{const req=indexedDB.open(AIK_DB,AIK_DB_VERSION);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(AIK_CHARACTER_STORE))db.createObjectStore(AIK_CHARACTER_STORE,{keyPath:'id'})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+async function aikPutCharacter(c){const db=await openAiKreatorDb();return new Promise((resolve,reject)=>{const tx=db.transaction(AIK_CHARACTER_STORE,'readwrite');tx.objectStore(AIK_CHARACTER_STORE).put(c);tx.oncomplete=()=>resolve(c);tx.onerror=()=>reject(tx.error)})}
+async function aikDeleteCharacter(id){const db=await openAiKreatorDb();return new Promise((resolve,reject)=>{const tx=db.transaction(AIK_CHARACTER_STORE,'readwrite');tx.objectStore(AIK_CHARACTER_STORE).delete(id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)})}
+async function aikGetCharacters(){const db=await openAiKreatorDb();return new Promise((resolve,reject)=>{const req=db.transaction(AIK_CHARACTER_STORE,'readonly').objectStore(AIK_CHARACTER_STORE).getAll();req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error)})}
+function persistCharacterIndex(){const light=(state.characters||[]).map(c=>({id:c.id,characterId:c.characterId,name:c.name,role:c.role,tagline:c.tagline,mode:c.mode,buildStatus:c.buildStatus,ts:c.ts,updatedAt:c.updatedAt}));try{localStorage.setItem('kh_characters',JSON.stringify(light))}catch(e){console.warn('Character index save failed',e)}}
+async function hydrateCharactersFromDb(){try{let rows=await aikGetCharacters();if(!rows.length&&(state.characters||[]).some(c=>(c.refs||[]).length||c.bible)){for(const c of state.characters)await aikPutCharacter(c);rows=await aikGetCharacters()}if(rows.length){state.characters=rows;persistCharacterIndex();if(document.getElementById('view-characters')?.classList.contains('active'))renderCharacters()}}catch(e){console.error('Character database load failed',e);toast('Database karakter','Gagal membaca penyimpanan karakter: '+(e.message||e),'error')}}
+hydrateCharactersFromDb();
 
 // ============ UTILITIES ============
 function save(key, data) {
@@ -4904,7 +4915,7 @@ function openCharacterEditor(id) {
     </div>
 
     <div class="modal-footer" style="display:flex;gap:.6rem;margin-top:1.25rem;border-top:1px solid var(--border);padding-top:1rem">
-      <button class="btn btn-primary" style="flex:1" onclick="saveCharacter()"><svg class="ico"><use href="#i-save"/></svg> Simpan Progres</button>
+      <button class="btn btn-primary" style="flex:1" onclick="saveCharacter()"><svg class="ico"><use href="#i-save"/></svg> Simpan Progres</button><button class="btn btn-secondary" onclick="backupCurrentCharacter()"><svg class="ico"><use href="#i-download"/></svg> Unduh Backup Draft</button>
       ${existing?`<button class="btn btn-secondary" onclick="exportSharedCharacter('${c.id}')"><svg class="ico"><use href="#i-download"/></svg> Hubungkan ke AK Talent</button><button class="btn btn-danger" onclick="deleteCharacter('${c.id}')"><svg class="ico"><use href="#i-trash"/></svg> Hapus</button>`:''}
       <button class="btn btn-ghost" onclick="charCloseEditor()">Tutup</button>
     </div>
@@ -5083,7 +5094,7 @@ function charSnapWebcam() {
   ctx.drawImage(v, (v.videoWidth-s)/2, (v.videoHeight-s)/2, s, s, 0, 0, s, s);
   const url = cv.toDataURL('image/jpeg', 0.92);
   _charEdit.refs = _charEdit.refs || [];
-  _charEdit.refs.push({ url, master: _charEdit.refs.length===0 });
+  _charEdit.refs.push({url,master:_charEdit.refs.length===0,source:'manual-upload',group:'Upload Manual',label:''});
   charRenderRefs();
   toast('Foto diambil','Ditambahkan ke referensi','success');
 }
@@ -5184,13 +5195,13 @@ function charTab(pane) {
 function charRenderRefs() {
   const grid = document.getElementById('chRefGrid');
   if (!grid) return;
-  const refs = _charEdit.refs || [];
-  grid.innerHTML = `<div style="grid-column:1/-1" class="che-hint">CANONICAL MASTER SET · ${Math.min(refs.length,12)}/12 ${refs.length===12?'· LENGKAP':'· perlu dilengkapi'}</div>`+refs.map((r,i)=>`
-    <div class="che-ref ${r.master?'master':''}" onclick="charSetMaster(${i})" title="${r.label?escapeHtml(r.label)+' — ':''}Klik untuk jadikan Master">
+  const refs=_charEdit.refs||[],slots=charRequiredSheetShots(),valid=new Set(slots.map(x=>x.label)),assigned=new Set(refs.filter(r=>valid.has(r.label)).map(r=>r.label)),done=Math.min(12,(refs.some(r=>r.master)?1:0)+assigned.size);
+  grid.innerHTML=`<div style="grid-column:1/-1" class="che-hint">CANONICAL MASTER SET · ${done}/12 ${done===12?'· LENGKAP':'· pilih label pada foto upload manual'}</div>`+refs.map((r,i)=>`
+    <div class="che-ref ${r.master?'master':''}" onclick="charSetMaster(${i})" title="Klik foto untuk menjadikannya Master">
       <img src="${r.url}">
-      ${r.label?`<span class="che-ref-label">${escapeHtml(r.label)}</span>`:''}
+      ${r.master?'<span class="che-ref-label">Master</span>':`<select class="che-ref-slot" onclick="event.stopPropagation()" onchange="charSetRefLabel(${i},this.value)"><option value="">Pilih slot…</option>${slots.map(x=>`<option value="${escapeHtml(x.label)}" ${r.label===x.label?'selected':''} ${assigned.has(x.label)&&r.label!==x.label?'disabled':''}>${escapeHtml(x.label)}</option>`).join('')}</select>`}
       <button class="del" onclick="event.stopPropagation();charDelRef(${i})"><svg class="ico"><use href="#i-x"/></svg></button>
-    </div>`).join('') + `
+    </div>`).join('')+`
     <label class="che-add"><svg class="ico"><use href="#i-plus"/></svg>Tambah foto
       <input type="file" accept="image/*" multiple style="display:none" onchange="charAddRefs(event)"></label>`;
   charRenderSheetOpts();
@@ -5314,6 +5325,7 @@ async function charAddRefs(ev) {
   ev.target.value = '';
   charRenderRefs();
 }
+function charSetRefLabel(i,label){if(!_charEdit.refs?.[i])return;if(label&&_charEdit.refs.some((r,n)=>n!==i&&r.label===label))return toast('Slot sudah terisi',label+' sudah dipakai foto lain.','warning');_charEdit.refs[i].label=label;_charEdit.refs[i].group=label?'Canonical Master':'Upload Manual';_charEdit.refs[i].source=_charEdit.refs[i].source||'manual-upload';charRenderRefs()}
 function charDelRef(i) {
   const wasMaster = _charEdit.refs[i].master;
   _charEdit.refs.splice(i,1);
@@ -5562,10 +5574,11 @@ function akUniversalCharacterId(c){if(c.characterId?.startsWith('char_'))return 
 function toSharedCharacterV1(c){const characterId=akUniversalCharacterId(c),traits=c.physicalIdentity||c.traits||{},refs=c.masterSet||c.refs||[];return{schema:'ak-character/v1',characterId,talentId:c.talentId||null,legacyId:c.id||null,characterVersion:Number(c.characterVersion||1),createdAt:c.createdAt||new Date(c.ts||Date.now()).toISOString(),updatedAt:new Date().toISOString(),updatedBy:'AiKreator',identity:{name:c.name||c.basic?.name||'',displayAge:c.basic?.age||'',ethnicity:c.basic?.eth||'',gender:c.basic?.gender||'',height:c.basic?.height||'',roles:c.basic?.roles?.length?c.basic.roles:[c.role||'AI Influencer'],tagline:c.tagline||'',mode:c.mode||'fictional'},physicalIdentity:{faceShape:traits.faceShape||'',skin:traits.skin||'',skinTexture:traits.skinTexture||'',eyes:traits.eyes||'',eyeDetail:traits.eyeDetail||'',eyebrows:traits.eyebrows||'',nose:traits.nose||'',lips:traits.lips||'',lipDetail:traits.lipDetail||'',hairBase:traits.hairBase||traits.hair||'',hairDetail:traits.hairDetail||'',bodyType:traits.bodyType||'',permanentTraits:traits.permanentTraits||[]},styleDefaults:c.styleDefaults||{description:traits.style||''},voiceIdentity:c.voiceIdentity||c.voiceCfg||null,productionCharacterBible:{text:c.bible||'',details:c.bibleDetails||{},contextSignature:c.bibleContextSignature||''},canonicalPortrait:c.canonicalPortrait||refs.find(r=>r.master)?.url||refs[0]?.url||null,masterSet:refs.slice(0,12).map(r=>({group:r.group||'Referensi',label:r.label||r.name||'Referensi',url:r.url,source:r.source||'AiKreator'})),productionLocks:c.productionLocks||{},ownership:{ownerAuthorizationRequired:true,visibility:'private'},productionExtension:{sourceApp:'AiKreator',legacyIdentityText:c.identity||'',generation:c.productionExtension||{}},careerExtension:c.careerExtension||{},credentialsIncluded:false}}
 function sharedToAiKreator(s,existing){const c=existing?JSON.parse(JSON.stringify(existing)):{refs:[],voiceCfg:{}};c.characterId=s.characterId;c.talentId=s.talentId||c.talentId||null;c.id=c.id||s.legacyId||s.characterId;c.characterVersion=s.characterVersion||1;c.name=s.identity?.name||c.name||'';c.role=s.identity?.roles?.[0]||c.role||'AI Influencer';c.tagline=s.identity?.tagline||c.tagline||'';c.mode=s.identity?.mode||c.mode||'fictional';c.physicalIdentity={...(c.physicalIdentity||{}),...(s.physicalIdentity||{})};c.styleDefaults={...(c.styleDefaults||{}),...(s.styleDefaults||{})};c.identity=s.productionExtension?.legacyIdentityText||c.identity||Object.values(s.physicalIdentity||{}).filter(x=>typeof x==='string'&&x).join(', ');c.bible=s.productionCharacterBible?.text||c.bible||'';c.voiceCfg=s.voiceIdentity||c.voiceCfg;c.refs=(s.masterSet||[]).map((r,i)=>({...r,master:i===0}));c.productionLocks=s.productionLocks||c.productionLocks||{};c.careerExtension=s.careerExtension||c.careerExtension||{};c.ts=c.ts||Date.now();return c}
 function downloadAKFile(data,name){const b=new Blob([JSON.stringify(data)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
-function characterReadiness(c){const missing=[];if(!(c.refs||[]).length)missing.push('foto canonical');if((c.refs||[]).length!==12)missing.push(`Master Set ${(c.refs||[]).length}/12`);if(!c.voiceCfg?.locked)missing.push('suara');if(!String(c.bible||'').trim())missing.push('Character Bible');if(c.bible&&c.bibleVoiceSignature!==charVoiceSignature(c))missing.push('sinkronisasi Bible-suara');return{ready:!missing.length,missing}}
+function characterReadiness(c){const missing=[];if(!(c.refs||[]).length)missing.push('foto canonical');const required=new Set(charRequiredSheetShots().map(x=>x.label)),labels=new Set((c.refs||[]).filter(x=>required.has(x.label)).map(x=>x.label)),master=(c.refs||[]).some(x=>x.master)?1:0,masterCount=master+labels.size;if(masterCount!==12)missing.push(`Master Set ${masterCount}/12`);if(!c.voiceCfg?.locked)missing.push('suara');if(!String(c.bible||'').trim())missing.push('Character Bible');if(c.bible&&c.bibleVoiceSignature!==charVoiceSignature(c))missing.push('sinkronisasi Bible-suara');return{ready:!missing.length,missing}}
+function backupCurrentCharacter(){const c=_charEdit;if(!c?.name?.trim())return toast('Nama wajib','Isi nama sebelum mengunduh backup.','warning');if(!(c.refs||[]).length)return toast('Foto wajib','Unggah foto canonical sebelum mengunduh backup.','warning');const pack=toSharedCharacterV1(c);pack.buildStatus=characterReadiness(c).ready?'READY':'DRAFT';pack.readinessMissing=characterReadiness(c).missing;downloadAKFile(pack,(c.name||'karakter').replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'-draft.akcharacter');toast('Backup diunduh','Simpan file ini di HDD untuk pemulihan karakter.','success')}
 function exportSharedCharacter(id){const c=(state.characters||[]).find(x=>x.id===id);if(!c)return;const ready=characterReadiness(c);if(!ready.ready)return toast('Karakter belum siap',`Lengkapi: ${ready.missing.join(', ')}.`,'warning');const s=toSharedCharacterV1(c);c.characterId=s.characterId;c.characterVersion=s.characterVersion;save('characters',state.characters);downloadAKFile(s,(c.name||'karakter').replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'.akcharacter')}
-async function importSharedCharacter(event){const f=event.target.files?.[0];event.target.value='';if(!f)return;try{const s=JSON.parse(await f.text());if(s.schema!=='ak-character/v1'||s.credentialsIncluded!==false)throw new Error('Format bukan ak-character/v1');const old=(state.characters||[]).find(x=>x.characterId===s.characterId||x.id===s.characterId);const c=sharedToAiKreator(s,old);state.characters=state.characters||[];const i=state.characters.findIndex(x=>x===old);if(i>=0)state.characters[i]=c;else state.characters.unshift(c);save('characters',state.characters);renderCharacters();toast('Terhubung',`${c.name} tersedia di AiKreator tanpa menghapus sumbernya.`,'success')}catch(e){toast('Impor gagal',e.message||String(e),'warning')}}
-function saveCharacter() {
+async function importSharedCharacter(event){const f=event.target.files?.[0];event.target.value='';if(!f)return;try{const s=JSON.parse(await f.text());if(s.schema!=='ak-character/v1'||s.credentialsIncluded!==false)throw new Error('Format bukan ak-character/v1');const old=(state.characters||[]).find(x=>x.characterId===s.characterId||x.id===s.characterId);const c=sharedToAiKreator(s,old);state.characters=state.characters||[];const i=state.characters.findIndex(x=>x===old);if(i>=0)state.characters[i]=c;else state.characters.unshift(c);await aikPutCharacter(c);persistCharacterIndex();renderCharacters();toast('Terhubung',`${c.name} tersedia di AiKreator tanpa menghapus sumbernya.`,'success')}catch(e){toast('Impor gagal',e.message||String(e),'warning')}}
+async function saveCharacter() {
   const c = _charEdit;
   c.name = (document.getElementById('chName')?.value || c.name || '').trim();
   c.tagline = document.getElementById('chTagline')?.value || c.tagline || '';
@@ -5582,14 +5595,14 @@ function saveCharacter() {
   const readiness=characterReadiness(c);c.buildStatus=readiness.ready?'READY':'DRAFT';c.readinessMissing=readiness.missing;c.updatedAt=new Date().toISOString();
   const idx = state.characters.findIndex(x => x.id === c.id);
   if (idx >= 0) state.characters[idx] = c; else state.characters.unshift(c);
-  save('characters', state.characters);
+  try{await aikPutCharacter(c);persistCharacterIndex()}catch(e){toast('Gagal menyimpan','Database karakter gagal: '+(e.message||e),'error');return}
   charCloseEditor();
   toast(readiness.ready?'Karakter siap':'Draft tersimpan',readiness.ready?`Karakter \"${c.name}\" siap digunakan dan dihubungkan.`:`Progres ${c.name} aman. Belum lengkap: ${readiness.missing.join(', ')}.`,'success');
 }
-function deleteCharacter(id) {
+async function deleteCharacter(id) {
   if (!confirm('Hapus karakter ini beserta bible & referensinya?')) return;
   state.characters = (state.characters||[]).filter(c => c.id !== id);
-  save('characters', state.characters);
+  try{await aikDeleteCharacter(id);persistCharacterIndex()}catch(e){toast('Gagal menghapus',e.message||String(e),'error');return}
   charCloseEditor();
   toast('Dihapus','Karakter dihapus','info');
 }
