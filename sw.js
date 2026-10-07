@@ -1,5 +1,5 @@
 /* AiKreator Service Worker */
-const CACHE = 'aikreator-v33';
+const CACHE = 'aikreator-v34';
 const CORE = [
   './',
   './index.html',
