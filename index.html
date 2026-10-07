@@ -5228,7 +5228,7 @@ const SHEET_BODY = [
   { id:'fullbody', label:'Seluruh Badan', prompt:'full body shot, head to toe, standing pose' },
 ];
 function charRequiredSheetShots(){const a=[];SHEET_ANGLES.forEach(x=>a.push({...x,kind:'angle'}));SHEET_EXPR.filter(x=>['natural','smile','laugh','thinking'].includes(x.id)).forEach(x=>a.push({...x,prompt:'front view, '+x.prompt,kind:'expr'}));SHEET_BODY.forEach(x=>a.push({...x,kind:'body'}));return a}
-function charSheetSelected(){const required=charRequiredSheetShots(),have=new Set((_charEdit.refs||[]).map(x=>x.label));if(!_charEdit._sheetRetry)_charEdit._sheetRetry=new Set(required.filter(x=>!have.has(x.label)).map(x=>x.label));return _charEdit._sheetRetry}
+function charSheetSelected(){const required=charRequiredSheetShots(),have=new Set((_charEdit.refs||[]).map(x=>x.label));if(!(_charEdit._sheetRetry instanceof Set))_charEdit._sheetRetry=new Set(required.filter(x=>!have.has(x.label)).map(x=>x.label));return _charEdit._sheetRetry}
 function charRenderSheetOpts(){
   const el=document.getElementById('chSheetOpts');if(!el)return;const required=charRequiredSheetShots(),have=new Set((_charEdit.refs||[]).map(x=>x.label)),selected=charSheetSelected(),missing=required.filter(x=>!have.has(x.label));
   el.innerHTML=`<div class="che-hint"><b>Pilih slot yang akan dibuat.</b> Slot gelap belum tersedia; slot centang dapat dipilih ulang untuk mengganti hasil.</div><div class="sheet-chips">${required.map((x,i)=>`<button type="button" class="sheet-chip ${have.has(x.label)?'on':''} ${selected.has(x.label)?'retry':''}" onclick="charToggleSheet('${x.label.replace(/'/g,"\\'")}')">${i+2}. ${x.label}${have.has(x.label)?' ✓':''}${selected.has(x.label)?' ↻':''}</button>`).join('')}</div>`;
