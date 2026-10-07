@@ -753,8 +753,10 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .asset-body .atext{color:var(--text-secondary);font-size:.78rem;margin-top:.25rem;line-height:1.4;max-height:3.2em;overflow:hidden;word-break:break-word}
 .asset-body .alink{color:var(--accent);font-size:.76rem;text-decoration:none;word-break:break-all}
 .asset-kind{position:absolute;top:.6rem;left:.6rem;font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(0,0,0,.55);color:#fff;backdrop-filter:blur(4px)}
-.asset-del{position:absolute;top:.6rem;right:.6rem;width:26px;height:26px;border:none;border-radius:var(--r-md);background:rgba(0,0,0,.55);color:#fff;cursor:pointer;font-size:.8rem;opacity:0;transition:opacity .15s}
+.asset-del{position:absolute;top:.6rem;right:.6rem;width:28px;height:28px;border:none;background:transparent;color:#fff;cursor:pointer;opacity:0;transition:opacity .15s,color .15s,transform .15s;filter:drop-shadow(0 1px 2px rgba(0,0,0,.9));display:grid;place-items:center;padding:0}
+.asset-del .ico{width:18px;height:18px}
 .asset-card:hover .asset-del{opacity:1}
+.asset-del:hover{color:var(--danger);transform:scale(1.08)}
 /* modal form bits */
 .modal-form label{display:block;font-size:.82rem;font-weight:600;color:var(--text-secondary);margin:.9rem 0 .35rem}
 /* ===== AVATAR CROPPER ===== */
@@ -3188,7 +3190,7 @@ function renderAssets() {
     if (proj) body += `<div class="atext" style="color:${proj.color};font-weight:600;margin-top:.3rem">${escapeHtml(proj.emoji)} ${escapeHtml(proj.name)}</div>`;
     return `<div class="asset-card ${a.type==='video'?'asset-video-card':''}" onclick="openAssetModal('${a.id}')">
       <span class="asset-kind">${kindLabel[a.type] || a.type}</span>
-      <button class="asset-del" onclick="event.stopPropagation();hapusAsset('${a.id}')" title="Hapus"><svg class="ico"><use href="#i-trash"/></svg> ️</button>
+      <button class="asset-del" onclick="event.stopPropagation();hapusAsset('${a.id}')" title="Hapus"><svg class="ico"><use href="#i-trash"/></svg></button>
       <div class="asset-thumb ${a.type==='image'?'asset-image':''}">${thumb}</div>
       <div class="asset-body">${body}</div>
     </div>`;
@@ -4334,7 +4336,7 @@ function ceRenderAssetList() {
   if (!imgs.length) { box.innerHTML = `<div class="ce-asset-empty">Belum ada gambar di Assets.</div>`; return; }
   box.innerHTML = imgs.map(a => `<div class="ce-asset-thumb" title="${escapeHtml(a.name)}">
       <img src="${escapeHtml(a.url)}" onclick="ceAddAssetImage('${a.id}')" onerror="this.parentElement.classList.add('broken')">
-      <button class="ce-asset-del" title="Hapus asset" onclick="event.stopPropagation();ceDeleteAsset('${a.id}')"><svg class="ico"><use href="#i-trash"/></svg> ️</button>
+      <button class="ce-asset-del" title="Hapus asset" onclick="event.stopPropagation();ceDeleteAsset('${a.id}')"><svg class="ico"><use href="#i-trash"/></svg></button>
     </div>`).join('');
 }
 function ceDeleteAsset(assetId) {
