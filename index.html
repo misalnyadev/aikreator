@@ -741,7 +741,12 @@ html.dark .home-illus .illus-dark{display:block;filter:drop-shadow(0 8px 18px rg
 .asset-card{border:1px solid var(--border);border-radius:var(--r-lg);background:var(--bg-card);overflow:hidden;transition:all .18s;position:relative}
 .asset-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
 .asset-thumb{height:130px;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;overflow:hidden}
-.asset-thumb img{width:100%;height:100%;object-fit:cover}
+.asset-thumb.asset-image{height:auto;min-height:130px;max-height:360px}
+.asset-thumb.asset-image img{display:block;width:100%;height:auto;max-height:360px;object-fit:contain;background:var(--bg-elevated)}
+.asset-card.asset-video-card{cursor:pointer}
+.asset-card.asset-video-card .asset-thumb{height:auto;aspect-ratio:9/16;max-height:520px}
+.asset-card.asset-video-card video{width:100%;height:100%;object-fit:cover;cursor:pointer;background:#000}
+.asset-caption{font-size:.76rem;color:var(--text-muted);line-height:1.4;margin-top:.38rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-wrap}
 .asset-thumb .big{font-size:2.4rem}
 .asset-body{padding:.85rem}
 .asset-body b{font-size:.88rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -3170,8 +3175,8 @@ function renderAssets() {
   box.innerHTML = list.map(a => {
     const proj = (state.projects || []).find(p => p.id === a.project);
     let thumb = '';
-    if (a.type === 'image') thumb = `<img src="${escapeHtml(a.url)}" alt="${escapeHtml(a.name)}" onerror="this.parentElement.innerHTML='<span class=\\'big\\'><svg class="ico"><use href="#i-image"/></svg></span>'">`;
-    else if (a.type === 'video') thumb = `<video src="${escapeHtml(a.url)}" muted playsinline onmouseover="this.play()" onmouseout="this.pause()" style="width:100%;height:100%;object-fit:cover"></video>`;
+    if (a.type === 'image') thumb = `<img src="${escapeHtml(a.url)}" alt="${escapeHtml(a.name)}" onerror="assetMediaError(this,'image')">`;
+    else if (a.type === 'video') thumb = `<video src="${escapeHtml(a.url)}" muted playsinline preload="metadata" onmouseenter="this.play().catch(()=>{})" onmouseleave="this.pause();this.currentTime=0" onerror="assetMediaError(this,'video')"></video>`;
     else if (a.type === 'audio') thumb = `<span class="big"><svg class="ico"><use href="#i-mic"/></svg></span>`;
     else if (a.type === 'link') thumb = `<span class="big"><svg class="ico"><use href="#i-link"/></svg></span>`;
     else thumb = `<span class="big"><svg class="ico"><use href="#i-pen"/></svg></span>`;
@@ -3179,14 +3184,19 @@ function renderAssets() {
     if (a.type === 'text') body += `<div class="atext">${escapeHtml(a.content || '')}</div>`;
     else if (a.type === 'audio') body += `<audio src="${escapeHtml(a.url)}" controls onclick="event.stopPropagation()" style="width:100%;margin-top:.4rem;height:34px"></audio>`;
     else if (a.type === 'link') body += `<a class="alink" href="${escapeHtml(a.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${escapeHtml(a.url)}</a>`;
+    if ((a.type === 'image' || a.type === 'video') && a.content) body += `<div class="asset-caption">${escapeHtml(a.content)}</div>`;
     if (proj) body += `<div class="atext" style="color:${proj.color};font-weight:600;margin-top:.3rem">${escapeHtml(proj.emoji)} ${escapeHtml(proj.name)}</div>`;
-    return `<div class="asset-card" onclick="openAssetModal('${a.id}')">
+    return `<div class="asset-card ${a.type==='video'?'asset-video-card':''}" onclick="openAssetModal('${a.id}')">
       <span class="asset-kind">${kindLabel[a.type] || a.type}</span>
       <button class="asset-del" onclick="event.stopPropagation();hapusAsset('${a.id}')" title="Hapus"><svg class="ico"><use href="#i-trash"/></svg> ️</button>
-      <div class="asset-thumb">${thumb}</div>
+      <div class="asset-thumb ${a.type==='image'?'asset-image':''}">${thumb}</div>
       <div class="asset-body">${body}</div>
     </div>`;
   }).join('');
+}
+function assetMediaError(el,type){
+  const box=el?.parentElement;if(!box)return;
+  box.innerHTML=type==='video'?'<span class="big"><svg class="ico"><use href="#i-video"/></svg></span>':'<span class="big"><svg class="ico"><use href="#i-image"/></svg></span>';
 }
 function filterAssets(f) {
   state.assetFilter = f;
