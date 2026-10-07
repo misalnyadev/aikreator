@@ -4886,8 +4886,8 @@ function openCharacterEditor(id) {
       ${[['faceShape','Bentuk wajah'],['skin','Warna kulit dasar'],['skinTexture','Tekstur kulit'],['eyes','Mata'],['eyeDetail','Detail mata'],['eyebrows','Alis'],['nose','Hidung'],['lips','Bibir'],['lipDetail','Detail bibir'],['hairBase','Rambut dasar'],['hairDetail','Detail rambut'],['bodyType','Proporsi/bentuk tubuh']].map(([k,l])=>`<div class="ce-prop-group"><label>${l}</label><input class="form-input" value="${escapeHtml(c.physicalIdentity[k]||'')}" oninput="_charEdit.physicalIdentity['${k}']=this.value"></div>`).join('')}
       <div class="ce-prop-group"><label>Ciri permanen</label><textarea class="form-input" rows="2" oninput="_charEdit.physicalIdentity.permanentTraits=this.value.split(',').map(x=>x.trim()).filter(Boolean)">${escapeHtml((c.physicalIdentity.permanentTraits||[]).join(', '))}</textarea></div>
       <div style="font-weight:700;margin:.8rem 0 .4rem">Mutable Styling</div>
-      <div class="che-hint">Boleh diganti per job tanpa mengubah wajah: pakaian, gaya rambut, makeup, lipstick, aksesori, perhiasan, dan lainnya.</div>
-      <div class="ce-prop-group"><label>Gaya default</label><textarea class="form-input" rows="3" oninput="_charEdit.styleDefaults.description=this.value">${escapeHtml(c.styleDefaults.description||'')}</textarea></div>
+      <div class="che-hint">Penampilan yang boleh berubah sesuai brief produksi tanpa mengubah identitas karakter.</div>
+      <div class="ce-prop-group"><label>Yang boleh berubah</label><textarea class="form-input" rows="2" placeholder="Gaya rambut, pakaian, makeup, lipstik, aksesori, perhiasan, kacamata" oninput="_charEdit.styleDefaults.description=this.value">${escapeHtml(c.styleDefaults.description||'')}</textarea></div>
       <div style="font-weight:700;margin:.8rem 0 .4rem">Production Locks</div>
       <div class="ce-prop-group"><label>Elemen yang tidak boleh berubah</label><textarea class="form-input" rows="4" placeholder="Wajah, usia visual, proporsi tubuh, ciri permanen..." oninput="_charEdit.productionLocks.text=this.value">${escapeHtml(c.productionLocks.text||'')}</textarea></div>
     </div>
